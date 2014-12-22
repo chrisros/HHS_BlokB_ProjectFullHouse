@@ -6,19 +6,34 @@
 package lidselecter;
 
 import java.awt.Color;
+import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author chris
+ * @author chris overzicht van toernooien
+ *
+ * datum plaats id max aantal spelers wanneer geselecteerd geef proces en alles
+ * uit database
  */
 public class Toernooien extends javax.swing.JFrame {
+
+    private final DefaultTableModel table = new DefaultTableModel();
 
     /**
      * Creates new form Toernooien
      */
     public Toernooien() {
         initComponents();
+
+        toernooiTabel.setModel(table);
+        String[] Kolomnaam = {"Toernooi id", "Datum", "Plaats", "Max spelers"};
+        table.setColumnIdentifiers(Kolomnaam);
+        table.setRowCount(0);
+        table.setColumnCount(4);
+
+        //Update_Table();
     }
 
     private void ePopup(Exception e) {
@@ -29,7 +44,7 @@ public class Toernooien extends javax.swing.JFrame {
 
     private void setProgress(int currentPlayers, int maxPlayers) {
         try {
-            progressBar.setMinimum(0);
+            progressBar.setMinimum(0); 
             progressBar.setMaximum(maxPlayers);
             progressBar.setName("Inschrijvingen");
             progressBar.setValue(currentPlayers);
@@ -83,8 +98,9 @@ public class Toernooien extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         test1 = new javax.swing.JTextField();
         test2 = new javax.swing.JTextField();
+        ophalenButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        toernooiTabel = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -104,6 +120,13 @@ public class Toernooien extends javax.swing.JFrame {
             }
         });
 
+        ophalenButton.setText("Toernooi gegevens ophalen");
+        ophalenButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ophalenButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -119,13 +142,18 @@ public class Toernooien extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(test2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(263, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(ophalenButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(216, 216, 216)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ophalenButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                        .addComponent(jButton2))
                     .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -134,7 +162,7 @@ public class Toernooien extends javax.swing.JFrame {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        toernooiTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -142,10 +170,18 @@ public class Toernooien extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Toenooi id", "Datum", "Plaats", "Max Spelers"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(toernooiTabel);
 
         jButton1.setText("Terug");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -161,7 +197,7 @@ public class Toernooien extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -172,10 +208,10 @@ public class Toernooien extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -197,6 +233,60 @@ public class Toernooien extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_test2ActionPerformed
 
+    private void ophalenButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ophalenButtonMouseClicked
+        // TODO add your handling code here:
+        Sql_connect.doConnect();
+        // declareer de variable voor in de rs
+        String id;
+        String naam;
+        String plaats;
+        String maxSpelers;
+
+        try {
+            // connect 
+            Sql_connect.doConnect();
+            // statement maken
+            String prepSqlStatement = "select * from toernooi;";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            ResultSet result = stat.executeQuery();
+
+            // rijen
+            int i = 0;
+
+            while (result.next()) {
+                i++;
+
+            }
+            table.setRowCount(i);
+            result.beforeFirst();
+
+            int d = 0;
+            while (result.next()) {
+                //Stop de variable in een rs
+                id           = result.getString("Id_toernooi");
+                naam         = result.getString("naam");
+                plaats       = result.getString("Locatie_code");
+                maxSpelers    = result.getString("Max_speler_per_tafel");
+                
+                // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
+                table.setValueAt(id, d, 0);
+                table.setValueAt(naam, d, 1);
+                table.setValueAt(plaats, d, 2);
+                table.setValueAt(maxSpelers, d, 3);
+                // verhoog aantal totdat alles was je hebt opgevraagd is geweest
+                d++;
+
+            }
+
+            result.last();
+            System.out.println(result.getRow());
+
+            result.close();
+            stat.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, e);
+        }
+    }//GEN-LAST:event_ophalenButtonMouseClicked
     /**
      * @param args the command line arguments
      */
@@ -211,16 +301,21 @@ public class Toernooien extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Toernooien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Toernooien.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Toernooien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Toernooien.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Toernooien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Toernooien.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Toernooien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Toernooien.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -237,9 +332,10 @@ public class Toernooien extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton ophalenButton;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField test1;
     private javax.swing.JTextField test2;
+    private javax.swing.JTable toernooiTabel;
     // End of variables declaration//GEN-END:variables
 }
