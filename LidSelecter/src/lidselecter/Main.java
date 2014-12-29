@@ -29,18 +29,18 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        beherenSpelerButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        agendaToernooiButton = new javax.swing.JButton();
+        beherenToernooiButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Speler beheer");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        beherenSpelerButton.setText("Speler beheer");
+        beherenSpelerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                beherenSpelerButtonActionPerformed(evt);
             }
         });
 
@@ -48,14 +48,19 @@ public class Main extends javax.swing.JFrame {
 
         jLabel2.setText("Toernooien");
 
-        jButton2.setText("Toernooien agenda");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        agendaToernooiButton.setText("Toernooien agenda");
+        agendaToernooiButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                agendaToernooiButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Toernooi beheer");
+        beherenToernooiButton.setText("Toernooi beheer");
+        beherenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                beherenToernooiButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,11 +70,11 @@ public class Main extends javax.swing.JFrame {
                 .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jButton1))
+                    .addComponent(beherenSpelerButton))
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(agendaToernooiButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(beherenToernooiButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(jLabel2)))
@@ -84,29 +89,36 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(beherenSpelerButton)
+                    .addComponent(agendaToernooiButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(beherenToernooiButton)
                 .addContainerGap(204, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void beherenSpelerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenSpelerButtonActionPerformed
         this.dispose();
         Ledeneditor ledenedit = new Ledeneditor();
         ledenedit.setVisible(rootPaneCheckingEnabled);
         ledenedit.setLocationRelativeTo(null);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_beherenSpelerButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void agendaToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaToernooiButtonActionPerformed
         this.dispose();
-        Toernooien toernooi = new Toernooien();
+        Toernooien_main toernooi = new Toernooien_main();
         toernooi.setVisible(rootPaneCheckingEnabled);
         toernooi.setLocationRelativeTo(null);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_agendaToernooiButtonActionPerformed
+
+    private void beherenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenToernooiButtonActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        Toernooi_beheren toernooi = new Toernooi_beheren();
+        toernooi.setVisible(rootPaneCheckingEnabled);
+    }//GEN-LAST:event_beherenToernooiButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -144,9 +156,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton agendaToernooiButton;
+    private javax.swing.JButton beherenSpelerButton;
+    private javax.swing.JButton beherenToernooiButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
