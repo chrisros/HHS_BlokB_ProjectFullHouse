@@ -40,7 +40,7 @@ public class Toernooien_main extends javax.swing.JFrame {
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
         table.setColumnCount(4);
-        
+
         toernooiVullen();
         tableEigenschappen();
 
@@ -48,7 +48,7 @@ public class Toernooien_main extends javax.swing.JFrame {
 
     // hierin wordt gezorgd dat de inhoud rechts staat
     private void tableEigenschappen() {
-        
+
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         toernooiTabel.getColumn("Toernooi id").setCellRenderer(rightRenderer);
@@ -162,6 +162,7 @@ public class Toernooien_main extends javax.swing.JFrame {
     }
 
     // hierin worden de gegevens opgeroepen om weer te geven in jtextfielden met de overige eigenschappen
+    // ook wordt hier de max inschrijvingen gevuld
     private void gegevensOphalen() {
 
         try {
@@ -195,6 +196,10 @@ public class Toernooien_main extends javax.swing.JFrame {
         }
     }
 
+    // weergeven van daadwerkelijk ingeschreven spelers
+    private void progressBarInschrijvingen() {
+       }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -224,7 +229,7 @@ public class Toernooien_main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         toernooiTabel = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        toevoegenToernooiButton = new javax.swing.JButton();
+        inschrijvenToernooiButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -384,10 +389,10 @@ public class Toernooien_main extends javax.swing.JFrame {
             }
         });
 
-        toevoegenToernooiButton.setText("Toernooi toevoegen");
-        toevoegenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
+        inschrijvenToernooiButton.setText("Inschrijven Toernooi");
+        inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toevoegenToernooiButtonActionPerformed(evt);
+                inschrijvenToernooiButtonActionPerformed(evt);
             }
         });
 
@@ -401,7 +406,7 @@ public class Toernooien_main extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(toevoegenToernooiButton)
+                        .addComponent(inschrijvenToernooiButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)))
                 .addContainerGap())
@@ -416,7 +421,7 @@ public class Toernooien_main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(toevoegenToernooiButton))
+                    .addComponent(inschrijvenToernooiButton))
                 .addContainerGap())
         );
 
@@ -435,17 +440,31 @@ public class Toernooien_main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
-    private void toevoegenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toevoegenToernooiButtonActionPerformed
+    private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_toevoegenToernooiButtonActionPerformed
+    }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
     private void inschrijfProcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijfProcesButtonActionPerformed
         try {
+            int row = toernooiTabel.getSelectedRow();
+
+            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            Sql_connect.doConnect();
+            
+            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = '" + Table_click + "'";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            ResultSet result = stat.executeQuery();
+
+            if (result.next()) {
+                String add1 = result.getString("inschrijvingen");
+                minSpelersTxt.setText(add1);}
+            
             setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
 
         } catch (Exception e) {
-            ePopup(e);
+            //ePopup(e);
+            System.out.println(e);
         }
 
     }//GEN-LAST:event_inschrijfProcesButtonActionPerformed
@@ -493,6 +512,7 @@ public class Toernooien_main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField inschrijfKostTxt;
     private javax.swing.JButton inschrijfProcesButton;
+    private javax.swing.JButton inschrijvenToernooiButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -511,6 +531,5 @@ public class Toernooien_main extends javax.swing.JFrame {
     private javax.swing.JTextField spelTypeTxt;
     private javax.swing.JTextField spelersPrTafelTxt;
     private javax.swing.JTable toernooiTabel;
-    private javax.swing.JButton toevoegenToernooiButton;
     // End of variables declaration//GEN-END:variables
 }

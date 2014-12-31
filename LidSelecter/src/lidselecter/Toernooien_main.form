@@ -30,7 +30,7 @@
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="toevoegenToernooiButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="inschrijvenToernooiButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -49,7 +49,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="toevoegenToernooiButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inschrijvenToernooiButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -307,12 +307,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="toevoegenToernooiButton">
+    <Component class="javax.swing.JButton" name="inschrijvenToernooiButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Toernooi toevoegen"/>
+        <Property name="text" type="java.lang.String" value="Inschrijven Toernooi"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toevoegenToernooiButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inschrijvenToernooiButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
