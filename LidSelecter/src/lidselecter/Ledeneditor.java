@@ -6,7 +6,7 @@ package lidselecter;
 import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-//import java.sql.SQLException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -34,17 +34,20 @@ public class Ledeneditor extends javax.swing.JFrame {
 
     private void getPerson() {
         try {
-            int l_code;
+            int l_code = 0;
+            boolean hasRun = false;
+            
             try {
+                getSelectedId();
                 l_code = Integer.parseInt(id.getText());
             } catch (Exception e) {
-                l_code = 0;
+                feedback.setText("Geen code ingevoerd/niets geselecteerd");
             }
 
-            boolean hasRun = false;
-            if (l_code > 0) {
+            
+            if (id.getText() != null) {
                 Sql_connect.doConnect();
-                String prepSqlStatement = "SELECT roepnaam, achternaam FROM lid WHERE l_code = ? LIMIT 1";
+                String prepSqlStatement = "SELECT roepnaam, achternaam, adres, postcode, woonplaats, land, email, telefoon FROM test_leden WHERE l_code = ? LIMIT 1";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
                 stat.setInt(1, l_code);
                 ResultSet result = stat.executeQuery();
@@ -52,14 +55,18 @@ public class Ledeneditor extends javax.swing.JFrame {
                 while (result.next()) {
                     roepnaam.setText(result.getString("roepnaam"));
                     achternaam.setText(result.getString("achternaam"));
-                    hasRun = true;
+                    adres.setText(result.getString("adres"));
+                    postcode.setText(result.getString("postcode"));
+                    woonplaats.setText(result.getString("woonplaats"));
+                    land.setText(result.getString("land"));
+                    email.setText(result.getString("email"));
+                    telefoon.setText(result.getString("telefoon"));
                     feedback.setText("Opvraag lid gelukt!");
+                    hasRun = true;
                 }
-                if (!hasRun) {
-                    feedback.setText("code bestaat niet");
-                }
+                
             } else {
-                feedback.setText("Geen code ingevoerd");
+                feedback.setText("Geen code ingevoerd/niets geselecteerd");
             }
         } catch (Exception e) {
             ePopup(e);
@@ -70,18 +77,21 @@ public class Ledeneditor extends javax.swing.JFrame {
 
     private void setPerson() {
         try {
-            //collect variables from textfields
-            int code = Integer.parseInt(id.getText());
-            String rnaam = roepnaam.getText();
-            String anaam = achternaam.getText();
-
+            
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "UPDATE lid SET roepnaam=?, achternaam=? WHERE l_code = ?";
+            String prepSqlStatement = "UPDATE test_leden SET roepnaam=?, achternaam=?, adres=?. postcode=?, woonplaats=?, land=?, email=?, telefoonnummer=? WHERE l_code = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setString(1, rnaam);
-            stat.setString(2, anaam);
-            stat.setInt(3, code);
+            stat.setString(1, roepnaam.getText());
+            stat.setString(2, achternaam.getText());
+            stat.setString(3, adres.getText());
+            stat.setString(4, postcode.getText());
+            stat.setString(5, woonplaats.getText());
+            stat.setString(6, land.getText());
+            stat.setString(7, email.getText());
+            stat.setString(8, telefoon.getText());
+            stat.setInt(9, Integer.parseInt(id.getText()));
+                
             stat.executeUpdate();
             feedback.setText("Wijziging lid gelukt!");
             getLijst();
@@ -96,7 +106,7 @@ public class Ledeneditor extends javax.swing.JFrame {
     private void getLijst() {
         try {
             Sql_connect.doConnect();
-            String prepSqlStatement = "SELECT roepnaam, l_code FROM lid ";
+            String prepSqlStatement = "SELECT roepnaam, l_code FROM test_leden ";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
@@ -120,7 +130,7 @@ public class Ledeneditor extends javax.swing.JFrame {
         int newl_code = 0;
         try {
             Sql_connect.doConnect();
-            String prepSqlStatement = "select MAX(l_code) AS biggest from lid";
+            String prepSqlStatement = "select MAX(l_code) AS biggest from test_leden";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
             while (result.next()) {
@@ -138,16 +148,21 @@ public class Ledeneditor extends javax.swing.JFrame {
     private void addPerson() {
         try {
             int code = getNewCode();
-            String rnaam = roepnaam.getText();
-            String anaam = achternaam.getText();
-
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "INSERT INTO lid (l_code, roepnaam, achternaam) VALUES (?, ?, ?)";
+            String prepSqlStatement = "INSERT INTO test_leden (l_code, roepnaam, achternaam, adres, postcode, woonplaats, land, email, telefoon) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"; 
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, code);
-            stat.setString(2, rnaam);
-            stat.setString(3, anaam);
+            stat.setString(2, roepnaam.getText());
+            stat.setString(3, achternaam.getText());
+            stat.setString(4, adres.getText());
+            stat.setString(5, postcode.getText());
+            stat.setString(6, woonplaats.getText());
+            stat.setString(7, land.getText());
+            stat.setString(8, email.getText());
+            stat.setString(9, telefoon.getText());
+            
             stat.executeUpdate();
             feedback.setText("Toevoegen lid gelukt!");
             getLijst();
@@ -183,7 +198,7 @@ public class Ledeneditor extends javax.swing.JFrame {
 
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "DELETE FROM lid WHERE l_code = ? AND roepnaam = ? AND achternaam = ?";
+            String prepSqlStatement = "DELETE FROM test_leden WHERE l_code = ? AND roepnaam = ? AND achternaam = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, code);
             stat.setString(2, rnaam);
@@ -275,7 +290,6 @@ public class Ledeneditor extends javax.swing.JFrame {
     */
     private boolean checkFields() {
         fieldsOk=true;
-        checkIntField   (id,            3,  12);
         checkStringField(roepnaam,      2,  30);
         checkStringField(achternaam,    2,  30);
         checkStringField(adres,         2,  40);
