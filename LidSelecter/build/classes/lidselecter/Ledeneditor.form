@@ -111,10 +111,10 @@
                                               <Component id="postcode" alignment="1" max="32767" attributes="0"/>
                                               <Component id="woonplaats" alignment="1" max="32767" attributes="0"/>
                                               <Component id="achternaam" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="adres" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="adresField" alignment="0" max="32767" attributes="0"/>
                                               <Component id="id" alignment="1" max="32767" attributes="0"/>
-                                              <Component id="land" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="email" max="32767" attributes="0"/>
+                                              <Component id="landField" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="emailField" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" attributes="0">
@@ -181,7 +181,7 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="adres" alignment="3" max="32767" attributes="0"/>
+                                      <Component id="adresField" alignment="3" max="32767" attributes="0"/>
                                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -197,11 +197,11 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="land" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="landField" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="email" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="emailField" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -366,9 +366,9 @@
             <Property name="text" type="java.lang.String" value="Adres:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="adres">
+        <Component class="javax.swing.JTextField" name="adresField">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adresActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adresFieldActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="postcode">
@@ -405,11 +405,11 @@
             <Property name="orientation" type="int" value="1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="land">
+        <Component class="javax.swing.JTextField" name="landField">
         </Component>
-        <Component class="javax.swing.JTextField" name="email">
+        <Component class="javax.swing.JTextField" name="emailField">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="emailActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="emailFieldActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="telefoon">

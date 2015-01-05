@@ -67,7 +67,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
                 //Stop de variable in een rs
                 id = result.getString("Id_toernooi");
                 naam = result.getString("Datum");
-                plaats = result.getString("Locatie_code");
+                plaats = result.getString("Id_locatie");
                 Max_inschrijvingen_T = result.getString("Max_inschrijvingen_T");
 
                 // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
@@ -137,8 +137,8 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
                     + "(Id_persoon, Id_toernooi, Betaald, Positie, Fiches)"
                     + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, idToernooi);
-            stat.setInt(2, idSpeler);
+            stat.setInt(1, idSpeler);
+            stat.setInt(2, idToernooi);
             stat.setInt(3, isPositie);
             stat.setInt(4, isBetaald);
             stat.setInt(5, aantalFisches);
@@ -206,7 +206,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
         jScrollPane1.setViewportView(toernooiTabel);
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jLabel1.setText("Klik een toernooi aan, vul verolgens je spelers code in en klik op inschrijven");
+        jLabel1.setText("Klik toernooi aan en vul je id in");
 
         jLabel2.setText("Toernooi id");
 
@@ -227,13 +227,10 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,6 +250,10 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(MELDINGFIELD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +275,8 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();

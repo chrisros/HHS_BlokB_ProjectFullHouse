@@ -7,9 +7,11 @@ package lidselecter;
 
 import java.awt.Color;
 import java.sql.*;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -43,7 +45,6 @@ public class Toernooien_main extends javax.swing.JFrame {
 
         toernooiVullen();
         tableEigenschappen();
-
     }
 
     // hierin wordt gezorgd dat de inhoud rechts staat
@@ -55,7 +56,14 @@ public class Toernooien_main extends javax.swing.JFrame {
         toernooiTabel.getColumn("Datum").setCellRenderer(rightRenderer);
         toernooiTabel.getColumn("Plaats code").setCellRenderer(rightRenderer);
         toernooiTabel.getColumn("Max spelers").setCellRenderer(rightRenderer);
+
+        TableCellRenderer rendererFromHeader = toernooiTabel.getTableHeader().getDefaultRenderer();
+        JLabel headerLabel = (JLabel) rendererFromHeader;
+        headerLabel.setHorizontalAlignment(JLabel.RIGHT);
+
     }
+
+    
 
     private void ePopup(Exception e) {
         final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
@@ -138,7 +146,7 @@ public class Toernooien_main extends javax.swing.JFrame {
                 //Stop de variable in een rs
                 id = result.getString("Id_toernooi");
                 naam = result.getString("Datum");
-                plaats = result.getString("Locatie_code");
+                plaats = result.getString("Id_locatie");
                 Max_inschrijvingen_T = result.getString("Max_inschrijvingen_T");
 
                 // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
@@ -160,6 +168,7 @@ public class Toernooien_main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, e);
         }
     }
+    
 
     // hierin worden de gegevens opgeroepen om weer te geven in jtextfielden met de overige eigenschappen
     // ook wordt hier de max inschrijvingen gevuld
@@ -195,10 +204,6 @@ public class Toernooien_main extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-
-    // weergeven van daadwerkelijk ingeschreven spelers
-    private void progressBarInschrijvingen() {
-       }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,6 +248,8 @@ public class Toernooien_main extends javax.swing.JFrame {
 
         progressBar.setForeground(new java.awt.Color(153, 153, 255));
 
+        minSpelersTxt.setEditable(false);
+
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setText("Naam");
 
@@ -279,7 +286,7 @@ public class Toernooien_main extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -400,15 +407,15 @@ public class Toernooien_main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(inschrijvenToernooiButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(inschrijvenToernooiButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -418,11 +425,10 @@ public class Toernooien_main extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(inschrijvenToernooiButton))
-                .addContainerGap())
+                    .addComponent(inschrijvenToernooiButton)))
         );
 
         pack();
@@ -442,6 +448,9 @@ public class Toernooien_main extends javax.swing.JFrame {
 
     private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        Toernooi_inschrijven Toernooi_inschrijven = new Toernooi_inschrijven();
+        Toernooi_inschrijven.setVisible(rootPaneCheckingEnabled);
 
     }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
@@ -451,15 +460,16 @@ public class Toernooien_main extends javax.swing.JFrame {
 
             String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
             Sql_connect.doConnect();
-            
+
             String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = '" + Table_click + "'";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
                 String add1 = result.getString("inschrijvingen");
-                minSpelersTxt.setText(add1);}
-            
+                minSpelersTxt.setText(add1);
+            }
+
             setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
 
         } catch (Exception e) {
