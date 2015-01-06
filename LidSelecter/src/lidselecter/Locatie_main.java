@@ -27,6 +27,7 @@ public class Locatie_main extends javax.swing.JFrame {
      */
     public Locatie_main() {
         initComponents();
+        setLocationRelativeTo(null);
 
         locatieTable.setModel(table);
         String[] Kolomnaam = {"Locatie id", "Naam", "Plaats", "Straat", "Huisnummer", "Telefoonnummer"};
@@ -131,7 +132,6 @@ public class Locatie_main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         locatieTable = new javax.swing.JTable();
         locatieToevoegenButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         terugButton = new javax.swing.JButton();
 
         jButton2.setText("Terug");
@@ -173,13 +173,6 @@ public class Locatie_main extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Terug");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         terugButton.setText("Terug");
         terugButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -199,11 +192,6 @@ public class Locatie_main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(terugButton)))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(262, 262, 262)
-                    .addComponent(jButton1)
-                    .addContainerGap(263, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,11 +201,6 @@ public class Locatie_main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(locatieToevoegenButton)
                     .addComponent(terugButton)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(112, 112, 112)
-                    .addComponent(jButton1)
-                    .addContainerGap(112, Short.MAX_VALUE)))
         );
 
         pack();
@@ -226,10 +209,6 @@ public class Locatie_main extends javax.swing.JFrame {
     private void locatieTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_locatieTableMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_locatieTableMouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -244,6 +223,9 @@ public class Locatie_main extends javax.swing.JFrame {
 
     private void locatieToevoegenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locatieToevoegenButtonActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        Locatie_beheren Locatie_beheren = new Locatie_beheren();
+        Locatie_beheren.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_locatieToevoegenButtonActionPerformed
 
     /**
@@ -282,7 +264,6 @@ public class Locatie_main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable locatieTable;

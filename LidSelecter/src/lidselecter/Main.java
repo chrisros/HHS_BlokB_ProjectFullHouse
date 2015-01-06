@@ -86,6 +86,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         overzichtSpelerButton.setText("Speler overzicht");
+        overzichtSpelerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                overzichtSpelerButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,6 +181,13 @@ public class Main extends javax.swing.JFrame {
         Locatie_main Locatie_main = new Locatie_main();
         Locatie_main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_locatieButtonActionPerformed
+
+    private void overzichtSpelerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overzichtSpelerButtonActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        LedenOverzicht LedenOverzicht = new LedenOverzicht();
+        LedenOverzicht.setVisible(rootPaneCheckingEnabled);
+    }//GEN-LAST:event_overzichtSpelerButtonActionPerformed
 
     /**
      * @param args the command line arguments

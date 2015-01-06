@@ -27,6 +27,7 @@ public class LedenOverzicht extends javax.swing.JFrame {
      */
     public LedenOverzicht() {
         initComponents();
+        setLocationRelativeTo(null);
 
         ledenTable.setModel(table);
         String[] Kolomnaam
@@ -44,7 +45,7 @@ public class LedenOverzicht extends javax.swing.JFrame {
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
         table.setColumnCount(10);
-        
+
         tabelVullen();
         tableEigenschappen();
     }
@@ -76,7 +77,6 @@ public class LedenOverzicht extends javax.swing.JFrame {
 
             int d = 0;
             while (result.next()) {
-
 
                 //Stop de variable in een rs
                 Id_persoon = result.getString("Id_persoon");
@@ -115,15 +115,21 @@ public class LedenOverzicht extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, e);
         }
     }
-    
+
     private void tableEigenschappen() {
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-        ledenTable.getColumn("Toernooi id").setCellRenderer(rightRenderer);
-        ledenTable.getColumn("Datum").setCellRenderer(rightRenderer);
-        ledenTable.getColumn("Plaats code").setCellRenderer(rightRenderer);
-        ledenTable.getColumn("Max spelers").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("ID").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Voornaam").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Achternaam").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Adres").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Postcode").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Woonplaats").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Land").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Email").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Tel.").setCellRenderer(rightRenderer);
+        ledenTable.getColumn("Rating").setCellRenderer(rightRenderer);
 
         TableCellRenderer rendererFromHeader = ledenTable.getTableHeader().getDefaultRenderer();
         JLabel headerLabel = (JLabel) rendererFromHeader;
@@ -189,8 +195,8 @@ public class LedenOverzicht extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(backToMain))
         );
 
