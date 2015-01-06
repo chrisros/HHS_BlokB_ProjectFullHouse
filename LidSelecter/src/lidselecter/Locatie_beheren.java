@@ -29,6 +29,10 @@ public class Locatie_beheren extends javax.swing.JFrame {
      */
     public Locatie_beheren() {
         initComponents();
+        setLocationRelativeTo(null);
+
+        LocatieList.setModel(jListModel);
+
     }
 
     private void ePopup(Exception e) {

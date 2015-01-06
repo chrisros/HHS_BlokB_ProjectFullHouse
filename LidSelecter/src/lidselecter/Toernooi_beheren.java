@@ -55,7 +55,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                 item.maxInschrijf = result.getString("Max_inschrijvingen_T");
                 item.maxPTafel = result.getString("Max_speler_per_tafel");
                 item.kaartCode = result.getString("Kaartspel_code");
-                item.locatieCode = result.getString("Locatie_code");
+                item.locatieCode = result.getString("Id_locatie");
                 item.kaartType = result.getString("Kaartspeltype");
 
                 jListModel.addElement(item);
@@ -157,7 +157,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             String Max_inschrijvingen_T = maxInschrijfTxt.getText();
             String Max_speler_per_tafel = maxSpelersTafelTxt.getText();
             String Kaartspel_code = codeKaartspelTxt.getText();
-            String Locatie_code = codeLocatieTxt.getText();
+            String Id_locatie = codeLocatieTxt.getText();
             String Kaartspeltype = typeKaartspelTxt.getText();
 
             // sql prepair statement
@@ -165,7 +165,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                     = "INSERT INTO toernooi (Id_toernooi, Naam, Datum, "
                     + "Inschrijfkosten, Max_inschrijvingen_T, "
                     + "Max_speler_per_tafel, Kaartspel_code, "
-                    + "Locatie_code, Kaartspeltype) "
+                    + "Id_locatie, Kaartspeltype) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setString(1, Id_toernooi);
@@ -175,7 +175,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             stat.setString(5, Max_inschrijvingen_T);
             stat.setString(6, Max_speler_per_tafel);
             stat.setString(7, Kaartspel_code);
-            stat.setString(8, Locatie_code);
+            stat.setString(8, Id_locatie);
             stat.setString(9, Kaartspeltype);
             stat.executeUpdate();
             // melding
