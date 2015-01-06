@@ -376,6 +376,11 @@ public class Toernooien_main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toernooiTabelFocusGained(evt);
+            }
+        });
         toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 toernooiTabelMouseClicked(evt);
@@ -478,6 +483,10 @@ public class Toernooien_main extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_inschrijfProcesButtonActionPerformed
+
+    private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_toernooiTabelFocusGained
     /**
      * @param args the command line arguments
      */

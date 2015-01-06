@@ -198,6 +198,11 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toernooiTabelFocusGained(evt);
+            }
+        });
         toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 toernooiTabelMouseClicked(evt);
@@ -290,13 +295,18 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
 
     private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
         // TODO add your handling code here:
-        gegevensOphalen();
+            
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         inschrijvenToernooi();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
+        // TODO add your handling code here:
+        gegevensOphalen();
+    }//GEN-LAST:event_toernooiTabelFocusGained
 
     /**
      * @param args the command line arguments

@@ -7,7 +7,8 @@ package lidselecter;
 public class ModelItem {
 
     public int id;
-    public String description;
+    public String voornaam;
+    public String achternaam;
     public String datum;
     public String inschrijfKosten;
     public String maxInschrijf;
@@ -18,6 +19,7 @@ public class ModelItem {
 
     @Override
     public String toString() {
+        String description = voornaam+" "+achternaam;
         return description;
     }
 
