@@ -4,9 +4,9 @@
 package lidselecter;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-//import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -26,10 +26,38 @@ public class Ledeneditor extends javax.swing.JFrame {
     DefaultListModel jListModel = new DefaultListModel();
 
     public Ledeneditor() {
-        setLocationRelativeTo(null);
-        initComponents();
-        jList.setModel(jListModel);
-        getLijst();
+               setLocationRelativeTo(null);
+               initComponents();
+               jList.setModel(jListModel);
+               setFields();
+               getLijst();
+               
+    }
+    
+    private void setFields()    
+    {
+        id.setText("");
+        id.setBackground(Color.white);
+        roepnaam.setText("");
+        roepnaam.setBackground(Color.white);
+        achternaam.setText("");
+        achternaam.setBackground(Color.white);
+        adresField.setText("");
+        adresField.setBackground(Color.white);
+        postcode.setText("");
+        postcode.setBackground(Color.white);
+        woonplaats.setText("");
+        woonplaats.setBackground(Color.white);
+        landField.setText("");
+        landField.setBackground(Color.white);
+        emailField.setText("");    
+        emailField.setBackground(Color.white);
+        telefoon.setText("");
+        telefoon.setBackground(Color.white);
+        feedback.setText("");
+        feedback.setBackground(Color.white);
+        
+        
     }
 
     private void getPerson() {
@@ -44,8 +72,7 @@ public class Ledeneditor extends javax.swing.JFrame {
             boolean hasRun = false;
             if (l_code > 0) {
                 Sql_connect.doConnect();
-                String prepSqlStatement = "SELECT * FROM persoon WHERE Id_persoon = ? LIMIT 1";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM persoon WHERE Id_persoon = ? LIMIT 1");
                 stat.setInt(1, l_code);
                 ResultSet result = stat.executeQuery();
 
@@ -56,9 +83,8 @@ public class Ledeneditor extends javax.swing.JFrame {
                     postcode.setText(result.getString("Postcode"));
                     woonplaats.setText(result.getString("Woonplaats"));
                     landField.setText(result.getString("Land"));
-                    emailField.setText(result.getString("Email"));
-                    String tel = result.getString("Telefoonnummer");
-                    telefoon.setText("0" + tel);
+                    emailField.setText(result.getString("Email"));                   
+                    telefoon.setText(result.getString("Telefoonnummer"));
 
                     hasRun = true;
                     feedback.setText("Opvraag lid gelukt!");
@@ -82,43 +108,40 @@ public class Ledeneditor extends javax.swing.JFrame {
             int code = Integer.parseInt(id.getText());
             String rnaam = roepnaam.getText();
             String anaam = achternaam.getText();
+            String adres = adresField.getText();
+            String postc = postcode.getText();
+            String woonpl = woonplaats.getText();
+            String land = landField.getText();
+            String email = emailField.getText();
+            String tel = telefoon.getText();
 
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "UPDATE persoon SET voornaam=?, Achternaam=? WHERE Id_persoon = ?";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("UPDATE persoon SET voornaam=?, achternaam=?, adres=?, postcode=?, woonplaats=?, land=?, email=?, telefoonnummer=? WHERE Id_persoon = ?");
             stat.setString(1, rnaam);
             stat.setString(2, anaam);
-            stat.setInt(3, code);
+            stat.setString(3, adres);
+            stat.setString(4, postc);
+            stat.setString(5, woonpl);
+            stat.setString(6, land);
+            stat.setString(7, email);
+            stat.setString(8, tel);
+            stat.setInt(9, code);
             stat.executeUpdate();
             feedback.setText("Wijziging lid gelukt!");
-            getLijst();
+            //getLijst();
         } catch (Exception e) {
             ePopup(e);
             Logger.getLogger(Ledeneditor.class.getName()).log(Level.SEVERE, null, e);
             feedback.setText("Wijziging lid mislukt!");
-            getLijst();
+            //getLijst();
         }
     }
 
     private void getLijst() {
-        try {
-            Sql_connect.doConnect();
-
-            String zoekVeld = zoekTxt.getText();
-
-            String[] parts = zoekVeld.split(" ");
-            int partsLength = parts.length;
-
-            if (partsLength == 2) {
-
-                String voor = parts[0];
-                String achter = parts[1];
-
-                String prepSqlStatement = "SELECT voornaam, achternaam, Id_persoon FROM persoon WHERE voornaam like ? AND achternaam like ? ";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-                stat.setString(1, voor);
-                stat.setString(2, achter);
+            try {
+                Sql_connect.doConnect();
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT voornaam, achternaam, Id_persoon FROM persoon ORDER BY voornaam");
                 ResultSet result = stat.executeQuery();
 
                 jListModel.removeAllElements();
@@ -130,33 +153,17 @@ public class Ledeneditor extends javax.swing.JFrame {
                     jListModel.addElement(item);
                     feedback.setText("Opvraag lijst gelukt!");
                 }
-            } // if statement
-            else {
-                String zoek = zoekTxt.getText();
 
-                String prepSqlStatement = "SELECT voornaam, achternaam, Id_persoon FROM persoon WHERE voornaam like ? ";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-                stat.setString(1, zoek);
-                ResultSet result = stat.executeQuery();
-
-                jListModel.removeAllElements();
-                while (result.next()) {
-                    ModelItem item = new ModelItem();
-                    item.id = result.getInt("Id_persoon");
-                    item.voornaam = result.getString("voornaam");
-                    item.achternaam = result.getString("achternaam");
-                    jListModel.addElement(item);
-                    feedback.setText("Opvraag lijst gelukt!");
-                }
+            } catch (Exception e) {
+                ePopup(e);
             }
-        } catch (Exception e) {
-            ePopup(e);
         }
-    }
     /*
      * vraagt de hoogste ID op uit de DB en  maakt een nieuwe die 1 hoger is
+     * overbodig sinds er EINDELIJK auto increment in de db zit >.<
      */
 
+    /*
     private int getNewCode() {
         int newl_code = 0;
         try {
@@ -175,10 +182,9 @@ public class Ledeneditor extends javax.swing.JFrame {
         }
         return newl_code;
     }
-
+    */
     private void addPerson() {
         try {
-            int code = getNewCode();
             String rnaam = roepnaam.getText();
             String anaam = achternaam.getText();
             String adres = adresField.getText();
@@ -187,24 +193,23 @@ public class Ledeneditor extends javax.swing.JFrame {
             String land = landField.getText();
             String email = emailField.getText();
             String tel = telefoon.getText();
-            int rating = 100;
+                            
 
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "INSERT INTO persoon (l_code, voornaam, Achternaam, Adres, Postcode, Woonplaats, Land, Email, Telefoonnummer, Rating) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, code);
-            stat.setString(2, rnaam);
-            stat.setString(3, anaam);
-            stat.setString(4, adres);
-            stat.setString(5, postc);
-            stat.setString(6, woonpl);
-            stat.setString(7, land);
-            stat.setString(8, email);
-            stat.setString(9, tel);
-            stat.setInt(10, rating);
-
+            String prepSqlStatementAdd = "INSERT INTO persoon (voornaam, Achternaam, Adres, Postcode, Woonplaats, Land, Email, Telefoonnummer) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementAdd);
+            //stat.setInt(1, code);
+            stat.setString(1, rnaam);
+            stat.setString(2, anaam);
+            stat.setString(3, adres);
+            stat.setString(4, postc);
+            stat.setString(5, woonpl);
+            stat.setString(6, land);
+            stat.setString(7, email);
+            stat.setString(8, tel);
+        
             stat.executeUpdate();
             feedback.setText("Toevoegen lid gelukt!");
             getLijst();
@@ -231,6 +236,14 @@ public class Ledeneditor extends javax.swing.JFrame {
         }
 
     }
+    private void checkEsc(KeyEvent evt)
+    {   
+        processKeyEvent(evt);
+        if (evt.getKeyCode()==27)
+        {
+            close();
+        }
+    }
 
     private void deletePerson() {
         try {
@@ -240,8 +253,8 @@ public class Ledeneditor extends javax.swing.JFrame {
 
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatement = "DELETE FROM persoon WHERE Id_persoon = ? AND voornaam = ? AND achternaam = ?";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            String prepSqlStatementDel = "DELETE FROM persoon WHERE Id_persoon = ? AND voornaam = ? AND achternaam = ?";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementDel);
             stat.setInt(1, code);
             stat.setString(2, rnaam);
             stat.setString(3, anaam);
@@ -271,7 +284,7 @@ public class Ledeneditor extends javax.swing.JFrame {
             } else if (field.getText().length() < minLength) {
                 feedback.setForeground(Color.red);
                 feedback.setText("Input te kort");
-                field.setBackground(Color.red);
+                field.setBackground(Color.red); 
                 fieldsOk = false;
             } else if (field.getText().length() > maxLength) {
                 feedback.setForeground(Color.red);
@@ -317,8 +330,8 @@ public class Ledeneditor extends javax.swing.JFrame {
                     field.setBackground(Color.red);
                     fieldsOk = false;
                 } else {
-                    feedback.setForeground(Color.black);
-                    feedback.setText("");
+                    //feedback.setForeground(Color.black);
+                    //feedback.setText("");
                     field.setBackground(Color.white);
                 }
             } catch (Exception e) {
@@ -335,7 +348,7 @@ public class Ledeneditor extends javax.swing.JFrame {
 
     private boolean checkFields() {
         fieldsOk = true;
-        checkIntField(id, 3, 12);
+        //checkIntField(id, 3, 12);
         checkStringField(roepnaam, 2, 30);
         checkStringField(achternaam, 2, 30);
         checkStringField(adresField, 2, 40);
@@ -344,6 +357,7 @@ public class Ledeneditor extends javax.swing.JFrame {
         checkStringField(landField, 2, 30);
         checkStringField(emailField, 2, 40);
         checkStringField(telefoon, 10, 12);
+        if(fieldsOk)feedback.setForeground(Color.black);
         return fieldsOk;
     }
 
@@ -356,7 +370,13 @@ public class Ledeneditor extends javax.swing.JFrame {
         String error = eMessage + e;
         JOptionPane.showMessageDialog(rootPane, error);
     }
-
+    
+    private void close()
+    {
+        this.dispose();
+        Main menu = new Main();
+        menu.setVisible(rootPaneCheckingEnabled);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -395,9 +415,9 @@ public class Ledeneditor extends javax.swing.JFrame {
         landField = new javax.swing.JTextField();
         emailField = new javax.swing.JTextField();
         telefoon = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        zoekTxt = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         jFormattedTextField1.setText("DD");
@@ -415,20 +435,29 @@ public class Ledeneditor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Leden beheer");
-        setResizable(false);
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Personen"));
-
-        jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListValueChanged(evt);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
             }
         });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Personen"));
+        jPanel1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPanel1KeyPressed(evt);
+            }
+        });
+
         jList.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 jListCaretPositionChanged(evt);
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListValueChanged(evt);
             }
         });
         jScrollPane1.setViewportView(jList);
@@ -471,8 +500,14 @@ public class Ledeneditor extends javax.swing.JFrame {
                 roepnaamFocusLost(evt);
             }
         });
+        roepnaam.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                roepnaamKeyPressed(evt);
+            }
+        });
 
         id.setEditable(false);
+        id.setBackground(new java.awt.Color(200, 200, 200));
         id.setFocusCycleRoot(true);
         id.setNextFocusableComponent(roepnaam);
         id.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -514,15 +549,23 @@ public class Ledeneditor extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setText("Alle spelers");
+
         jButton2.setText("Zoek persoon");
 
-        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                zoekTxtKeyReleased(evt);
+        jButton1.setText("Clear");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Zoeken");
+        jButton3.setText("Terug");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -559,9 +602,8 @@ public class Ledeneditor extends javax.swing.JFrame {
                                 .addComponent(telefoon)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(voegtoe, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -569,20 +611,25 @@ public class Ledeneditor extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(wijzig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)))
                         .addGap(10, 10, 10)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(67, 67, 67)
+                        .addComponent(jLabel11)
                         .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -624,8 +671,10 @@ public class Ledeneditor extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(telefoon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(voegtoe)
                     .addComponent(wijzig))
@@ -637,50 +686,35 @@ public class Ledeneditor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jSeparator1))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3))
         );
-
-        jButton3.setText("Terug");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.dispose();
-        Main menu = new Main();
-        menu.setVisible(rootPaneCheckingEnabled);
+        close();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
@@ -720,39 +754,41 @@ public class Ledeneditor extends javax.swing.JFrame {
     }//GEN-LAST:event_voegtoeActionPerformed
 
     private void verwijderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderActionPerformed
-        if (checkFields() == true) {
+       
             deletePerson();
-        }
+        
     }//GEN-LAST:event_verwijderActionPerformed
 
     private void jListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListValueChanged
         getSelectedId();
         getPerson();
+        checkFields();
     }//GEN-LAST:event_jListValueChanged
 
     private void jListCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jListCaretPositionChanged
 
     }//GEN-LAST:event_jListCaretPositionChanged
 
-    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
-        // TODO add your handling code here:
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //getLijst();
+        setFields();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-        getLijst();
+    private void jPanel1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyPressed
+        
+    }//GEN-LAST:event_jPanel1KeyPressed
 
-        /*
-         zoekVeld = zoekTxt.getText();
-         int posSpatie = zoekVeld.indexOf(" ");
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        
+    }//GEN-LAST:event_formKeyPressed
 
-         if (posSpatie > 0) {
-
-         String achternaam = zoekVeld.subString(posSpatie + 1, s.length());
-         }
-         pos met indexOf(" ");
-         substring (postion + 1 tot lengte
-
-         met split, if array is 2
-         */
-    }//GEN-LAST:event_zoekTxtKeyReleased
+    private void roepnaamKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_roepnaamKeyPressed
+        if(evt.getKeyCode()==27)
+        {
+            close();
+        }
+        
+    }//GEN-LAST:event_roepnaamKeyPressed
 
     /**
      * @param args the command line arguments
@@ -795,15 +831,16 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel feedback;
     private javax.swing.JTextField id;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -822,6 +859,5 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JButton voegtoe;
     private javax.swing.JButton wijzig;
     private javax.swing.JTextField woonplaats;
-    private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }
