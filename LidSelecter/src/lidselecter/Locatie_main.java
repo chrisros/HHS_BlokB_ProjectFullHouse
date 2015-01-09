@@ -54,48 +54,55 @@ public class Locatie_main extends javax.swing.JFrame {
         try {
             // connect 
             Sql_connect.doConnect();
-            // statement maken
-            String prepSqlStatement = "select * from locatie;";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            ResultSet result = stat.executeQuery();
 
-            // rijen
-            int i = 0;
+            String zoekVeld = zoekTxt.getText();
 
-            while (result.next()) {
-                i++;
+            
+                // statement maken
+                String prepSqlStatement = "select * from locatie where Naam_locatie like ? OR Plaats like ?;";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + zoekVeld + "%");
+                stat.setString(2, "%" + zoekVeld + "%");
+                ResultSet result = stat.executeQuery();
 
-            }
-            table.setRowCount(i);
-            result.beforeFirst();
+                // rijen
+                int i = 0;
 
-            int d = 0;
-            while (result.next()) {
-                //Stop de variable in een rs
-                id = result.getString("Id_locatie");
-                naam = result.getString("Naam_locatie");
-                plaats = result.getString("plaats");
-                Straat = result.getString("Straat");
-                Huisnummer = result.getString("Huisnummer");
-                Telefoonnummer = result.getString("Telefoonnummer");
+                while (result.next()) {
+                    i++;
 
-                // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
-                table.setValueAt(id, d, 0);
-                table.setValueAt(naam, d, 1);
-                table.setValueAt(plaats, d, 2);
-                table.setValueAt(Straat, d, 3);
-                table.setValueAt(Huisnummer, d, 4);
-                table.setValueAt(Telefoonnummer, d, 5);
-                // verhoog aantal totdat alles was je hebt opgevraagd is geweest
-                d++;
+                }
+                table.setRowCount(i);
+                result.beforeFirst();
 
-            }
+                int d = 0;
+                while (result.next()) {
+                    //Stop de variable in een rs
+                    id = result.getString("Id_locatie");
+                    naam = result.getString("Naam_locatie");
+                    plaats = result.getString("plaats");
+                    Straat = result.getString("Straat");
+                    Huisnummer = result.getString("Huisnummer");
+                    Telefoonnummer = result.getString("Telefoonnummer");
 
-            result.last();
-            System.out.println(result.getRow());
+                    // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
+                    table.setValueAt(id, d, 0);
+                    table.setValueAt(naam, d, 1);
+                    table.setValueAt(plaats, d, 2);
+                    table.setValueAt(Straat, d, 3);
+                    table.setValueAt(Huisnummer, d, 4);
+                    table.setValueAt(Telefoonnummer, d, 5);
+                    // verhoog aantal totdat alles was je hebt opgevraagd is geweest
+                    d++;
 
-            result.close();
-            stat.close();
+                }
+
+                result.last();
+                System.out.println(result.getRow());
+
+                result.close();
+                stat.close();
+            
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
         }
@@ -133,6 +140,8 @@ public class Locatie_main extends javax.swing.JFrame {
         locatieTable = new javax.swing.JTable();
         locatieToevoegenButton = new javax.swing.JButton();
         terugButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        zoekTxt = new javax.swing.JTextField();
 
         jButton2.setText("Terug");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -180,24 +189,44 @@ public class Locatie_main extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Zoeken");
+
+        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(locatieToevoegenButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(terugButton))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(locatieToevoegenButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(terugButton)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(zoekTxt)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(locatieToevoegenButton)
                     .addComponent(terugButton)))
@@ -227,6 +256,11 @@ public class Locatie_main extends javax.swing.JFrame {
         Locatie_beheren Locatie_beheren = new Locatie_beheren();
         Locatie_beheren.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_locatieToevoegenButtonActionPerformed
+
+    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+        // TODO add your handling code here:
+        tabelVullen();
+    }//GEN-LAST:event_zoekTxtKeyReleased
 
     /**
      * @param args the command line arguments
@@ -265,9 +299,11 @@ public class Locatie_main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable locatieTable;
     private javax.swing.JButton locatieToevoegenButton;
     private javax.swing.JButton terugButton;
+    private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }

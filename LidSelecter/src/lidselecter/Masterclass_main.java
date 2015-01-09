@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,6 +23,7 @@ import javax.swing.table.TableCellRenderer;
 public class Masterclass_main extends javax.swing.JFrame {
 
     private final DefaultTableModel table = new DefaultTableModel();
+    DefaultListModel jListModel = new DefaultListModel();
 
     /**
      * Creates new form Masterclass_main
@@ -30,6 +32,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         maxSpelersTxt.setText("0");
+        inschrijfList.setModel(jListModel);
 
         masterclassTable.setModel(table);
         String[] Kolomnaam = {"Masterclass id", "Min Rating", "Prijs", "Max spelers", "Locatie code", "Datum"};
@@ -41,7 +44,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         tableEigenschappen();
 
     }
-    
+
     private void tableEigenschappen() {
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
@@ -194,6 +197,61 @@ public class Masterclass_main extends javax.swing.JFrame {
         }
     }
 
+    private void vulLijst() {
+        try {
+            Sql_connect.doConnect();
+            String zoekVeld = zoekTxt.getText();
+
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
+
+            if (partsLength == 2) {
+
+                String voornaam = parts[0];
+                String achternaam = parts[1];
+
+                String prepSqlStatementVoorActer = "SELECT * FROM persoon where Voornaam like ? AND Achternaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setString(1, "%" + voornaam + "%");
+                stat.setString(2, "%" + achternaam + "%");
+
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+
+                }
+
+            } else {
+                String prepSqlStatement = "SELECT * FROM persoon where Voornaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + zoekVeld + "%");
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                }
+            }
+        } catch (Exception e) {
+            ePopup(e);
+        }
+    }
+
     private void inschrijvenMasterclass() {
 
         // krijg de tekst uit de velden
@@ -202,7 +260,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         try {
             //maak een connectie
             Sql_connect.doConnect();
-            
+
             // sql prepair statement
             String prepSqlStatement
                     = "INSERT INTO masterclassdeelnemer "
@@ -249,6 +307,10 @@ public class Masterclass_main extends javax.swing.JFrame {
         masterclass_IdTxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         MELDINGVELD = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        inschrijfList = new javax.swing.JList();
+        jLabel4 = new javax.swing.JLabel();
+        zoekTxt = new javax.swing.JTextField();
 
         inschrijvenToernooiButton.setText("Inschrijven Toernooi");
         inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
@@ -326,90 +388,128 @@ public class Masterclass_main extends javax.swing.JFrame {
 
         MELDINGVELD.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
+        inschrijfList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        inschrijfList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inschrijfListMouseClicked(evt);
+            }
+        });
+        inschrijfList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                inschrijfListValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(inschrijfList);
+
+        jLabel4.setText("Zoeken");
+
+        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(inschrijvenMasterclassButton))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(169, 169, 169)
+                                .addContainerGap()
                                 .addComponent(MELDINGVELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(inschrijfProcesButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(12, 12, 12))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel2)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel3)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(inschrijvenMasterclassButton))))
+                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(zoekTxt))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(92, 92, 92)
+                                .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(inschrijfProcesButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane1))
+                                .addGap(131, 131, 131)))
+                        .addGap(140, 140, 140)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {maxSpelersTxt, minSpelersTxt});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)
-                            .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(inschrijfProcesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(inschrijfProcesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inschrijvenMasterclassButton))))
+                        .addComponent(inschrijvenMasterclassButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();
@@ -461,6 +561,51 @@ public class Masterclass_main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inschrijfProcesButtonActionPerformed
 
+    private void inschrijfListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inschrijfListMouseClicked
+        // TODO add your handling code here:
+        gegevensLijst();
+    }//GEN-LAST:event_inschrijfListMouseClicked
+
+    private void inschrijfListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_inschrijfListValueChanged
+        // TODO add your handling code here:
+        gegevensLijst();
+    }//GEN-LAST:event_inschrijfListValueChanged
+
+    private void gegevensLijst() {
+        try {
+            if (inschrijfList.getSelectedValue() == null) {
+                MELDINGFIELD.setText("Niets Geselecteerd.");
+            } else {
+                ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
+                speler_codeTxt.setText(Integer.toString(selectedItem.id));
+
+                MELDINGFIELD.setText("Opvraag ID gelukt!");
+            }
+        } catch (Exception e) {
+            MELDINGFIELD.setText("Geen naam geselecteerd!");
+        }
+    }
+    
+    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+        // TODO add your handling code here:
+
+        vulLijst();
+
+        /*
+         zoekVeld = zoekTxt.getText();
+         int posSpatie = zoekVeld.indexOf(" ");
+
+         if (posSpatie > 0) {
+
+         String achternaam = zoekVeld.subString(posSpatie + 1, s.length());
+         }
+         pos met indexOf(" ");
+         substring (postion + 1 tot lengte
+
+         met split, if array is 2
+         */
+    }//GEN-LAST:event_zoekTxtKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -499,6 +644,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel MELDINGFIELD;
     private javax.swing.JLabel MELDINGVELD;
+    private javax.swing.JList inschrijfList;
     private javax.swing.JButton inschrijfProcesButton;
     private javax.swing.JButton inschrijvenMasterclassButton;
     private javax.swing.JButton inschrijvenToernooiButton;
@@ -506,15 +652,18 @@ public class Masterclass_main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable masterclassTable;
     private javax.swing.JTextField masterclass_IdTxt;
     private javax.swing.JTextField maxSpelersTxt;
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField speler_codeTxt;
+    private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 
 }

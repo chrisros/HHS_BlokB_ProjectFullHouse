@@ -60,57 +60,125 @@ public class LedenOverzicht extends javax.swing.JFrame {
         try {
             // connect 
             Sql_connect.doConnect();
-            // statement maken
-            String prepSqlStatement = "select * from persoon;";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            ResultSet result = stat.executeQuery();
 
-            // rijen
-            int i = 0;
+            String zoekVeld = zoekTxt.getText();
 
-            while (result.next()) {
-                i++;
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
 
+            if (partsLength == 2) {
+
+                String voornaam = parts[0];
+                String achternaam = parts[1];
+
+                // statement maken
+                String prepSqlStatement = "select * from persoon where (Voornaam like ? AND Achternaam like ?);";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + voornaam + "%");
+                stat.setString(2, "%" + achternaam + "%");
+                ResultSet result = stat.executeQuery();
+
+                // rijen
+                int i = 0;
+
+                while (result.next()) {
+                    i++;
+
+                }
+                table.setRowCount(i);
+                result.beforeFirst();
+
+                int d = 0;
+                while (result.next()) {
+
+                    //Stop de variable in een rs
+                    Id_persoon = result.getString("Id_persoon");
+                    Voornaam = result.getString("Voornaam");
+                    Achternaam = result.getString("Achternaam");
+                    Adres = result.getString("Adres");
+                    Postcode = result.getString("Postcode");
+                    Woonplaats = result.getString("Woonplaats");
+                    Land = result.getString("Land");
+                    Email = result.getString("Email");
+                    Telefoonnummer = result.getString("Telefoonnummer");
+                    Rating = result.getString("Rating");
+
+                    // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
+                    table.setValueAt(Id_persoon, d, 0);
+                    table.setValueAt(Voornaam, d, 1);
+                    table.setValueAt(Achternaam, d, 2);
+                    table.setValueAt(Adres, d, 3);
+                    table.setValueAt(Postcode, d, 4);
+                    table.setValueAt(Woonplaats, d, 5);
+                    table.setValueAt(Land, d, 6);
+                    table.setValueAt(Email, d, 7);
+                    table.setValueAt(Telefoonnummer, d, 8);
+                    table.setValueAt(Rating, d, 9);
+                    // verhoog aantal totdat alles was je hebt opgevraagd is geweest
+                    d++;
+
+                }
+
+                result.last();
+                System.out.println(result.getRow());
+
+                result.close();
+                stat.close();
+            } // if statement
+            else {
+
+                String prepSqlStatement = "select * from persoon where (Voornaam like ?);";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + zoekVeld + "%");
+                ResultSet result = stat.executeQuery();
+
+                // rijen
+                int i = 0;
+
+                while (result.next()) {
+                    i++;
+
+                }
+                table.setRowCount(i);
+                result.beforeFirst();
+
+                int d = 0;
+                while (result.next()) {
+
+                    //Stop de variable in een rs
+                    Id_persoon = result.getString("Id_persoon");
+                    Voornaam = result.getString("Voornaam");
+                    Achternaam = result.getString("Achternaam");
+                    Adres = result.getString("Adres");
+                    Postcode = result.getString("Postcode");
+                    Woonplaats = result.getString("Woonplaats");
+                    Land = result.getString("Land");
+                    Email = result.getString("Email");
+                    Telefoonnummer = result.getString("Telefoonnummer");
+                    Rating = result.getString("Rating");
+
+                    // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
+                    table.setValueAt(Id_persoon, d, 0);
+                    table.setValueAt(Voornaam, d, 1);
+                    table.setValueAt(Achternaam, d, 2);
+                    table.setValueAt(Adres, d, 3);
+                    table.setValueAt(Postcode, d, 4);
+                    table.setValueAt(Woonplaats, d, 5);
+                    table.setValueAt(Land, d, 6);
+                    table.setValueAt(Email, d, 7);
+                    table.setValueAt(Telefoonnummer, d, 8);
+                    table.setValueAt(Rating, d, 9);
+                    // verhoog aantal totdat alles was je hebt opgevraagd is geweest
+                    d++;
+
+                }
+
+                result.last();
+                System.out.println(result.getRow());
+
+                result.close();
+                stat.close();
             }
-            table.setRowCount(i);
-            result.beforeFirst();
-
-            int d = 0;
-            while (result.next()) {
-
-                //Stop de variable in een rs
-                Id_persoon = result.getString("Id_persoon");
-                Voornaam = result.getString("Voornaam");
-                Achternaam = result.getString("Achternaam");
-                Adres = result.getString("Adres");
-                Postcode = result.getString("Postcode");
-                Woonplaats = result.getString("Woonplaats");
-                Land = result.getString("Land");
-                Email = result.getString("Email");
-                Telefoonnummer = result.getString("Telefoonnummer");
-                Rating = result.getString("Rating");
-
-                // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
-                table.setValueAt(Id_persoon, d, 0);
-                table.setValueAt(Voornaam, d, 1);
-                table.setValueAt(Achternaam, d, 2);
-                table.setValueAt(Adres, d, 3);
-                table.setValueAt(Postcode, d, 4);
-                table.setValueAt(Woonplaats, d, 5);
-                table.setValueAt(Land, d, 6);
-                table.setValueAt(Email, d, 7);
-                table.setValueAt(Telefoonnummer, d, 8);
-                table.setValueAt(Rating, d, 9);
-                // verhoog aantal totdat alles was je hebt opgevraagd is geweest
-                d++;
-
-            }
-
-            result.last();
-            System.out.println(result.getRow());
-
-            result.close();
-            stat.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
         }
@@ -149,6 +217,8 @@ public class LedenOverzicht extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         ledenTable = new javax.swing.JTable();
         backToMain = new javax.swing.JButton();
+        zoekTxt = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -182,21 +252,40 @@ public class LedenOverzicht extends javax.swing.JFrame {
             }
         });
 
+        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxtKeyReleased(evt);
+            }
+        });
+
+        jLabel1.setText("Zoeken");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 762, Short.MAX_VALUE)
                 .addComponent(backToMain))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(zoekTxt)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(backToMain))
         );
 
@@ -212,6 +301,11 @@ public class LedenOverzicht extends javax.swing.JFrame {
         Main Main = new Main();
         Main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_backToMainActionPerformed
+
+    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+        // TODO add your handling code here:
+        tabelVullen();
+    }//GEN-LAST:event_zoekTxtKeyReleased
 
     /**
      * @param args the command line arguments
@@ -250,7 +344,9 @@ public class LedenOverzicht extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backToMain;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable ledenTable;
+    private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }

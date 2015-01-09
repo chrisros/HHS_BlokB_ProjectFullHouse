@@ -16,11 +16,16 @@ public class ModelItem {
     public String kaartCode;
     public String locatieCode;
     public String kaartType;
+    public String naam;
 
     @Override
     public String toString() {
         String description = voornaam+" "+achternaam;
         return description;
+    }
+    
+    public String toNaam(){
+        return naam;
     }
 
     public String toDatum() {

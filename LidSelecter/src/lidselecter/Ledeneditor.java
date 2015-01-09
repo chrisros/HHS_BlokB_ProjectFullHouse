@@ -26,10 +26,10 @@ public class Ledeneditor extends javax.swing.JFrame {
     DefaultListModel jListModel = new DefaultListModel();
 
     public Ledeneditor() {
-                setLocationRelativeTo(null);
-               initComponents();
-               jList.setModel(jListModel);
-               getLijst();
+        setLocationRelativeTo(null);
+        initComponents();
+        jList.setModel(jListModel);
+        getLijst();
     }
 
     private void getPerson() {
@@ -102,10 +102,23 @@ public class Ledeneditor extends javax.swing.JFrame {
     }
 
     private void getLijst() {
-            try {
-                Sql_connect.doConnect();
-                String prepSqlStatement = "SELECT voornaam, achternaam, Id_persoon FROM persoon ";
+        try {
+            Sql_connect.doConnect();
+
+            String zoekVeld = zoekTxt.getText();
+
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
+
+            if (partsLength == 2) {
+
+                String voor = parts[0];
+                String achter = parts[1];
+
+                String prepSqlStatement = "SELECT voornaam, achternaam, Id_persoon FROM persoon WHERE voornaam like ? AND achternaam like ? ";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, voor);
+                stat.setString(2, achter);
                 ResultSet result = stat.executeQuery();
 
                 jListModel.removeAllElements();
@@ -117,11 +130,29 @@ public class Ledeneditor extends javax.swing.JFrame {
                     jListModel.addElement(item);
                     feedback.setText("Opvraag lijst gelukt!");
                 }
+            } // if statement
+            else {
+                String zoek = zoekTxt.getText();
 
-            } catch (Exception e) {
-                ePopup(e);
+                String prepSqlStatement = "SELECT voornaam, achternaam, Id_persoon FROM persoon WHERE voornaam like ? ";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, zoek);
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+                    feedback.setText("Opvraag lijst gelukt!");
+                }
             }
+        } catch (Exception e) {
+            ePopup(e);
         }
+    }
     /*
      * vraagt de hoogste ID op uit de DB en  maakt een nieuwe die 1 hoger is
      */
@@ -364,8 +395,9 @@ public class Ledeneditor extends javax.swing.JFrame {
         landField = new javax.swing.JTextField();
         emailField = new javax.swing.JTextField();
         telefoon = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        zoekTxt = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
 
         jFormattedTextField1.setText("DD");
@@ -387,16 +419,16 @@ public class Ledeneditor extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Personen"));
 
+        jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListValueChanged(evt);
+            }
+        });
         jList.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 jListCaretPositionChanged(evt);
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-            }
-        });
-        jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListValueChanged(evt);
             }
         });
         jScrollPane1.setViewportView(jList);
@@ -482,9 +514,15 @@ public class Ledeneditor extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setText("Alle spelers");
-
         jButton2.setText("Zoek persoon");
+
+        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxtKeyReleased(evt);
+            }
+        });
+
+        jLabel5.setText("Zoeken");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -534,14 +572,16 @@ public class Ledeneditor extends javax.swing.JFrame {
                                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(10, 10, 10)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -597,8 +637,10 @@ public class Ledeneditor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jSeparator1))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
         );
 
@@ -692,6 +734,26 @@ public class Ledeneditor extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jListCaretPositionChanged
 
+    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+        // TODO add your handling code here:
+
+        getLijst();
+
+        /*
+         zoekVeld = zoekTxt.getText();
+         int posSpatie = zoekVeld.indexOf(" ");
+
+         if (posSpatie > 0) {
+
+         String achternaam = zoekVeld.subString(posSpatie + 1, s.length());
+         }
+         pos met indexOf(" ");
+         substring (postion + 1 tot lengte
+
+         met split, if array is 2
+         */
+    }//GEN-LAST:event_zoekTxtKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -738,10 +800,10 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -760,5 +822,6 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JButton voegtoe;
     private javax.swing.JButton wijzig;
     private javax.swing.JTextField woonplaats;
+    private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }
