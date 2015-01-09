@@ -6,6 +6,8 @@
 
 package lidselecter;
 
+import java.awt.Image;
+
 /**
  *
  * @author chris
@@ -18,8 +20,10 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         setLocationRelativeTo(null);
+        this.setExtendedState(Main.MAXIMIZED_BOTH);
+        //this.setIconImage(new ImageIcon("/Icon.png").getImage());
     }
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,68 +33,186 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        beherenSpelerButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        beherenSpelerButton = new javax.swing.JButton();
+        overzichtSpelerButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
+        locatieButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
         agendaToernooiButton = new javax.swing.JButton();
         beherenToernooiButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         agendaMasterclassButton = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        locatieButton = new javax.swing.JButton();
-        overzichtSpelerButton = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Full House Management Application 1.0");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setFocusTraversalPolicyProvider(true);
+        setMaximumSize(new java.awt.Dimension(200, 40));
 
+        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Spelers");
+        jLabel1.setFocusTraversalPolicyProvider(true);
+        jLabel1.setMaximumSize(new java.awt.Dimension(200, 40));
+
+        beherenSpelerButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
         beherenSpelerButton.setText("Speler beheer");
+        beherenSpelerButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        beherenSpelerButton.setFocusTraversalPolicyProvider(true);
+        beherenSpelerButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        beherenSpelerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                beherenSpelerButtonMouseEntered(evt);
+            }
+        });
         beherenSpelerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 beherenSpelerButtonActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Spelers");
-
-        jLabel2.setText("Toernooien");
-
-        agendaToernooiButton.setText("Toernooien agenda");
-        agendaToernooiButton.addActionListener(new java.awt.event.ActionListener() {
+        overzichtSpelerButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        overzichtSpelerButton.setText("Speler overzicht");
+        overzichtSpelerButton.setFocusTraversalPolicyProvider(true);
+        overzichtSpelerButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        overzichtSpelerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agendaToernooiButtonActionPerformed(evt);
+                overzichtSpelerButtonActionPerformed(evt);
             }
         });
 
-        beherenToernooiButton.setText("Toernooi beheer");
-        beherenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                beherenToernooiButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Masterclass");
-
-        agendaMasterclassButton.setText("Masterclass agenda");
-        agendaMasterclassButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agendaMasterclassButtonActionPerformed(evt);
-            }
-        });
-
+        jLabel4.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Locatie");
+        jLabel4.setFocusTraversalPolicyProvider(true);
+        jLabel4.setMaximumSize(new java.awt.Dimension(200, 40));
 
+        locatieButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
         locatieButton.setText("Locatie´s");
+        locatieButton.setFocusTraversalPolicyProvider(true);
+        locatieButton.setMaximumSize(new java.awt.Dimension(200, 40));
         locatieButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 locatieButtonActionPerformed(evt);
             }
         });
 
-        overzichtSpelerButton.setText("Speler overzicht");
-        overzichtSpelerButton.addActionListener(new java.awt.event.ActionListener() {
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Toernooien");
+        jLabel2.setFocusTraversalPolicyProvider(true);
+        jLabel2.setMaximumSize(new java.awt.Dimension(200, 40));
+
+        agendaToernooiButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        agendaToernooiButton.setText("Toernooien agenda");
+        agendaToernooiButton.setFocusCycleRoot(true);
+        agendaToernooiButton.setFocusTraversalPolicyProvider(true);
+        agendaToernooiButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        agendaToernooiButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                overzichtSpelerButtonActionPerformed(evt);
+                agendaToernooiButtonActionPerformed(evt);
             }
         });
+
+        beherenToernooiButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        beherenToernooiButton.setText("Toernooi beheer");
+        beherenToernooiButton.setFocusTraversalPolicyProvider(true);
+        beherenToernooiButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        beherenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                beherenToernooiButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Masterclass");
+        jLabel3.setFocusTraversalPolicyProvider(true);
+        jLabel3.setMaximumSize(new java.awt.Dimension(200, 40));
+
+        agendaMasterclassButton.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        agendaMasterclassButton.setText("Masterclass agenda");
+        agendaMasterclassButton.setFocusTraversalPolicyProvider(true);
+        agendaMasterclassButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        agendaMasterclassButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agendaMasterclassButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(beherenSpelerButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(overzichtSpelerButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(locatieButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(agendaToernooiButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(beherenToernooiButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(agendaMasterclassButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator2))
+                .addContainerGap())
+        );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {agendaMasterclassButton, agendaToernooiButton, beherenSpelerButton, beherenToernooiButton, locatieButton, overzichtSpelerButton});
+
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(beherenSpelerButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(overzichtSpelerButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(locatieButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(agendaToernooiButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(beherenToernooiButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(agendaMasterclassButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,96 +220,65 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(beherenSpelerButton)
-                    .addComponent(jLabel4)
-                    .addComponent(locatieButton)
-                    .addComponent(overzichtSpelerButton))
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(agendaMasterclassButton)
-                    .addComponent(jLabel3)
-                    .addComponent(agendaToernooiButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(beherenToernooiButton)
-                    .addComponent(jLabel2))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {agendaMasterclassButton, agendaToernooiButton, beherenToernooiButton});
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {beherenSpelerButton, locatieButton, overzichtSpelerButton});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(beherenSpelerButton)
-                    .addComponent(agendaToernooiButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(beherenToernooiButton)
-                    .addComponent(overzichtSpelerButton))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(agendaMasterclassButton)
-                    .addComponent(locatieButton))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void beherenSpelerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenSpelerButtonActionPerformed
-        this.dispose();
-        Ledeneditor ledenedit = new Ledeneditor();
-        ledenedit.setVisible(rootPaneCheckingEnabled);
-        ledenedit.setLocationRelativeTo(null);
-    }//GEN-LAST:event_beherenSpelerButtonActionPerformed
-
-    private void agendaToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaToernooiButtonActionPerformed
-        this.dispose();
-        Toernooien_main toernooi = new Toernooien_main();
-        toernooi.setVisible(rootPaneCheckingEnabled);
-        toernooi.setLocationRelativeTo(null);
-    }//GEN-LAST:event_agendaToernooiButtonActionPerformed
-
-    private void beherenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenToernooiButtonActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-        Toernooi_beheren toernooi = new Toernooi_beheren();
-        toernooi.setVisible(rootPaneCheckingEnabled);
-    }//GEN-LAST:event_beherenToernooiButtonActionPerformed
-
-    private void agendaMasterclassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaMasterclassButtonActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-        Masterclass_main Masterclass_main = new Masterclass_main();
-        Masterclass_main.setVisible(rootPaneCheckingEnabled);
-    }//GEN-LAST:event_agendaMasterclassButtonActionPerformed
-
     private void locatieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locatieButtonActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
+        // TODO add your handling code here:        
         Locatie_main Locatie_main = new Locatie_main();
         Locatie_main.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
     }//GEN-LAST:event_locatieButtonActionPerformed
 
     private void overzichtSpelerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overzichtSpelerButtonActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
+        // TODO add your handling code here:       
         LedenOverzicht LedenOverzicht = new LedenOverzicht();
         LedenOverzicht.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
     }//GEN-LAST:event_overzichtSpelerButtonActionPerformed
+
+    private void agendaMasterclassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaMasterclassButtonActionPerformed
+        // TODO add your handling code here:        
+        Masterclass_main Masterclass_main = new Masterclass_main();
+        Masterclass_main.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
+    }//GEN-LAST:event_agendaMasterclassButtonActionPerformed
+
+    private void agendaToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaToernooiButtonActionPerformed
+        Toernooien_main toernooi = new Toernooien_main();
+        toernooi.setVisible(rootPaneCheckingEnabled);
+        toernooi.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_agendaToernooiButtonActionPerformed
+
+    private void beherenSpelerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenSpelerButtonActionPerformed
+        Ledeneditor ledenedit = new Ledeneditor();
+        ledenedit.setVisible(rootPaneCheckingEnabled);
+        ledenedit.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_beherenSpelerButtonActionPerformed
+
+    private void beherenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beherenToernooiButtonActionPerformed
+        // TODO add your handling code here:
+        Toernooi_beheren toernooi = new Toernooi_beheren();
+        toernooi.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
+    }//GEN-LAST:event_beherenToernooiButtonActionPerformed
+
+    private void beherenSpelerButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_beherenSpelerButtonMouseEntered
+        
+    }//GEN-LAST:event_beherenSpelerButtonMouseEntered
 
     /**
      * @param args the command line arguments
@@ -233,6 +324,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JButton locatieButton;
     private javax.swing.JButton overzichtSpelerButton;
     // End of variables declaration//GEN-END:variables
