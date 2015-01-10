@@ -20,8 +20,12 @@ public class ModelItem {
 
     @Override
     public String toString() {
-        String description = voornaam+" "+achternaam;
-        return description;
+        String description;
+        if(naam.length()<1)
+        {
+            naam =  voornaam+" "+achternaam;
+        } 
+        return naam;
     }
     
     public String toNaam(){
