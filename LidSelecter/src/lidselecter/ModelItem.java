@@ -21,11 +21,14 @@ public class ModelItem {
     @Override
     public String toString() {
         String description;
-        if(naam.length()<1)
+        if(null==naam)
         {
-            naam =  voornaam+" "+achternaam;
-        } 
-        return naam;
+            description = voornaam+" "+achternaam;
+        } else
+        {
+            description = naam;   
+        }     
+        return description;
     }
     
     public String toNaam(){
