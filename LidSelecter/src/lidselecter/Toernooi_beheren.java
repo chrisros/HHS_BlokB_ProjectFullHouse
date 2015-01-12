@@ -35,7 +35,6 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         //locatieLabel.setText("<html>Loctie code:<br>(0 voor onbekende locatie)</html>");
         toernooiList.setModel(jListModel);
         vulLijst();
-        leegVelden();
     }
 
     // Hier vul je de lijst met de toernooi namen
@@ -78,6 +77,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             ePopup(e);
         }
     }
+<<<<<<< HEAD
     
     //leegt de lijst
     private void leegVelden()
@@ -92,6 +92,8 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         codeLocatieTxt.setText("");
         //typeKaartspelTxt.setText("");
     }
+=======
+>>>>>>> parent of d215fd5... leegvelden
 
     // hier krijg je het eerst volgende nummer voor het id
     private int nieuwToernooiId() {
@@ -153,6 +155,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
     // hier geef je de eisen mee
     private boolean checkFields() {
         fieldsOk = true;
+        checkStringField(idToernooiTxt, 1, 100);
         checkStringField(naamToernooiTxt, 2, 250);
         checkStringField(datumTxt, 10, 10);
         checkStringField(inschrijfKostenTxt, 4, 40);
@@ -173,7 +176,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             idToernooiTxt.setText(Integer.toString(new_toernooiID));
 
             // krijg de tekst uit de velden
-            //String Id_toernooi = idToernooiTxt.getText(); /* is tekstdie verkregen is uit nieuwToernooiId() methode */
+            String Id_toernooi = idToernooiTxt.getText(); /* is tekstdie verkregen is uit nieuwToernooiId() methode */
 
             String naam = naamToernooiTxt.getText();
             String Datum = datumTxt.getText();
@@ -186,12 +189,13 @@ public class Toernooi_beheren extends javax.swing.JFrame {
 
             // sql prepair statement
             String prepSqlStatement
-                    = "INSERT INTO toernooi (Naam, Datum, "
+                    = "INSERT INTO toernooi (Id_toernooi, Naam, Datum, "
                     + "Inschrijfkosten, Max_inschrijvingen_T, "
                     + "Max_speler_per_tafel, Kaartspel_code, "
                     + "Id_locatie, Kaartspeltype) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            stat.setString(1, Id_toernooi);
             stat.setString(2, naam);
             stat.setString(3, Datum);
             stat.setString(4, Inschrijfkosten);
@@ -232,7 +236,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                     + "Max_inschrijvingen_T = ?,"
                     + "Max_speler_per_tafel = ?,"
                     + "Kaartspel_code = ?,"
-                    + "Id_locatie = ?,"
+                    + "Locatie_code = ?,"
                     + "Kaartspeltype = ? "
                     + "WHERE Id_toernooi = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
@@ -338,10 +342,13 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         zoekTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         backToMain = new javax.swing.JButton();
+<<<<<<< HEAD
         jButton1 = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+=======
+>>>>>>> parent of d215fd5... leegvelden
 
         terugButton.setText("Terug");
         terugButton.addActionListener(new java.awt.event.ActionListener() {
@@ -376,16 +383,15 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         });
 
         idToernooiTxt.setEditable(false);
-        idToernooiTxt.setBackground(new java.awt.Color(200, 200, 200));
         idToernooiTxt.setFocusCycleRoot(true);
-        idToernooiTxt.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                idToernooiTxtFocusLost(evt);
-            }
-        });
         idToernooiTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 idToernooiTxtActionPerformed(evt);
+            }
+        });
+        idToernooiTxt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                idToernooiTxtFocusLost(evt);
             }
         });
 
@@ -476,6 +482,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             }
         });
 
+<<<<<<< HEAD
         jButton1.setText("Clear");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -494,6 +501,8 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             }
         });
 
+=======
+>>>>>>> parent of d215fd5... leegvelden
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -525,9 +534,13 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                                             .addComponent(wijzigenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(voegtoeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(1, 1, 1)))
+<<<<<<< HEAD
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(verwijderenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+=======
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+>>>>>>> parent of d215fd5... leegvelden
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -538,9 +551,16 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                                             .addComponent(codeLocatieTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                                             .addComponent(naamToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                                             .addComponent(idToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+<<<<<<< HEAD
                                             .addComponent(datumTxt)
                                             .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                             .addComponent(jLabel1))
+=======
+                                            .addComponent(datumTxt)))
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(verwijderenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(typeKaartspelTxt)))))
+>>>>>>> parent of d215fd5... leegvelden
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -615,9 +635,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(voegtoeButton)
                                         .addGap(4, 4, 4)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(wijzigenButton)
-                                            .addComponent(jButton1)))))
+                                        .addComponent(wijzigenButton))))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -746,6 +764,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_toernooiListValueChanged
 
+<<<<<<< HEAD
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         leegVelden();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -754,6 +773,8 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         Locatie_selector popup = new Locatie_selector();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+=======
+>>>>>>> parent of d215fd5... leegvelden
     private void ePopup(Exception e) {
         final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
         String error = eMessage + e;
@@ -804,10 +825,13 @@ public class Toernooi_beheren extends javax.swing.JFrame {
     private javax.swing.JLabel feedback2;
     private javax.swing.JTextField idToernooiTxt;
     private javax.swing.JTextField inschrijfKostenTxt;
+<<<<<<< HEAD
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
+=======
+>>>>>>> parent of d215fd5... leegvelden
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
