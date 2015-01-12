@@ -48,6 +48,31 @@ public class Toernooi_main extends javax.swing.JFrame {
         tabelVullen();
         tableEigenschappen();
     }
+    //vult de progress bar
+    private void updateProgressBar()
+    {
+                try {
+            int row = toernooiTabel.getSelectedRow();
+
+            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            Sql_connect.doConnect();
+
+            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = '" + Table_click + "'";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            ResultSet result = stat.executeQuery();
+
+            if (result.next()) {
+                String add1 = result.getString("inschrijvingen");
+                minSpelersTxt.setText(add1);
+            }
+
+            setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
+
+        } catch (Exception e) {
+            //ePopup(e);
+            System.out.println(e);
+        }
+    }
 
     // hierin wordt gezorgd dat de inhoud rechts staat
     private void tableEigenschappen() {
@@ -418,7 +443,7 @@ public class Toernooi_main extends javax.swing.JFrame {
     private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
         // TODO add your handling code here:
         gegevensOphalen();
-
+        updateProgressBar();
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
     private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
@@ -430,32 +455,12 @@ public class Toernooi_main extends javax.swing.JFrame {
     }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
     private void inschrijfProcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijfProcesButtonActionPerformed
-        try {
-            int row = toernooiTabel.getSelectedRow();
 
-            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
-            Sql_connect.doConnect();
-
-            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = '" + Table_click + "'";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            ResultSet result = stat.executeQuery();
-
-            if (result.next()) {
-                String add1 = result.getString("inschrijvingen");
-                minSpelersTxt.setText(add1);
-            }
-
-            setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
-
-        } catch (Exception e) {
-            //ePopup(e);
-            System.out.println(e);
-        }
 
     }//GEN-LAST:event_inschrijfProcesButtonActionPerformed
 
     private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_toernooiTabelFocusGained
 
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased

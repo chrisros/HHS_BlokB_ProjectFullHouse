@@ -77,7 +77,17 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             ePopup(e);
         }
     }
-
+    private void leegVelden()
+    {
+        naamToernooiTxt.setText("");
+        datumTxt.setText("");
+        inschrijfKostenTxt.setText("");
+        maxInschrijfTxt.setText("");
+        maxSpelersTafelTxt.setText("");
+        codeKaartspelTxt.setText("");
+        codeLocatieTxt.setText("");
+        typeKaartspelTxt.setText("");
+    }
     // hier krijg je het eerst volgende nummer voor het id
     private int nieuwToernooiId() {
         // standaart waarde nieuw id
@@ -328,6 +338,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         zoekTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         backToMain = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         terugButton.setText("Terug");
         terugButton.addActionListener(new java.awt.event.ActionListener() {
@@ -462,6 +473,13 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Leeg velden");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -508,7 +526,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                                             .addComponent(naamToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                                             .addComponent(idToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                                             .addComponent(datumTxt)))
-                                    .addComponent(verwijderenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(verwijderenButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -583,8 +603,10 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(voegtoeButton)
                                         .addGap(4, 4, 4)
-                                        .addComponent(wijzigenButton))))
-                            .addComponent(jScrollPane1))))
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(wijzigenButton)
+                                            .addComponent(jButton1)))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -592,7 +614,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                         .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(backToMain)
-                        .addGap(0, 20, Short.MAX_VALUE))))
+                        .addGap(0, 30, Short.MAX_VALUE))))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -712,6 +734,12 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_toernooiListValueChanged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       nieuwToernooiId();
+       vulLijst();
+       leegVelden();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void ePopup(Exception e) {
         final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
         String error = eMessage + e;
@@ -763,6 +791,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
     private javax.swing.JLabel feedback2;
     private javax.swing.JTextField idToernooiTxt;
     private javax.swing.JTextField inschrijfKostenTxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;

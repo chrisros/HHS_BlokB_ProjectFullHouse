@@ -168,7 +168,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
         fieldsOk = true;
         checkStringField(idLocatieTxt, 1, 100);
         checkStringField(naamLocTxt, 2, 250);
-        checkStringField(plaatsTxt, 10, 10);
+        checkStringField(plaatsTxt, 3, 100);
         checkStringField(straatTxt, 4, 40);
         checkStringField(huisnummerTxt, 2, 100);
         checkStringField(telNummerTxt, 1, 100);
