@@ -30,6 +30,7 @@ public class Toernooien_main extends javax.swing.JFrame {
     private final DefaultTableModel table = new DefaultTableModel();
 
     private String meeneemId;
+    private String meeneemNaam;
     /**
      * Creates new form Toernooien
      */
@@ -464,8 +465,13 @@ public class Toernooien_main extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
-        toernooiMeenemen();
+        //toernooiMeenemen();
+        
         Toernooi_start Toernooi_start = new Toernooi_start();
+        toernooiMeenemen();
+        Toernooi_start.idToernooiTxt.setText(meeneemId);
+        Toernooi_start.naamToernooiTxt.setText(meeneemNaam);
+        
         this.dispose();
         Toernooi_start.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_startButtonActionPerformed
@@ -485,6 +491,7 @@ public class Toernooien_main extends javax.swing.JFrame {
             if (result.next()) {
                 
                 meeneemId = result.getString("Id_toernooi");
+                meeneemNaam = result.getString("Naam");
                 
             }
 
@@ -547,7 +554,7 @@ public class Toernooien_main extends javax.swing.JFrame {
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton startButton;
-    private javax.swing.JTable toernooiTabel;
+    public javax.swing.JTable toernooiTabel;
     private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }
