@@ -25,28 +25,32 @@ public class Toernooi_start extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         TafelList.setModel(jListModel);
         //vulLijst();
-        
 
     }
 
-    private void vulLijst() {
+    private void krijgTafels() {
         try {
             Sql_connect.doConnect();
-            int whereClaus = Integer.parseInt(idToernooiTxt.getText()); 
-            System.out.println("wheree:" + whereClaus);
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM persoon where Id_persoon = " + whereClaus);
+            int whereClaus = Integer.parseInt(idToernooiTxt.getText());
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(""
+                    + "SELECT *, COUNT(Id_persoon) as aantalInschrijvingen "
+                    + "FROM toernooideelnemer TD "
+                    + "INNER JOIN toernooi T "
+                    + "ON TD.Id_persoon = T.Id_persoon "
+                    + "where TD.Id_toernooi = " + whereClaus);
             ResultSet result = stat.executeQuery();
 
-            jListModel.removeAllElements();
+            String inschr = "";
+            String maxPT = "";
+
             while (result.next()) {
-                ModelItem item = new ModelItem();
-                item.id = result.getInt("Id_persoon");
-                item.voornaam = result.getString("voornaam");
-                item.achternaam = result.getString("achternaam");
-                jListModel.addElement(item);
+                inschr = result.getString("aantalInschrijvingen");
+                System.out.println(inschr);
+                maxPT = result.getString("Max_speler_per_tafel");
                 //feedback.setText("Opvraag lijst gelukt!");
             }
-
+            int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
+            System.out.println("aantal tafels = " + aantalTafels);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -287,7 +291,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
+krijgTafels();
         String wat = idToernooiTxt.getText();
         System.out.println("wat:" + wat);
     }//GEN-LAST:event_jButton2ActionPerformed
