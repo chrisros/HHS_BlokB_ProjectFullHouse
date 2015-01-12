@@ -107,16 +107,14 @@
                                                   <Component id="inschrijfKostenTxt" linkSize="1" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
                                                   <Component id="codeKaartspelTxt" linkSize="1" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
                                                   <Component id="codeLocatieTxt" linkSize="1" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
+                                                  <Component id="typeKaartspelTxt" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
                                               </Group>
                                               <Component id="naamToernooiTxt" linkSize="1" pref="124" max="32767" attributes="0"/>
                                               <Component id="idToernooiTxt" linkSize="1" pref="124" max="32767" attributes="0"/>
                                               <Component id="datumTxt" linkSize="1" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="verwijderenButton" max="32767" attributes="0"/>
-                                          <Component id="typeKaartspelTxt" linkSize="1" max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="verwijderenButton" min="-2" pref="171" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -216,7 +214,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <Component id="jScrollPane1" pref="310" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -289,7 +287,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel14">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Inschrijf kosten"/>
+            <Property name="text" type="java.lang.String" value="Inschrijf kosten (00.00)"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="inschrijfKostenTxt">
