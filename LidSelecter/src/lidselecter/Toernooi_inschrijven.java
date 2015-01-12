@@ -103,13 +103,14 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             Sql_connect.doConnect();
 
             // statement maken
-            String prepSqlStatement = "select Id_toernooi from toernooi where Id_toernooi = '" + Table_click + "'";
+            String prepSqlStatement = "select * from toernooi where Id_toernooi = '" + Table_click + "'";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
-                String id_toernooi = result.getString("Id_toernooi");
-                toernooi_IdTxt.setText(id_toernooi);
+
+                String add6 = result.getString("Id_toernooi");
+                toernooi_IdTxt.setText(add6);
             }
 
         } catch (Exception e) {
@@ -165,7 +166,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
-            
+
             if (partsLength == 2) {
 
                 String voornaam = parts[0];
@@ -398,7 +399,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
 
     private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
         // TODO add your handling code here:
-
+        gegevensOphalen();
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

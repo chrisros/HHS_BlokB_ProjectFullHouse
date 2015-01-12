@@ -29,6 +29,7 @@ public class Toernooien_main extends javax.swing.JFrame {
     // private PreparedStatement pst = null;
     private final DefaultTableModel table = new DefaultTableModel();
 
+    private String meeneemId;
     /**
      * Creates new form Toernooien
      */
@@ -463,10 +464,35 @@ public class Toernooien_main extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        toernooiMeenemen();
         Toernooi_start Toernooi_start = new Toernooi_start();
+        this.dispose();
         Toernooi_start.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_startButtonActionPerformed
+    
+    private void toernooiMeenemen(){
+        try {
+            int row = toernooiTabel.getSelectedRow();
+
+            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            Sql_connect.doConnect();
+
+            // statement maken
+            String prepSqlStatement = "select * from toernooi where Id_toernooi = '" + Table_click + "'";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            ResultSet result = stat.executeQuery();
+
+            if (result.next()) {
+                
+                meeneemId = result.getString("Id_toernooi");
+                
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
