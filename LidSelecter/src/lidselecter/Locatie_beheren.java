@@ -76,8 +76,7 @@ public class Locatie_beheren extends javax.swing.JFrame {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie");
                 result = stat.executeQuery();
             } else{
-                String prepSqlStatement = "SELECT * FROM locatie where Naam_locatie like ? OR Plaats like ?";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie WHERE Naam_locatie like ? OR Plaats like ?");
                 stat.setString(1, zoekVeld);
                 stat.setString(2, zoekVeld);
                 result = stat.executeQuery();
@@ -433,6 +432,11 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
             }
         });
 
+        zoekTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoekTxtActionPerformed(evt);
+            }
+        });
         zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 zoekTxtKeyReleased(evt);
@@ -486,12 +490,11 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(134, 134, 134)
-                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0))))
+                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -626,9 +629,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     }//GEN-LAST:event_voegtoeButtonActionPerformed
 
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
-        // TODO add your handling code here:
-
-        
+        vulLijst();
 
         /*
          zoekVeld = zoekTxt.getText();
@@ -648,6 +649,10 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     private void LocatieListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_LocatieListValueChanged
         gegevensLijst();
     }//GEN-LAST:event_LocatieListValueChanged
+
+    private void zoekTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoekTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_zoekTxtActionPerformed
 
     /**
      * @param args the command line arguments

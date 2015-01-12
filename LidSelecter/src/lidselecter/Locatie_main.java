@@ -57,14 +57,18 @@ public class Locatie_main extends javax.swing.JFrame {
 
             String zoekVeld = zoekTxt.getText();
 
-            
+            ResultSet result; 
                 // statement maken
-                String prepSqlStatement = "select * from locatie where Naam_locatie like ? OR Plaats like ?;";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            if (zoekVeld.equals(""))
+            {
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie");
+                result = stat.executeQuery();
+            } else{
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where Naam_locatie like ? OR Plaats like ?;");
                 stat.setString(1, "%" + zoekVeld + "%");
                 stat.setString(2, "%" + zoekVeld + "%");
-                ResultSet result = stat.executeQuery();
-
+                result = stat.executeQuery();
+            }
                 // rijen
                 int i = 0;
 
@@ -101,7 +105,7 @@ public class Locatie_main extends javax.swing.JFrame {
                 System.out.println(result.getRow());
 
                 result.close();
-                stat.close();
+                //stat.close();
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
