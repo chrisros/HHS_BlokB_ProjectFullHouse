@@ -256,7 +256,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_agendaMasterclassButtonActionPerformed
 
     private void agendaToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendaToernooiButtonActionPerformed
-        Toernooien_main toernooi = new Toernooien_main();
+        Toernooi_main toernooi = new Toernooi_main();
         toernooi.setVisible(rootPaneCheckingEnabled);
         toernooi.setLocationRelativeTo(null);
         this.dispose();

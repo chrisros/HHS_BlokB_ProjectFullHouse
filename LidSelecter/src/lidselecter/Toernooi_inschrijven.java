@@ -393,7 +393,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
-        Toernooien_main Toernooi_main = new Toernooien_main();
+        Toernooi_main Toernooi_main = new Toernooi_main();
         Toernooi_main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_jButton1ActionPerformed
 

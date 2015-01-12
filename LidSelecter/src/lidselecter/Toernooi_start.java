@@ -32,22 +32,24 @@ public class Toernooi_start extends javax.swing.JFrame {
         try {
             Sql_connect.doConnect();
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(""
-                    + "SELECT *, COUNT(Id_persoon) as aantalInschrijvingen "
-                    + "FROM toernooideelnemer TD "
-                    + "INNER JOIN toernooi T "
-                    + "ON TD.Id_persoon = T.Id_persoon "
-                    + "where TD.Id_toernooi = " + whereClaus);
-            ResultSet result = stat.executeQuery();
+            
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = " + whereClaus);
+            ResultSet result1 = stat1.executeQuery();
+
+            PreparedStatement stat2 = Sql_connect.getConnection().prepareStatement("select * from toernooi where Id_toernooi = " + whereClaus);
+            ResultSet result2 = stat2.executeQuery();
 
             String inschr = "";
             String maxPT = "";
 
-            while (result.next()) {
-                inschr = result.getString("aantalInschrijvingen");
-                System.out.println(inschr);
-                maxPT = result.getString("Max_speler_per_tafel");
-                //feedback.setText("Opvraag lijst gelukt!");
+            while (result1.next()) {
+                inschr = result1.getString("inschrijvingen");
+                System.out.println("aantal: " + inschr);
+                
+            }
+            while (result2.next()){
+                maxPT = result2.getString("Max_speler_per_tafel");
+                System.out.println("per tafel: " + maxPT);
             }
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
             System.out.println("aantal tafels = " + aantalTafels);
@@ -215,6 +217,7 @@ public class Toernooi_start extends javax.swing.JFrame {
         });
 
         idToernooiTxt.setEditable(false);
+        idToernooiTxt.setText("1");
 
         jLabel4.setText("Toernooi id");
 
@@ -280,7 +283,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
-        Toernooien_main Toernooien_main = new Toernooien_main();
+        Toernooi_main Toernooien_main = new Toernooi_main();
         Toernooien_main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -291,7 +294,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-krijgTafels();
+        krijgTafels();
         String wat = idToernooiTxt.getText();
         System.out.println("wat:" + wat);
     }//GEN-LAST:event_jButton2ActionPerformed

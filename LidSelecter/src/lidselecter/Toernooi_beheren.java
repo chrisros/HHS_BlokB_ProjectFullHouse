@@ -645,7 +645,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         if (checkFields() == true) {
             nieuwToernooi();
             this.dispose();
-        Toernooien_main Toernooien_main = new Toernooien_main();
+        Toernooi_main Toernooien_main = new Toernooi_main();
         Toernooien_main.setVisible(rootPaneCheckingEnabled);
         }
         

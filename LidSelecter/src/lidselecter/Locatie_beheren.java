@@ -83,7 +83,7 @@ public class Locatie_beheren extends javax.swing.JFrame {
                 }
                 jListModel.removeAllElements();
                 while (result.next()) {
-                    ModelItemLocatie item = new ModelItemLocatie();
+                    Locatie_ModelItem item = new Locatie_ModelItem();
                     item.id = result.getInt("Id_locatie");
                     item.naam = result.getString("Naam_locatie");
                     item.straat = result.getString("Straat");
@@ -242,7 +242,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
             if (LocatieList.getSelectedValue() == null) {
                 MELDINGFIELD.setText("Niets Geselecteerd.");
             } else {
-                ModelItemLocatie selectedItem = (ModelItemLocatie) LocatieList.getSelectedValue();
+                Locatie_ModelItem selectedItem = (Locatie_ModelItem) LocatieList.getSelectedValue();
                 idLocatieTxt.setText(Integer.toString(selectedItem.id));
                 naamLocTxt.setText(selectedItem.naam);
                 plaatsTxt.setText(selectedItem.plaats);
@@ -623,7 +623,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
         if (checkFields() == true) {
             nieuwLocatie();
             this.dispose();
-            Toernooien_main Toernooien_main = new Toernooien_main();
+            Toernooi_main Toernooien_main = new Toernooi_main();
             Toernooien_main.setVisible(rootPaneCheckingEnabled);
         }
     }//GEN-LAST:event_voegtoeButtonActionPerformed
