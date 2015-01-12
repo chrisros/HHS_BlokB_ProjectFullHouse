@@ -29,7 +29,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         inschrijfList.setModel(jListModel);
-
+        vulLijst();
         toernooiTabel.setModel(table);
         String[] Kolomnaam = {"Toernooi id", "Datum", "Plaats code", "Max spelers"};
         table.setColumnIdentifiers(Kolomnaam);
@@ -139,7 +139,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             // sql prepair statement
             String prepSqlStatement
                     = "INSERT INTO toernooideelnemer "
-                    + "(Id_persoon, Id_toernooi, Betaald, Positie, Fiches)"
+                    + "(Id_persoon, Id_toernooi, ISbetaald, Positie, Fiches)"
                     + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, idSpeler);
