@@ -84,9 +84,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         inschrijfKostenTxt.setText("");
         maxInschrijfTxt.setText("");
         maxSpelersTafelTxt.setText("");
-        codeKaartspelTxt.setText("");
+        //codeKaartspelTxt.setText("");
         codeLocatieTxt.setText("");
-        typeKaartspelTxt.setText("");
+        //typeKaartspelTxt.setText("");
     }
     // hier krijg je het eerst volgende nummer voor het id
     private int nieuwToernooiId() {
@@ -154,9 +154,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         checkStringField(inschrijfKostenTxt, 4, 40);
         checkStringField(maxInschrijfTxt, 2, 100);
         checkStringField(maxSpelersTafelTxt, 1, 100);
-        checkStringField(codeKaartspelTxt, 1, 100);
+        //checkStringField(codeKaartspelTxt, 1, 100);
         checkStringField(codeLocatieTxt, 1, 100);
-        checkStringField(typeKaartspelTxt, 1, 255);
+        //checkStringField(typeKaartspelTxt, 1, 255);
         return fieldsOk;
     }
 

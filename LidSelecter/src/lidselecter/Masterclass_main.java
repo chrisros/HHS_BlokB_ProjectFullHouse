@@ -34,10 +34,10 @@ public class Masterclass_main extends javax.swing.JFrame {
         maxSpelersTxt.setText("0");
         inschrijfList.setModel(jListModel);
         masterclassTable.setModel(table);
-        String[] Kolomnaam = {"Masterclass id", "Min Rating", "Prijs", "Max spelers", "Locatie code", "Datum"};
+        String[] Kolomnaam = {"Masterclass","Id", "Min Rating", "Prijs", "Capaciteit", "Locatie code", "Datum"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
-        table.setColumnCount(6);
+        table.setColumnCount(7);
         vulLijst();
         tabelVullen();
         tableEigenschappen();
@@ -48,12 +48,19 @@ public class Masterclass_main extends javax.swing.JFrame {
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-        masterclassTable.getColumn("Masterclass id").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Masterclass");
+        masterclassTable.getColumn("Id").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Id").setMaxWidth(50);
         masterclassTable.getColumn("Min Rating").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Min Rating").setMaxWidth(100);
         masterclassTable.getColumn("Prijs").setCellRenderer(rightRenderer);
-        masterclassTable.getColumn("Max spelers").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Prijs").setMaxWidth(70);
+        masterclassTable.getColumn("Capaciteit").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Capaciteit").setMaxWidth(100);
         masterclassTable.getColumn("Locatie code").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Locatie code").setMaxWidth(100);
         masterclassTable.getColumn("Datum").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Datum").setMaxWidth(90);
 
         TableCellRenderer rendererFromHeader = masterclassTable.getTableHeader().getDefaultRenderer();
         JLabel headerLabel = (JLabel) rendererFromHeader;
@@ -113,6 +120,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         // TODO add your handling code here:
         Sql_connect.doConnect();
         // declareer de variable voor in de rs
+        String naam;
         String id;
         String rating;
         String prijs;
@@ -141,6 +149,7 @@ public class Masterclass_main extends javax.swing.JFrame {
             int d = 0;
             while (result.next()) {
                 //Stop de variable in een rs
+                naam = result.getString("Naam_masterclass");
                 id = result.getString("Id_masterclass");
                 rating = result.getString("Minimale_rating");
                 prijs = result.getString("Inschrijf_prijs");
@@ -149,12 +158,13 @@ public class Masterclass_main extends javax.swing.JFrame {
                 Datum = result.getString("Datum");
 
                 // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
-                table.setValueAt(id, d, 0);
-                table.setValueAt(rating, d, 1);
-                table.setValueAt(prijs, d, 2);
-                table.setValueAt(Max_inschrijvingen_M, d, 3);
-                table.setValueAt(Id_locatie, d, 4);
-                table.setValueAt(Datum, d, 5);
+                table.setValueAt(naam, d, 0);
+                table.setValueAt(id, d, 1);
+                table.setValueAt(rating, d, 2);
+                table.setValueAt(prijs, d, 3);
+                table.setValueAt(Max_inschrijvingen_M, d, 4);
+                table.setValueAt(Id_locatie, d, 5);
+                table.setValueAt(Datum, d, 6);
 
                 // verhoog aantal totdat alles was je hebt opgevraagd is geweest
                 d++;
@@ -201,7 +211,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         try {
             int row = masterclassTable.getSelectedRow();
 
-            String Table_click = masterclassTable.getModel().getValueAt(row, 0).toString();
+            String Table_click = masterclassTable.getModel().getValueAt(row, 1).toString();
             Sql_connect.doConnect();
 
             // statement maken
