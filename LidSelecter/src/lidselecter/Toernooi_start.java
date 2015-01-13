@@ -32,7 +32,7 @@ public class Toernooi_start extends javax.swing.JFrame {
         try {
             Sql_connect.doConnect();
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
-            
+
             PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = " + whereClaus);
             ResultSet result1 = stat1.executeQuery();
 
@@ -45,14 +45,45 @@ public class Toernooi_start extends javax.swing.JFrame {
             while (result1.next()) {
                 inschr = result1.getString("inschrijvingen");
                 System.out.println("aantal: " + inschr);
-                
+
             }
-            while (result2.next()){
+            while (result2.next()) {
                 maxPT = result2.getString("Max_speler_per_tafel");
                 System.out.println("per tafel: " + maxPT);
             }
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
             System.out.println("aantal tafels = " + aantalTafels);
+            int spelers = (aantalTafels * Integer.parseInt(maxPT));
+            int overigeSpelers = Integer.parseInt(inschr) - spelers;
+            System.out.println("overige spelers: " + overigeSpelers);
+            vulLijst();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void vulLijst() {
+        try {
+            Sql_connect.doConnect();
+
+            String prepSqlStatementVoorActer = "SELECT * FROM toernooi";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+
+            ResultSet result = stat.executeQuery();
+
+            jListModel.removeAllElements();
+
+//
+//                //MELDINGFIELD.setText("Opvragen lijst gelukt!");
+//
+//            }
+            for (int i = 0; i < 2; i++) {
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.naam = "tafel 1";
+                    jListModel.addElement(item);
+                }
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
