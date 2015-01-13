@@ -72,18 +72,6 @@ public class Toernooi_start extends javax.swing.JFrame {
                 spelerListModel.addElement(item);
             }
             
-
-            Random rnd = new Random();
-
-//            for (int i2 = 0; i2 <= Integer.parseInt(maxPT); i2++) {
-//                int a = rnd.nextInt(120) + 1;
-//                System.out.print("a: " + a + " ");
-//                ModelItem item = new ModelItem();
-//                String itemString = "a";
-//                item.naam = itemString;
-//                spelerListModel.addElement(item);
-//
-//            }
             //vulLijst();
         } catch (Exception e) {
             System.out.println(e);

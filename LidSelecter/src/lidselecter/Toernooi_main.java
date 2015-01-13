@@ -225,7 +225,7 @@ public class Toernooi_main extends javax.swing.JFrame {
                 MELDINGFIELD.setText("Niets Geselecteerd.");
             } else {
                 ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
-                //speler_codeTxt.setText(Integer.toString(selectedItem.id));
+                speler_codeTxt.setText(Integer.toString(selectedItem.id));
 
                 MELDINGFIELD.setText("Opvraag ID gelukt!");
             }
@@ -308,6 +308,8 @@ public class Toernooi_main extends javax.swing.JFrame {
                 
                 String add6 = result.getString("Max_inschrijvingen_T");
                 maxSpelersTxt.setText(add6);
+                String add7 = result.getString("Id_toernooi");
+                toernooi_IdTxt.setText(add7);
             }
 
         } catch (Exception e) {
@@ -343,6 +345,10 @@ public class Toernooi_main extends javax.swing.JFrame {
         MELDINGFIELD = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         inschrijfList = new javax.swing.JList();
+        toernooi_IdTxt = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        speler_codeTxt = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -386,14 +392,14 @@ public class Toernooi_main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                toernooiTabelFocusGained(evt);
-            }
-        });
         toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 toernooiTabelMouseClicked(evt);
+            }
+        });
+        toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toernooiTabelFocusGained(evt);
             }
         });
         jScrollPane1.setViewportView(toernooiTabel);
@@ -465,6 +471,14 @@ public class Toernooi_main extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(inschrijfList);
 
+        toernooi_IdTxt.setEditable(false);
+
+        jLabel9.setText("toernooi:");
+
+        speler_codeTxt.setEditable(false);
+
+        jLabel10.setText("Inschrijven speler:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -478,18 +492,6 @@ public class Toernooi_main extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(progressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(inschrijvenToernooiButton))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
@@ -501,16 +503,43 @@ public class Toernooi_main extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jLabel1))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(216, 216, 216)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(MELDINGVELD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel10)
+                                                .addGap(34, 34, 34)
+                                                .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel9))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel6)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel7)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(inschrijvenToernooiButton))
+                                                    .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(zoekTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {inschrijvenToernooiButton, startButton});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -528,15 +557,23 @@ public class Toernooi_main extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inschrijvenToernooiButton)
-                            .addComponent(startButton)
-                            .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)
-                            .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGap(18, 18, 18)
-                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(startButton)
+                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel9)
+                                        .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel10))))
+                            .addComponent(inschrijvenToernooiButton)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -562,12 +599,47 @@ public class Toernooi_main extends javax.swing.JFrame {
 
     private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        Toernooi_inschrijven Toernooi_inschrijven = new Toernooi_inschrijven();
-        Toernooi_inschrijven.setVisible(rootPaneCheckingEnabled);
+        inschrijvenToernooi();
+//        this.dispose();
+//        Toernooi_inschrijven Toernooi_inschrijven = new Toernooi_inschrijven();
+//        Toernooi_inschrijven.setVisible(rootPaneCheckingEnabled);
 
     }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
+    private void inschrijvenToernooi() {
+
+        // krijg de tekst uit de velden
+        int idToernooi = Integer.parseInt(toernooi_IdTxt.getText());
+        int idSpeler = Integer.parseInt(speler_codeTxt.getText());
+        try {
+            //maak een connectie
+            Sql_connect.doConnect();
+
+            int isBetaald = 0;
+            int isPositie = 0;
+            int aantalFisches = 0;
+            // sql prepair statement
+            String prepSqlStatement
+                    = "INSERT INTO toernooideelnemer "
+                    + "(Id_persoon, Id_toernooi, ISbetaald, Positie, Fiches)"
+                    + "VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            stat.setInt(1, idSpeler);
+            stat.setInt(2, idToernooi);
+            stat.setInt(3, isPositie);
+            stat.setInt(4, isBetaald);
+            stat.setInt(5, aantalFisches);
+
+            stat.executeUpdate();
+            // melding
+            MELDINGFIELD.setText("Ingeschreven voor toernooi: " + idToernooi + " met speler code: " + idSpeler);
+
+        } catch (Exception e) {
+            ePopup(e);
+            MELDINGFIELD.setText("Inschrijven voor toernooi: " + idToernooi + " is mislukt");
+        }
+    }
+    
     private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
         
     }//GEN-LAST:event_toernooiTabelFocusGained
@@ -678,17 +750,21 @@ public class Toernooi_main extends javax.swing.JFrame {
     private javax.swing.JButton inschrijvenToernooiButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField maxSpelersTxt;
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JTextField speler_codeTxt;
     private javax.swing.JButton startButton;
     public javax.swing.JTable toernooiTabel;
+    private javax.swing.JTextField toernooi_IdTxt;
     private javax.swing.JTextField zoekTxt;
     private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables
