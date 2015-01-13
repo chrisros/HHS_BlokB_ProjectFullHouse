@@ -7,6 +7,7 @@ package lidselecter;
 
 import java.awt.Color;
 import java.sql.*;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,7 +29,7 @@ public class Toernooi_main extends javax.swing.JFrame {
     ////private String sql;
     // private PreparedStatement pst = null;
     private final DefaultTableModel table = new DefaultTableModel();
-
+    DefaultListModel jListModel = new DefaultListModel();
     private String meeneemId;
     private String meeneemNaam;
     /**
@@ -38,13 +39,13 @@ public class Toernooi_main extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         minSpelersTxt.setText("0");
-
+        inschrijfList.setModel(jListModel);
         toernooiTabel.setModel(table);
         String[] Kolomnaam = {"Toernooi id", "Naam", "Datum", "Kosten", "Max spelers", "Per tafel", "Kaart code", "Plaats code", "Type"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
         table.setColumnCount(9);
-
+        vulLijst();
         tabelVullen();
         tableEigenschappen();
     }
@@ -162,7 +163,7 @@ public class Toernooi_main extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = zoekTxt2.getText();
 
             // statement maken
             String prepSqlStatement = "select * from toernooi where Naam like ?;";
@@ -217,7 +218,77 @@ public class Toernooi_main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, e);
         }
     }
+    
+    private void gegevensLijst() {
+        try {
+            if (inschrijfList.getSelectedValue() == null) {
+                MELDINGFIELD.setText("Niets Geselecteerd.");
+            } else {
+                ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
+                //speler_codeTxt.setText(Integer.toString(selectedItem.id));
 
+                MELDINGFIELD.setText("Opvraag ID gelukt!");
+            }
+        } catch (Exception e) {
+            MELDINGFIELD.setText("Geen naam geselecteerd!");
+        }
+    }
+    
+        private void vulLijst() {
+        try {
+            Sql_connect.doConnect();
+            String zoekVeld = zoekTxt.getText();
+
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
+
+            if (partsLength == 2) {
+
+                String voornaam = parts[0];
+                String achternaam = parts[1];
+
+                String prepSqlStatementVoorActer = "SELECT * FROM persoon where Voornaam like ? AND Achternaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setString(1, "%" + voornaam + "%");
+                stat.setString(2, "%" + achternaam + "%");
+
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+
+                }
+
+            } else {
+                String prepSqlStatement = "SELECT * FROM persoon where Voornaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + zoekVeld + "%");
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                }
+            }
+        } catch (Exception e) {
+            ePopup(e);
+        }
+    }
+    
     // hierin worden de gegevens opgeroepen om weer te geven in jtextfielden met de overige eigenschappen
     // ook wordt hier de max inschrijvingen gevuld
     private void gegevensOphalen() {
@@ -257,19 +328,21 @@ public class Toernooi_main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         toernooiTabel = new javax.swing.JTable();
-        zoekTxt = new javax.swing.JTextField();
+        zoekTxt2 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
         progressBar = new javax.swing.JProgressBar();
         jLabel6 = new javax.swing.JLabel();
         minSpelersTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         maxSpelersTxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        zoekTxt2 = new javax.swing.JTextField();
+        zoekTxt = new javax.swing.JTextField();
         inschrijvenToernooiButton = new javax.swing.JButton();
         startButton = new javax.swing.JButton();
+        MELDINGVELD = new javax.swing.JLabel();
+        MELDINGFIELD = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        inschrijfList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -331,20 +404,13 @@ public class Toernooi_main extends javax.swing.JFrame {
             toernooiTabel.getColumnModel().getColumn(3).setHeaderValue("Max Spelers");
         }
 
-        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        zoekTxt2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                zoekTxtKeyReleased(evt);
+                zoekTxt2KeyReleased(evt);
             }
         });
 
         jLabel8.setText("Toernooi zoeken:");
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList1);
 
         progressBar.setForeground(new java.awt.Color(153, 153, 255));
 
@@ -357,6 +423,12 @@ public class Toernooi_main extends javax.swing.JFrame {
         maxSpelersTxt.setEditable(false);
 
         jLabel1.setText("Speler zoeken:");
+
+        zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxtKeyReleased(evt);
+            }
+        });
 
         inschrijvenToernooiButton.setText("Inschrijven Toernooi");
         inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
@@ -372,6 +444,27 @@ public class Toernooi_main extends javax.swing.JFrame {
             }
         });
 
+        MELDINGVELD.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+
+        MELDINGFIELD.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+
+        inschrijfList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        inschrijfList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inschrijfListMouseClicked(evt);
+            }
+        });
+        inschrijfList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                inschrijfListValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(inschrijfList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -384,12 +477,6 @@ public class Toernooi_main extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel1))
                             .addComponent(progressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
@@ -403,11 +490,25 @@ public class Toernooi_main extends javax.swing.JFrame {
                                 .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(inschrijvenToernooiButton))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(216, 216, 216)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(MELDINGVELD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                            .addComponent(zoekTxt2))))
+                            .addComponent(zoekTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -415,12 +516,14 @@ public class Toernooi_main extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel1))
+                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -431,12 +534,13 @@ public class Toernooi_main extends javax.swing.JFrame {
                             .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7)
                             .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                            .addComponent(jLabel6))
+                        .addGap(18, 18, 18)
+                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
@@ -468,10 +572,10 @@ public class Toernooi_main extends javax.swing.JFrame {
         
     }//GEN-LAST:event_toernooiTabelFocusGained
 
-    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+    private void zoekTxt2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxt2KeyReleased
         // TODO add your handling code here:
         tabelVullen();
-    }//GEN-LAST:event_zoekTxtKeyReleased
+    }//GEN-LAST:event_zoekTxt2KeyReleased
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
@@ -485,6 +589,20 @@ public class Toernooi_main extends javax.swing.JFrame {
         this.dispose();
         Toernooi_start.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_startButtonActionPerformed
+
+    private void inschrijfListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inschrijfListMouseClicked
+        // TODO add your handling code here:
+        gegevensLijst();
+    }//GEN-LAST:event_inschrijfListMouseClicked
+
+    private void inschrijfListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_inschrijfListValueChanged
+        // TODO add your handling code here:
+        gegevensLijst();
+    }//GEN-LAST:event_inschrijfListValueChanged
+
+    private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
+        vulLijst();
+    }//GEN-LAST:event_zoekTxtKeyReleased
     
     private void toernooiMeenemen(){
         try {
@@ -554,13 +672,15 @@ public class Toernooi_main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel MELDINGFIELD;
+    private javax.swing.JLabel MELDINGVELD;
+    private javax.swing.JList inschrijfList;
     private javax.swing.JButton inschrijvenToernooiButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
