@@ -176,9 +176,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             String Inschrijfkosten = inschrijfKostenTxt.getText();
             String Max_inschrijvingen_T = maxInschrijfTxt.getText();
             String Max_speler_per_tafel = maxSpelersTafelTxt.getText();
-            String Kaartspel_code = codeKaartspelTxt.getText();
+            //String Kaartspel_code = codeKaartspelTxt.getText();
             String Id_locatie = codeLocatieTxt.getText();
-            String Kaartspeltype = typeKaartspelTxt.getText();
+            //String Kaartspeltype = typeKaartspelTxt.getText();
 
             // sql prepair statement
             String prepSqlStatement
@@ -194,9 +194,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             stat.setString(4, Inschrijfkosten);
             stat.setString(5, Max_inschrijvingen_T);
             stat.setString(6, Max_speler_per_tafel);
-            stat.setString(7, Kaartspel_code);
+            //stat.setString(7, Kaartspel_code);
             stat.setString(8, Id_locatie);
-            stat.setString(9, Kaartspeltype);
+            //stat.setString(9, Kaartspeltype);
             stat.executeUpdate();
             // melding
             JOptionPane.showMessageDialog(rootPane, "Toevoegen nieuw toernooi gelukt");
@@ -217,9 +217,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             String Inschrijfkosten = inschrijfKostenTxt.getText();
             String Max_inschrijvingen_T = maxInschrijfTxt.getText();
             String Max_speler_per_tafel = maxSpelersTafelTxt.getText();
-            String Kaartspel_code = codeKaartspelTxt.getText();
+            //String Kaartspel_code = codeKaartspelTxt.getText();
             String Locatie_code = codeLocatieTxt.getText();
-            String Kaartspeltype = typeKaartspelTxt.getText();
+            //String Kaartspeltype = typeKaartspelTxt.getText();
 
             Sql_connect.doConnect();
             String prepSqlStatement = "UPDATE toernooi SET "
@@ -238,9 +238,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             stat.setString(3, Inschrijfkosten);
             stat.setString(4, Max_inschrijvingen_T);
             stat.setString(5, Max_speler_per_tafel);
-            stat.setString(6, Kaartspel_code);
+            //stat.setString(6, Kaartspel_code);
             stat.setString(7, Locatie_code);
-            stat.setString(8, Kaartspeltype);
+            //stat.setString(8, Kaartspeltype);
             stat.setInt(9, Id_toernooi);
             stat.executeUpdate();
             vulLijst();
@@ -286,9 +286,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                 inschrijfKostenTxt.setText(selectedItem.inschrijfKosten);
                 maxInschrijfTxt.setText(selectedItem.maxInschrijf);
                 maxSpelersTafelTxt.setText(selectedItem.maxPTafel);
-                codeKaartspelTxt.setText(selectedItem.kaartCode);
+                //codeKaartspelTxt.setText(selectedItem.kaartCode);
                 codeLocatieTxt.setText(selectedItem.locatieCode);
-                typeKaartspelTxt.setText(selectedItem.kaartType);
+                //typeKaartspelTxt.setText(selectedItem.kaartType);
 
                 MELDINGFIELD.setText("Opvraag ID gelukt!");
             }
@@ -322,12 +322,9 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         maxSpelersTafelTxt = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         locatieLabel = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        codeKaartspelTxt = new javax.swing.JTextField();
         codeLocatieTxt = new javax.swing.JTextField();
-        typeKaartspelTxt = new javax.swing.JTextField();
         datumTxt = new javax.swing.JFormattedTextField();
         feedback2 = new javax.swing.JLabel();
         wijzigenButton = new javax.swing.JButton();
@@ -339,6 +336,11 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         backToMain = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jTextField1 = new javax.swing.JTextField();
+        kaartspelType = new javax.swing.JComboBox();
 
         terugButton.setText("Terug");
         terugButton.addActionListener(new java.awt.event.ActionListener() {
@@ -374,14 +376,14 @@ public class Toernooi_beheren extends javax.swing.JFrame {
 
         idToernooiTxt.setEditable(false);
         idToernooiTxt.setFocusCycleRoot(true);
-        idToernooiTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idToernooiTxtActionPerformed(evt);
-            }
-        });
         idToernooiTxt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 idToernooiTxtFocusLost(evt);
+            }
+        });
+        idToernooiTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idToernooiTxtActionPerformed(evt);
             }
         });
 
@@ -405,9 +407,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
 
         jLabel16.setText("Maximale spelers per tafel:");
 
-        jLabel17.setText("Kaartspel code");
-
-        locatieLabel.setText("Locatie code: (vul 0 in ");
+        locatieLabel.setText("Locatie code:");
 
         jLabel19.setText("Kaartspel type");
 
@@ -464,7 +464,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Zoeken");
+        jLabel4.setText("Zoek toernooi:");
 
         backToMain.setText("Terug");
         backToMain.addActionListener(new java.awt.event.ActionListener() {
@@ -480,145 +480,160 @@ public class Toernooi_beheren extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Zoek locatie:");
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(jList1);
+
+        kaartspelType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Poker", "Klaverjassen", "Blackjack", "Patiance" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(46, 46, 46)
+                        .addComponent(feedback2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(backToMain))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(feedback2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel12)
                                     .addComponent(jLabel16)
-                                    .addComponent(jLabel17)
-                                    .addComponent(locatieLabel)
-                                    .addComponent(jLabel19)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel14)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(idToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(maxInschrijfTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(maxSpelersTafelTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(inschrijfKostenTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(naamToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                    .addComponent(datumTxt)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(locatieLabel)
+                                    .addComponent(jLabel19)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(wijzigenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(voegtoeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(1, 1, 1)))
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(maxInschrijfTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(maxSpelersTafelTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(inschrijfKostenTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(codeKaartspelTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(codeLocatieTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(typeKaartspelTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(naamToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                            .addComponent(idToernooiTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                            .addComponent(datumTxt)))
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(verwijderenButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)))))
+                                        .addComponent(verwijderenButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(codeLocatieTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(kaartspelType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))))
-                .addContainerGap())
+                                .addComponent(zoekTxt))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(362, 362, 362)
+                    .addGap(323, 323, 323)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(165, Short.MAX_VALUE)))
+                    .addContainerGap(339, Short.MAX_VALUE)))
         );
 
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {codeKaartspelTxt, codeLocatieTxt, datumTxt, idToernooiTxt, inschrijfKostenTxt, maxInschrijfTxt, maxSpelersTafelTxt, naamToernooiTxt});
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {codeLocatieTxt, datumTxt, idToernooiTxt, inschrijfKostenTxt, kaartspelType, maxInschrijfTxt, maxSpelersTafelTxt, naamToernooiTxt});
 
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(feedback2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel13)
-                                .addComponent(idToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(idToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(naamToernooiTxt))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(datumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inschrijfKostenTxt)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxInschrijfTxt)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxSpelersTafelTxt)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(codeLocatieTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(locatieLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel19)
+                            .addComponent(kaartspelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(verwijderenButton)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(voegtoeButton)
+                                .addGap(4, 4, 4)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel12)
-                                    .addComponent(naamToernooiTxt))
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(datumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(inschrijfKostenTxt)
-                                    .addComponent(jLabel14))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(maxInschrijfTxt)
-                                    .addComponent(jLabel15))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(maxSpelersTafelTxt)
-                                    .addComponent(jLabel16))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel17)
-                                    .addComponent(codeKaartspelTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(codeLocatieTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(locatieLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(typeKaartspelTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel19))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(verwijderenButton)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(voegtoeButton)
-                                        .addGap(4, 4, 4)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(wijzigenButton)
-                                            .addComponent(jButton1)))))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(wijzigenButton)
+                                    .addComponent(jButton1))))
+                        .addGap(16, 16, 16)
                         .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(backToMain)
-                        .addGap(0, 30, Short.MAX_VALUE))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(backToMain)
+                            .addComponent(feedback2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(30, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 21, Short.MAX_VALUE)))
+                    .addContainerGap()
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(63, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -626,85 +641,36 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void datumTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datumTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_datumTxtActionPerformed
-
-    private void codeLocatieTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeLocatieTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_codeLocatieTxtActionPerformed
-
-    private void inschrijfKostenTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijfKostenTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inschrijfKostenTxtActionPerformed
-
-    private void idToernooiTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_idToernooiTxtFocusLost
-
-    }//GEN-LAST:event_idToernooiTxtFocusLost
-
-    private void idToernooiTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idToernooiTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_idToernooiTxtActionPerformed
-
-    private void naamToernooiTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_naamToernooiTxtFocusLost
-
-    }//GEN-LAST:event_naamToernooiTxtFocusLost
-
-    private void voegtoeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voegtoeButtonActionPerformed
-        if (checkFields() == true) {
-            nieuwToernooi();
-            this.dispose();
-        Toernooi_main Toernooien_main = new Toernooi_main();
-        Toernooien_main.setVisible(rootPaneCheckingEnabled);
-        }
-        
-    }//GEN-LAST:event_voegtoeButtonActionPerformed
 
     private void terugButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_terugButtonActionPerformed
         // TODO add your handling code here:
 
     }//GEN-LAST:event_terugButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        nieuwToernooiId();
+        vulLijst();
+        leegVelden();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void backToMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMainActionPerformed
         this.dispose();
         Main Main = new Main();
         Main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_backToMainActionPerformed
-
-    private void verwijderenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderenButtonActionPerformed
-        // TODO add your handling code here:
-        verwijderenToernooi();
-    }//GEN-LAST:event_verwijderenButtonActionPerformed
-
-    private void wijzigenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wijzigenButtonActionPerformed
-        // TODO add your handling code here:
-        if (checkFields() == true) {
-            wijzigenToernooi();
-        }
-    }//GEN-LAST:event_wijzigenButtonActionPerformed
-
-    private void toernooiListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiListMouseClicked
-        // TODO add your handling code here:
-        
-
-    }//GEN-LAST:event_toernooiListMouseClicked
-
-    private void maxInschrijfTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxInschrijfTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxInschrijfTxtActionPerformed
 
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
         // TODO add your handling code here:
@@ -730,15 +696,64 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_zoekTxtActionPerformed
 
+    private void verwijderenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderenButtonActionPerformed
+        // TODO add your handling code here:
+        verwijderenToernooi();
+    }//GEN-LAST:event_verwijderenButtonActionPerformed
+
     private void toernooiListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_toernooiListValueChanged
         gegevensLijst();
     }//GEN-LAST:event_toernooiListValueChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       nieuwToernooiId();
-       vulLijst();
-       leegVelden();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void toernooiListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiListMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_toernooiListMouseClicked
+
+    private void wijzigenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wijzigenButtonActionPerformed
+        // TODO add your handling code here:
+        if (checkFields() == true) {
+            wijzigenToernooi();
+        }
+    }//GEN-LAST:event_wijzigenButtonActionPerformed
+
+    private void datumTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datumTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datumTxtActionPerformed
+
+    private void codeLocatieTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeLocatieTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_codeLocatieTxtActionPerformed
+
+    private void maxInschrijfTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxInschrijfTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxInschrijfTxtActionPerformed
+
+    private void inschrijfKostenTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijfKostenTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inschrijfKostenTxtActionPerformed
+
+    private void idToernooiTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idToernooiTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idToernooiTxtActionPerformed
+
+    private void idToernooiTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_idToernooiTxtFocusLost
+
+    }//GEN-LAST:event_idToernooiTxtFocusLost
+
+    private void naamToernooiTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_naamToernooiTxtFocusLost
+
+    }//GEN-LAST:event_naamToernooiTxtFocusLost
+
+    private void voegtoeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voegtoeButtonActionPerformed
+        if (checkFields() == true) {
+            nieuwToernooi();
+            this.dispose();
+            Toernooi_main Toernooien_main = new Toernooi_main();
+            Toernooien_main.setVisible(rootPaneCheckingEnabled);
+        }
+
+    }//GEN-LAST:event_voegtoeButtonActionPerformed
 
     private void ePopup(Exception e) {
         final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
@@ -785,32 +800,34 @@ public class Toernooi_beheren extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel MELDINGFIELD;
     private javax.swing.JButton backToMain;
-    private javax.swing.JTextField codeKaartspelTxt;
     private javax.swing.JTextField codeLocatieTxt;
     private javax.swing.JFormattedTextField datumTxt;
     private javax.swing.JLabel feedback2;
     private javax.swing.JTextField idToernooiTxt;
     private javax.swing.JTextField inschrijfKostenTxt;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JComboBox kaartspelType;
     private javax.swing.JLabel locatieLabel;
     private javax.swing.JTextField maxInschrijfTxt;
     private javax.swing.JTextField maxSpelersTafelTxt;
     private javax.swing.JTextField naamToernooiTxt;
     private javax.swing.JButton terugButton;
     private javax.swing.JList toernooiList;
-    private javax.swing.JTextField typeKaartspelTxt;
     private javax.swing.JButton verwijderenButton;
     private javax.swing.JButton voegtoeButton;
     private javax.swing.JButton wijzigenButton;
