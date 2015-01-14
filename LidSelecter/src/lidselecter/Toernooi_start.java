@@ -18,6 +18,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     DefaultListModel tafelListModel = new DefaultListModel();
     DefaultListModel spelerListModel = new DefaultListModel();
+    DefaultListModel rondeListModel = new DefaultListModel();
 
     /**
      * Creates new form Toernooi_start
@@ -27,6 +28,7 @@ public class Toernooi_start extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         TafelList.setModel(tafelListModel);
         SpelerList.setModel(spelerListModel);
+        RondeList.setModel(rondeListModel);
         //vulLijst();
 
     }
@@ -35,43 +37,48 @@ public class Toernooi_start extends javax.swing.JFrame {
         try {
             Sql_connect.doConnect();
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
-//
+
             PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = " + whereClaus);
             ResultSet result1 = stat1.executeQuery();
 
             PreparedStatement stat2 = Sql_connect.getConnection().prepareStatement("select * from toernooi where Id_toernooi = " + whereClaus);
             ResultSet result2 = stat2.executeQuery();
-            
-            
 
             String inschr = "";
             String maxPT = "";
 
             while (result1.next()) {
                 inschr = result1.getString("inschrijvingen");
-                System.out.println("aantal: " + inschr);
+                //System.out.println("aantal: " + inschr);
 
             }
             while (result2.next()) {
                 maxPT = result2.getString("Max_speler_per_tafel");
-                System.out.println("per tafel: " + maxPT);
+                //System.out.println("per tafel: " + maxPT);
             }
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
-            System.out.println("aantal tafels = " + aantalTafels);
+            //System.out.println("aantal tafels = " + aantalTafels);
             int spelers = (aantalTafels * Integer.parseInt(maxPT));
             int overigeSpelers = Integer.parseInt(inschr) - spelers;
-            System.out.println("overige spelers: " + overigeSpelers);
-            
-            PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("SELECT * FROM toernooideelnemer ORDER BY RAND() LIMIT " + Integer.parseInt(inschr));
+            //System.out.println("overige spelers: " + overigeSpelers);
+
+            PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("SELECT * FROM toernooideelnemer where Tafel_code is null ORDER BY RAND() LIMIT ?");
+            stat3.setInt(1, Integer.parseInt(maxPT));
+
             ResultSet result3 = stat3.executeQuery();
             spelerListModel.removeAllElements();
+            int y = 1;
             while (result3.next()) {
+                y++;
                 ModelItem item = new ModelItem();
+
                 String random = result3.getString("Id_persoon");
-                item.naam =  "random: "+ random;
+                item.naam = "Persoon: " + random;
+                
+                System.out.println(y);
                 spelerListModel.addElement(item);
             }
-            
+
             //vulLijst();
         } catch (Exception e) {
             System.out.println(e);
@@ -81,6 +88,62 @@ public class Toernooi_start extends javax.swing.JFrame {
     private void krijgTafels() {
         try {
             Sql_connect.doConnect();
+            String wat = idToernooiTxt.getText();
+            System.out.println("wat:" + wat);
+            int whereClaus = Integer.parseInt(idToernooiTxt.getText());
+
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = ?");
+            stat1.setInt(1, whereClaus);
+            ResultSet result1 = stat1.executeQuery();
+
+            PreparedStatement stat2 = Sql_connect.getConnection().prepareStatement("select * from toernooi where Id_toernooi = ?");
+            stat2.setInt(1, whereClaus);
+            ResultSet result2 = stat2.executeQuery();
+
+            String inschr = "";
+            String maxPT = "";
+
+            while (result1.next()) {
+                inschr = result1.getString("inschrijvingen");
+                //System.out.println("aantal: " + inschr);
+
+            }
+            while (result2.next()) {
+                maxPT = result2.getString("Max_speler_per_tafel");
+                //System.out.println("per tafel: " + maxPT);
+            }
+            int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
+            //System.out.println("aantal tafels = " + aantalTafels);
+            int spelers = (aantalTafels * Integer.parseInt(maxPT));
+            int overigeSpelers = Integer.parseInt(inschr) - spelers;
+            //System.out.println("overige spelers: " + overigeSpelers);
+            tafelListModel.removeAllElements();
+
+            //Random rnd = new Random();
+            if ((aantalTafels == 0) & (overigeSpelers < Integer.parseInt(maxPT))) {
+                ModelItem item = new ModelItem();
+                item.id = 1;
+                item.naam = "finale tafel";
+                tafelListModel.addElement(item);
+            } else {
+                for (int i1 = 1; i1 <= aantalTafels; i1++) {
+                    System.out.println("tafel:" + i1);
+                    ModelItem item = new ModelItem();
+                    item.id = i1;
+                    item.naam = "tafel " + i1;
+                    tafelListModel.addElement(item);
+
+                }
+            }
+            //vulLijst();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void krijgRondes() {
+        try {
+            Sql_connect.doConnect();
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
 
             PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = " + whereClaus);
@@ -107,13 +170,27 @@ public class Toernooi_start extends javax.swing.JFrame {
             int overigeSpelers = Integer.parseInt(inschr) - spelers;
             System.out.println("overige spelers: " + overigeSpelers);
 
+            rondeListModel.removeAllElements();
             //Random rnd = new Random();
-            for (int i1 = 1; i1 <= aantalTafels; i1++) {
-                System.out.println("tafel:" + i1);
+            int helftTafels = aantalTafels / 2;
+            int Rondes;
+            if (helftTafels > (Integer.parseInt(maxPT) / 2)) {
+                Rondes = helftTafels + 1;
+            } else {
+                Rondes = 2;
+            }
+            if (aantalTafels == 0) {
                 ModelItem item = new ModelItem();
-                item.naam = "tafel " + i1;
-                tafelListModel.addElement(item);
+                item.naam = "finale ronde";
+                rondeListModel.addElement(item);
+            } else {
+                for (int i1 = 1; i1 <= Rondes; i1++) {
+                    System.out.println("tafel:" + i1);
+                    ModelItem item = new ModelItem();
+                    item.naam = "ronde " + i1;
+                    rondeListModel.addElement(item);
 
+                }
             }
             //vulLijst();
         } catch (Exception e) {
@@ -166,6 +243,7 @@ public class Toernooi_start extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         RondeList = new javax.swing.JList();
+        vulRondeBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -187,6 +265,11 @@ public class Toernooi_start extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
+        });
+        TafelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                TafelListValueChanged(evt);
+            }
         });
         jScrollPane1.setViewportView(TafelList);
 
@@ -231,7 +314,19 @@ public class Toernooi_start extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        RondeList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                RondeListValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(RondeList);
+
+        vulRondeBtn.setText("vul Ronde");
+        vulRondeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vulRondeBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -242,7 +337,9 @@ public class Toernooi_start extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(vulRondeBtn))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -253,6 +350,8 @@ public class Toernooi_start extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(vulRondeBtn)
                 .addContainerGap())
         );
 
@@ -335,9 +434,9 @@ public class Toernooi_start extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -397,15 +496,37 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void vulTafelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulTafelBtnActionPerformed
         // TODO add your handling code here:
-        krijgTafels();
-        String wat = idToernooiTxt.getText();
-        System.out.println("wat:" + wat);
+        //krijgTafels();
+
     }//GEN-LAST:event_vulTafelBtnActionPerformed
 
     private void vulSpelerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulSpelerBtnActionPerformed
         // TODO add your handling code here:
-        krijgSpeler();
+
     }//GEN-LAST:event_vulSpelerBtnActionPerformed
+
+    private void vulRondeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulRondeBtnActionPerformed
+        // TODO add your handling code here:
+
+        krijgRondes();
+
+        /* 
+         als hoeveelheid tafels meer is dan (helft van de aantal spelers per tafel) in ronde 1 dan ronde^n
+        
+        
+        
+         */
+    }//GEN-LAST:event_vulRondeBtnActionPerformed
+
+    private void RondeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_RondeListValueChanged
+        // TODO add your handling code here:
+        krijgTafels();
+    }//GEN-LAST:event_RondeListValueChanged
+
+    private void TafelListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_TafelListValueChanged
+        // TODO add your handling code here:
+        krijgSpeler();
+    }//GEN-LAST:event_TafelListValueChanged
 
     /**
      * @param args the command line arguments
@@ -461,6 +582,7 @@ public class Toernooi_start extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     public javax.swing.JTextField naamToernooiTxt;
+    private javax.swing.JButton vulRondeBtn;
     private javax.swing.JButton vulSpelerBtn;
     private javax.swing.JButton vulTafelBtn;
     // End of variables declaration//GEN-END:variables
