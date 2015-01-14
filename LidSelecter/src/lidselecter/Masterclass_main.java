@@ -132,8 +132,8 @@ public class Masterclass_main extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
             // statement maken
-            String prepSqlStatement = "select * from masterclass;";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from masterclass WHERE Naam_masterclass LIKE ?");
+            stat.setString(1, "%"+zoekTxt2.getText()+"%");
             ResultSet result = stat.executeQuery();
 
             // rijen
@@ -172,7 +172,7 @@ public class Masterclass_main extends javax.swing.JFrame {
             }
 
             result.last();
-            System.out.println(result.getRow());
+            //System.out.println(result.getRow());
 
             result.close();
             stat.close();
@@ -188,10 +188,9 @@ public class Masterclass_main extends javax.swing.JFrame {
             String Table_click = masterclassTable.getModel().getValueAt(row, 1).toString();
             Sql_connect.doConnect();
 
-            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from masterclassdeelnemer where Id_masterclass = " + Table_click ;
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from masterclassdeelnemer where Id_masterclass = ?");
+            stat.setString(1, Table_click);
             ResultSet result = stat.executeQuery();
-
             if (result.next()) {
                 String add1 = result.getString("inschrijvingen");
                 minSpelersTxt.setText(add1);
@@ -214,8 +213,10 @@ public class Masterclass_main extends javax.swing.JFrame {
             Sql_connect.doConnect();
 
             // statement maken
-            String prepSqlStatement = "select * from masterclass where Id_masterclass = '" + Table_click + "'";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            
+            
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from masterclass where Id_masterclass = ?");
+            stat.setString(1, Table_click);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
@@ -460,6 +461,12 @@ public class Masterclass_main extends javax.swing.JFrame {
 
         jLabel5.setText("Masterclass zoeken:");
 
+        zoekTxt2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxt2KeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -618,6 +625,10 @@ public class Masterclass_main extends javax.swing.JFrame {
          met split, if array is 2
          */
     }//GEN-LAST:event_zoekTxtKeyReleased
+
+    private void zoekTxt2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxt2KeyReleased
+        tabelVullen();
+    }//GEN-LAST:event_zoekTxt2KeyReleased
 
     /**
      * @param args the command line arguments

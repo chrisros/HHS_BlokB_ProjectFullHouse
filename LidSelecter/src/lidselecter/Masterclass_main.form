@@ -341,6 +341,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="zoekTxt2">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="zoekTxt2KeyReleased"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
