@@ -10,6 +10,7 @@ import java.sql.*;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -32,7 +33,8 @@ public class Toernooi_main extends javax.swing.JFrame {
     DefaultListModel jListModel = new DefaultListModel();
     private String meeneemId;
     private String meeneemNaam;
-
+    private boolean fieldsOk;
+    
     /**
      * Creates new form Toernooien
      */
@@ -50,6 +52,46 @@ public class Toernooi_main extends javax.swing.JFrame {
         tabelVullen();
         tableEigenschappen();
     }
+    
+    
+    private void checkIntField(JTextField field, int minLength, int maxLength) {
+        try {
+            if (field.getText().equals("")) {
+                MELDINGVELD.setForeground(Color.orange);
+                MELDINGVELD.setText("Veld mag niet leeg zijn");
+                field.setBackground(Color.orange);
+                fieldsOk = false;
+            } else if (field.getText().length() < minLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te kort");
+                field.setBackground(Color.red); 
+                fieldsOk = false;
+            } else if (field.getText().length() > maxLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te lang");
+                field.setBackground(Color.red);
+                fieldsOk = false;
+            } else {
+                Integer.parseInt(field.getText());
+                MELDINGVELD.setForeground(Color.black);
+                MELDINGVELD.setText("");
+                field.setBackground(Color.white);
+            }
+        } catch (Exception e) {
+            MELDINGVELD.setForeground(Color.red);
+            MELDINGVELD.setText("Alleen cijfers toegestaan");
+            field.setBackground(Color.red);
+            fieldsOk = false;
+        }
+    }
+        private boolean checkFields() {
+        fieldsOk = true;
+        checkIntField(toernooi_IdTxt, 1, 10);
+        checkIntField(speler_codeTxt, 1, 10);
+        return fieldsOk;
+    }
+    
+    
 
     //vult de progress bar
 
@@ -145,6 +187,8 @@ public class Toernooi_main extends javax.swing.JFrame {
         }
 
     }
+  
+    
 
     // hierin worden de gegevens opgeroepen om in de tabel te zetten
     private void tabelVullen() {
@@ -579,7 +623,7 @@ public class Toernooi_main extends javax.swing.JFrame {
 
     private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
         // TODO add your handling code here:
-        inschrijvenToernooi();
+        if(checkFields()){inschrijvenToernooi();}
 //        this.dispose();
 //        Toernooi_inschrijven Toernooi_inschrijven = new Toernooi_inschrijven();
 //        Toernooi_inschrijven.setVisible(rootPaneCheckingEnabled);

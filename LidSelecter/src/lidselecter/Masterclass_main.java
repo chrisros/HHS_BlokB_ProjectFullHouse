@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -24,7 +25,7 @@ public class Masterclass_main extends javax.swing.JFrame {
 
     private final DefaultTableModel table = new DefaultTableModel();
     DefaultListModel jListModel = new DefaultListModel();
-
+    private boolean fieldsOk;
     /**
      * Creates new form Masterclass_main
      */
@@ -41,9 +42,46 @@ public class Masterclass_main extends javax.swing.JFrame {
         vulLijst();
         tabelVullen();
         tableEigenschappen();
-
+        
     }
 
+    private void checkIntField(JTextField field, int minLength, int maxLength) {
+        try {
+            if (field.getText().equals("")) {
+                MELDINGVELD.setForeground(Color.orange);
+                MELDINGVELD.setText("Veld mag niet leeg zijn");
+                field.setBackground(Color.orange);
+                fieldsOk = false;
+            } else if (field.getText().length() < minLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te kort");
+                field.setBackground(Color.red); 
+                fieldsOk = false;
+            } else if (field.getText().length() > maxLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te lang");
+                field.setBackground(Color.red);
+                fieldsOk = false;
+            } else {
+                Integer.parseInt(field.getText());
+                MELDINGVELD.setForeground(Color.black);
+                MELDINGVELD.setText("");
+                field.setBackground(Color.white);
+            }
+        } catch (Exception e) {
+            MELDINGVELD.setForeground(Color.red);
+            MELDINGVELD.setText("Alleen cijfers toegestaan");
+            field.setBackground(Color.red);
+            fieldsOk = false;
+        }
+    }
+        private boolean checkFields() {
+        fieldsOk = true;
+        checkIntField(masterclass_IdTxt, 1, 10);
+        checkIntField(speler_codeTxt, 1, 10);
+        return fieldsOk;
+    }
+    
     private void tableEigenschappen() {
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
@@ -234,15 +272,15 @@ public class Masterclass_main extends javax.swing.JFrame {
     private void gegevensLijst() {
         try {
             if (inschrijfList.getSelectedValue() == null) {
-                MELDINGFIELD.setText("Niets Geselecteerd.");
+                MELDINGVELD.setText("Niets Geselecteerd.");
             } else {
                 ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
                 speler_codeTxt.setText(Integer.toString(selectedItem.id));
 
-                MELDINGFIELD.setText("Opvraag ID gelukt!");
+                MELDINGVELD.setText("Opvraag ID gelukt!");
             }
         } catch (Exception e) {
-            MELDINGFIELD.setText("Geen naam geselecteerd!");
+            MELDINGVELD.setText("Geen naam geselecteerd!");
         }
     }
 
@@ -275,7 +313,7 @@ public class Masterclass_main extends javax.swing.JFrame {
                     item.achternaam = result.getString("achternaam");
                     jListModel.addElement(item);
 
-                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                    MELDINGVELD.setText("Opvragen lijst gelukt!");
 
                 }
 
@@ -293,7 +331,7 @@ public class Masterclass_main extends javax.swing.JFrame {
                     item.achternaam = result.getString("achternaam");
                     jListModel.addElement(item);
 
-                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                    MELDINGVELD.setText("Opvragen lijst gelukt!");
                 }
             }
         } catch (Exception e) {
@@ -590,8 +628,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
     private void inschrijvenMasterclassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenMasterclassButtonActionPerformed
-        // TODO add your handling code here:
-        inschrijvenMasterclass();
+        if(checkFields()){inschrijvenMasterclass();}
 
     }//GEN-LAST:event_inschrijvenMasterclassButtonActionPerformed
 
