@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Random;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -89,25 +90,89 @@ public class Toernooi_start extends javax.swing.JFrame {
 
             } // while (result3.next()) {
 
-            for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
-                ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
-                Object listItems = SpelerList.getModel().getElementAt(i);
-                PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
-                        + "UPDATE toernooideelnemer "
-                        + "set Tafel_code = ? "
-                        + "where Id_toernooi = ? "
-                        + "AND Id_persoon = ? "
-                        + "AND (Tafel_code is null OR Tafel_code > ? )"
-                        + "LIMIT ?");
-                stat4.setInt(1, selectedItem.id);
-                stat4.setInt(2, whereClaus);
-                stat4.setInt(3, Integer.parseInt(listItems.toString()));
-                System.out.println("where id_persoon = " + Integer.parseInt(listItems.toString()));
-                stat4.setInt(4, aantalTafels);
-                stat4.setInt(5, Integer.parseInt(maxPT));
+            String nogOver = "";
+            PreparedStatement stat5 = Sql_connect.getConnection().prepareStatement(""
+                    + "select count(*) from toernooideelnemer where Tafel_code is null and Id_toernooi = ?;");
+            stat5.setInt(1, whereClaus);
+            ResultSet result5 = stat5.executeQuery();
+            while (result5.next()) {
+                nogOver = result5.getString("count(*)");
+            }
+            if (Integer.parseInt(nogOver) == 0) {
+                JOptionPane.showMessageDialog(rootPane, "Er vallen geen spelers meer te verdelen, u word door gestuurd naar het volgende scherm");
+                MELDINGFIELD.setText("Er vallen geen spelers meer te verdelen, ga door naar het uitschakel systeem");
+            } else {
+                int teVerdelen = Integer.parseInt(nogOver);
+                if (teVerdelen == 1) {
+                    MELDINGFIELD.setText("Er valt nog " + teVerdelen + " speler te verdelen, verdeel de rest en ga dan door");
 
-                stat4.executeUpdate();
-            } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+                } else {
+                    MELDINGFIELD.setText("Er vallen nog " + teVerdelen + " spelers te verdelen, verdeel de rest en ga dan door");
+                }
+
+            } // else 
+
+            ModelItem item = new ModelItem();
+            ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
+            item.id = selectedItem.id;
+
+            PreparedStatement stat6 = Sql_connect.getConnection().prepareStatement("select count(*) from toernooideelnemer where Tafel_code = ? and Id_toernooi = ?;");
+            stat6.setInt(1, selectedItem.id);
+            stat6.setInt(2, whereClaus);
+            ResultSet result6 = stat6.executeQuery();
+            String aanTafel = "";
+            while (result6.next()) {
+                aanTafel = result6.getString("count(*)");
+            }
+            if (Integer.parseInt(aanTafel) == Integer.parseInt(maxPT)) {
+
+                if (JOptionPane.showConfirmDialog(null, "Er zitten al meer spelers aan deze tafel wilt u hier meer spelers aan toevoegen?", "WARNING",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+                    for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+                        //ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
+                        Object listItems = SpelerList.getModel().getElementAt(i);
+                        PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
+                                + "UPDATE toernooideelnemer "
+                                + "set Tafel_code = ? "
+                                + "where Id_toernooi = ? "
+                                + "AND Id_persoon = ? "
+                                + "AND (Tafel_code is null OR Tafel_code > ? )"
+                                + "LIMIT ?");
+                        stat4.setInt(1, selectedItem.id);
+                        stat4.setInt(2, whereClaus);
+                        stat4.setInt(3, Integer.parseInt(listItems.toString()));
+                        stat4.setInt(4, aantalTafels);
+                        stat4.setInt(5, Integer.parseInt(maxPT));
+
+                        stat4.executeUpdate();
+                    } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+                } // yes option
+                else {
+                    MELDINGFIELD.setText("U heeft geen extra spelers toegevoegd");
+                }
+            } // if (Integer.parseInt(aanTafel) == Integer.parseInt(maxPT)) {
+            else {
+                 for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+                        //ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
+                        Object listItems = SpelerList.getModel().getElementAt(i);
+                        PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
+                                + "UPDATE toernooideelnemer "
+                                + "set Tafel_code = ? "
+                                + "where Id_toernooi = ? "
+                                + "AND Id_persoon = ? "
+                                + "AND (Tafel_code is null OR Tafel_code > ? )"
+                                + "LIMIT ?");
+                        stat4.setInt(1, selectedItem.id);
+                        stat4.setInt(2, whereClaus);
+                        stat4.setInt(3, Integer.parseInt(listItems.toString()));
+                        System.out.println("where id_persoon = " + Integer.parseInt(listItems.toString()));
+                        stat4.setInt(4, aantalTafels);
+                        stat4.setInt(5, Integer.parseInt(maxPT));
+
+                        stat4.executeUpdate();
+                        } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+            }
 
             //vulLijst();
         } catch (Exception e) {
@@ -269,7 +334,6 @@ public class Toernooi_start extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TafelList = new javax.swing.JList();
-        vulTafelBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -279,14 +343,13 @@ public class Toernooi_start extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         SpelerList = new javax.swing.JList();
-        vulSpelerBtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         idToernooiTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         naamToernooiTxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        testbtn = new javax.swing.JButton();
+        MELDINGFIELD = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Toernooi voortgang");
@@ -305,13 +368,6 @@ public class Toernooi_start extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TafelList);
 
-        vulTafelBtn.setText("vul Tafels");
-        vulTafelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vulTafelBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -319,13 +375,12 @@ public class Toernooi_start extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(vulTafelBtn))
-                        .addGap(46, 46, 46)))
-                .addContainerGap())
+                        .addComponent(jLabel1)
+                        .addGap(243, 243, 243))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,9 +389,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(vulTafelBtn)
-                .addContainerGap())
+                .addGap(40, 40, 40))
         );
 
         jLabel2.setText("Ronde");
@@ -406,13 +459,6 @@ public class Toernooi_start extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(SpelerList);
 
-        vulSpelerBtn.setText("vul Speler");
-        vulSpelerBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vulSpelerBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -422,10 +468,8 @@ public class Toernooi_start extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(vulSpelerBtn))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel3)
+                        .addGap(0, 228, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -435,9 +479,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(vulSpelerBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         jButton1.setText("Terug");
@@ -463,12 +505,7 @@ public class Toernooi_start extends javax.swing.JFrame {
             }
         });
 
-        testbtn.setText("Test");
-        testbtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testbtnActionPerformed(evt);
-            }
-        });
+        MELDINGFIELD.setText("jLabel6");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -482,13 +519,6 @@ public class Toernooi_start extends javax.swing.JFrame {
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -496,14 +526,23 @@ public class Toernooi_start extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(naamToernooiTxt)))
+                                .addComponent(naamToernooiTxt))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(73, 73, 73)
+                                        .addComponent(jButton3)))))
                         .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(testbtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPanel1, jPanel2, jPanel3});
@@ -525,12 +564,9 @@ public class Toernooi_start extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(testbtn)
-                        .addGap(2, 2, 2)))
+                    .addComponent(jButton3)
+                    .addComponent(MELDINGFIELD))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1))
         );
 
@@ -549,17 +585,6 @@ public class Toernooi_start extends javax.swing.JFrame {
         // TODO add your handling code here:+
 
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void vulTafelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulTafelBtnActionPerformed
-        // TODO add your handling code here:
-        //krijgTafels();
-
-    }//GEN-LAST:event_vulTafelBtnActionPerformed
-
-    private void vulSpelerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulSpelerBtnActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_vulSpelerBtnActionPerformed
 
     private void vulRondeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulRondeBtnActionPerformed
         // TODO add your handling code here:
@@ -586,15 +611,9 @@ public class Toernooi_start extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_SpelerListValueChanged
 
-    private void testbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testbtnActionPerformed
-        // TODO add your handling code here:
-        System.out.println("JList item size: " + SpelerList.getModel());
-
-    }//GEN-LAST:event_testbtnActionPerformed
-
     private void SpelerListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SpelerListMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_SpelerListMouseClicked
 
     private void TafelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TafelListMouseClicked
@@ -648,6 +667,7 @@ public class Toernooi_start extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel MELDINGFIELD;
     private javax.swing.JList RondeList;
     private javax.swing.JList SpelerList;
     private javax.swing.JList TafelList;
@@ -667,9 +687,6 @@ public class Toernooi_start extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     public javax.swing.JTextField naamToernooiTxt;
-    private javax.swing.JButton testbtn;
     private javax.swing.JButton vulRondeBtn;
-    private javax.swing.JButton vulSpelerBtn;
-    private javax.swing.JButton vulTafelBtn;
     // End of variables declaration//GEN-END:variables
 }
