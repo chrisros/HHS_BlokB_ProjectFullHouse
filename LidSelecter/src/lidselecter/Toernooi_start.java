@@ -71,7 +71,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                     + "LIMIT ?");
             stat3.setInt(1, whereClaus);
             stat3.setInt(2, aantalTafels);
-            stat3.setInt(3, Integer.parseInt(maxPT));
+            stat3.setInt(3, 8);
 
             ResultSet result3 = stat3.executeQuery();
 
@@ -86,24 +86,28 @@ public class Toernooi_start extends javax.swing.JFrame {
                 spelerListModel.addElement(item);
                 // WERKENDE VERSIE //
 
-                for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
-                    Object listItems = SpelerList.getModel().getElementAt(i);
-                    PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
-                            + "UPDATE toernooideelnemer "
-                            + "set Tafel_code = ? "
-                            + "where Id_toernooi = ? "
-                            + "AND Id_persoon = ? "
-                            + "AND (Tafel_code is null OR Tafel_code > ? )"
-                            + "LIMIT ?");
-                    stat4.setInt(1, selectedItem.id);
-                    stat4.setInt(2, whereClaus);
-                    stat4.setInt(3, Integer.parseInt(listItems.toString()));
-                    stat4.setInt(4, aantalTafels);
-                    stat4.setInt(5, Integer.parseInt(maxPT));
-
-                    stat4.executeUpdate();
-                } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
             } // while (result3.next()) {
+
+            for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+                ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
+                Object listItems = SpelerList.getModel().getElementAt(i);
+                PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
+                        + "UPDATE toernooideelnemer "
+                        + "set Tafel_code = ? "
+                        + "where Id_toernooi = ? "
+                        + "AND Id_persoon = ? "
+                        + "AND (Tafel_code is null OR Tafel_code > ? )"
+                        + "LIMIT ?");
+                stat4.setInt(1, selectedItem.id);
+                stat4.setInt(2, whereClaus);
+                stat4.setInt(3, Integer.parseInt(listItems.toString()));
+                System.out.println("where id_persoon = " + Integer.parseInt(listItems.toString()));
+                stat4.setInt(4, aantalTafels);
+                stat4.setInt(5, Integer.parseInt(maxPT));
+
+                stat4.executeUpdate();
+            } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
+
             //vulLijst();
         } catch (Exception e) {
             System.out.println(e);
