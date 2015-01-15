@@ -71,7 +71,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                     + "LIMIT ?");
             stat3.setInt(1, whereClaus);
             stat3.setInt(2, aantalTafels);
-            stat3.setInt(3, 8);
+            stat3.setInt(3, Integer.parseInt(maxPT));
 
             ResultSet result3 = stat3.executeQuery();
 
@@ -79,6 +79,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                 ModelItem item = new ModelItem();
                 String random = result3.getString("Id_persoon");
                 item.naam = random;
+                System.out.println("random: " + random);
 
                 ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
                 item.id = selectedItem.id;
@@ -297,9 +298,9 @@ public class Toernooi_start extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        TafelList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                TafelListValueChanged(evt);
+        TafelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TafelListMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(TafelList);
@@ -392,6 +393,11 @@ public class Toernooi_start extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
+        });
+        SpelerList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SpelerListMouseClicked(evt);
+            }
         });
         SpelerList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -574,11 +580,6 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     }//GEN-LAST:event_RondeListValueChanged
 
-    private void TafelListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_TafelListValueChanged
-        // TODO add your handling code here:
-        krijgSpeler();
-    }//GEN-LAST:event_TafelListValueChanged
-
     private void SpelerListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_SpelerListValueChanged
         // TODO add your handling code here:
         System.out.println("klik");
@@ -590,6 +591,16 @@ public class Toernooi_start extends javax.swing.JFrame {
         System.out.println("JList item size: " + SpelerList.getModel());
 
     }//GEN-LAST:event_testbtnActionPerformed
+
+    private void SpelerListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SpelerListMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_SpelerListMouseClicked
+
+    private void TafelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TafelListMouseClicked
+        // TODO add your handling code here:
+        krijgSpeler();
+    }//GEN-LAST:event_TafelListMouseClicked
 
     private void gegevensLijst() {
         try {
