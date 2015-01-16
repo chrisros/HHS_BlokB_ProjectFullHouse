@@ -43,7 +43,16 @@ public class Locatie_selector extends javax.swing.JFrame {
     {
         
     }
-    
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
     public void tabelVullen() {
 
         // TODO add your handling code here:
@@ -60,7 +69,7 @@ public class Locatie_selector extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             
                 // statement maken

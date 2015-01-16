@@ -82,13 +82,22 @@ public class Toernooi_beheren extends javax.swing.JFrame {
        
         return spelersOk;
     }
-
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
     // Hier vul je de lijst met de toernooi namen gevuld
     private void vulLijst() {
         try {
             
             //Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
             ResultSet result;
             Sql_connect.doConnect();
             if (zoekVeld.equals(""))
@@ -129,7 +138,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
         try {
             
             //Sql_connect.doConnect();
-            String zoekVeld = zoekTxt2.getText();
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
             ResultSet result;
             Sql_connect.doConnect();
             if (zoekVeld.equals(""))

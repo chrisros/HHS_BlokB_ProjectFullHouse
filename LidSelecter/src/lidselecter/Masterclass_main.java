@@ -153,7 +153,16 @@ public class Masterclass_main extends javax.swing.JFrame {
         String error = eMessage + e;
         JOptionPane.showMessageDialog(rootPane, error);
     }
-
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
     private void tabelVullen() {
         // TODO add your handling code here:
         Sql_connect.doConnect();
@@ -169,9 +178,10 @@ public class Masterclass_main extends javax.swing.JFrame {
         try {
             // connect 
             Sql_connect.doConnect();
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
             // statement maken
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from masterclass WHERE Naam_masterclass LIKE ?");
-            stat.setString(1, "%"+zoekTxt2.getText()+"%");
+            stat.setString(1, "%"+zoekVeld+"%");
             ResultSet result = stat.executeQuery();
 
             // rijen
@@ -287,7 +297,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
