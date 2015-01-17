@@ -86,8 +86,8 @@ public class Locatie_beheren extends javax.swing.JFrame {
                 result = stat.executeQuery();
             } else{
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie WHERE Naam_locatie like ? OR Plaats like ?");
-                stat.setString(1, zoekVeld);
-                stat.setString(2, zoekVeld);
+                stat.setString(1,"%" +zoekVeld + "%");
+                stat.setString(2,"%" +zoekVeld + "%");
                 result = stat.executeQuery();
                 }
                 jListModel.removeAllElements();
