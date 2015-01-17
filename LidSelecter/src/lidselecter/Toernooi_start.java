@@ -40,30 +40,30 @@ public class Toernooi_start extends javax.swing.JFrame {
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
             spelerListModel.removeAllElements();
 
+            /* OPHALEN TOTAAL SPELERS DIE WERKELIJK ZIJN INGESCHREVEN */
             PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = ?");
             stat1.setInt(1, whereClaus);
             ResultSet result1 = stat1.executeQuery();
             String inschr = "";
             while (result1.next()) {
                 inschr = result1.getString("inschrijvingen");
-                //System.out.println("aantal: " + inschr);
             }
 
+            /* OPHALEN SPELERS PER TAFEL */
             PreparedStatement stat2 = Sql_connect.getConnection().prepareStatement("select * from toernooi where Id_toernooi = ?");
             stat2.setInt(1, whereClaus);
             ResultSet result2 = stat2.executeQuery();
             String maxPT = "";
             while (result2.next()) {
                 maxPT = result2.getString("Max_speler_per_tafel");
-                //System.out.println("per tafel: " + maxPT);
             }
 
+            /* BEREKENEN AANTAL NODIGE TAFELS */
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
-            //System.out.println("aantal tafels = " + aantalTafels);
             int spelers = (aantalTafels * Integer.parseInt(maxPT));
             int overigeSpelers = Integer.parseInt(inschr) - spelers;
-            //System.out.println("overige spelers: " + overigeSpelers);
 
+            /* HIER WORDEN SPELERS RANDOM GEKOZEN EN KRIJGEN ZE EEN TAFEL ID MEE */
             PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement(""
                     + "SELECT * FROM toernooideelnemer "
                     + "where Id_toernooi = ? "
@@ -80,7 +80,6 @@ public class Toernooi_start extends javax.swing.JFrame {
                 ModelItem item = new ModelItem();
                 String random = result3.getString("Id_persoon");
                 item.naam = random;
-                System.out.println("random: " + random);
 
                 ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
                 item.id = selectedItem.id;
@@ -90,6 +89,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
             } // while (result3.next()) {
 
+            /* HIER WORDT OPGEHAALD EN DAARNA GETOOND HOEVEEL SPELERS ER NOG NIET ZIJN INGESCHREVEN */
             String nogOver = "";
             PreparedStatement stat5 = Sql_connect.getConnection().prepareStatement(""
                     + "select count(*) from toernooideelnemer where Tafel_code is null and Id_toernooi = ?;");
@@ -98,6 +98,10 @@ public class Toernooi_start extends javax.swing.JFrame {
             while (result5.next()) {
                 nogOver = result5.getString("count(*)");
             }
+            /* 
+             ALS ER GEEN SPELERS MEER TE VERDELEN ZIJN KRIJG JE EEN DIALOOG SCHERM TE ZIEN
+             HIERMEE WORDT JE DOORGESTUURD NAAR HET VOLGENDE SCHERM OM SPELERS TE KUNNEN UITSCHAKELEN
+             */
             if (Integer.parseInt(nogOver) == 0) {
                 JOptionPane.showMessageDialog(rootPane, "Er vallen geen spelers meer te verdelen, u word door gestuurd naar het volgende scherm");
 
@@ -119,6 +123,10 @@ public class Toernooi_start extends javax.swing.JFrame {
                 ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
                 item.id = selectedItem.id;
 
+                /* 
+                 BIJ DEZE FUNCTIE WORDT GEKEKEN OF ER AL MAX AANTAL SPELERS PER TAFEL ZITTEN, 
+                 ALS DIT HET GEVAL IS KRIJG JE EEN DIALOOG VENSTER MET KEUZE NOG MEER SPELERS TOE TE VOEGEN 
+                 */
                 PreparedStatement stat6 = Sql_connect.getConnection().prepareStatement("select count(*) from toernooideelnemer where Tafel_code = ? and Id_toernooi = ?;");
                 stat6.setInt(1, selectedItem.id);
                 stat6.setInt(2, whereClaus);
@@ -128,25 +136,27 @@ public class Toernooi_start extends javax.swing.JFrame {
                     aanTafel = result6.getString("count(*)");
                 }
                 if (Integer.parseInt(aanTafel) == Integer.parseInt(maxPT)) {
-
+                    /* CHECK FOR DIALOOG VENSTER */
                     if (JOptionPane.showConfirmDialog(null, "Er zitten al meer spelers aan deze tafel wilt u hier meer spelers aan toevoegen?", "WAARSCHUWING",
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-
+                        /* HIER WORDT DE TAFEL_CODE GEUPDATE */
                         for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
                             //ModelItem selectedItem = (ModelItem) TafelList.getSelectedValue();
                             Object listItems = SpelerList.getModel().getElementAt(i);
                             PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
                                     + "UPDATE toernooideelnemer "
-                                    + "set Tafel_code = ? "
+                                    + "set Tafel_code = ?,"
+                                    + "Positie = ? "
                                     + "where Id_toernooi = ? "
                                     + "AND Id_persoon = ? "
                                     + "AND (Tafel_code is null OR Tafel_code > ? )"
                                     + "LIMIT ?");
                             stat4.setInt(1, selectedItem.id);
-                            stat4.setInt(2, whereClaus);
-                            stat4.setInt(3, Integer.parseInt(listItems.toString()));
-                            stat4.setInt(4, aantalTafels);
-                            stat4.setInt(5, Integer.parseInt(maxPT));
+                            stat4.setInt(2, Integer.parseInt(inschr));
+                            stat4.setInt(3, whereClaus);
+                            stat4.setInt(4, Integer.parseInt(listItems.toString()));
+                            stat4.setInt(5, aantalTafels);
+                            stat4.setInt(6, Integer.parseInt(maxPT));
 
                             stat4.executeUpdate();
                         } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
@@ -161,26 +171,27 @@ public class Toernooi_start extends javax.swing.JFrame {
                         Object listItems = SpelerList.getModel().getElementAt(i);
                         PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement(""
                                 + "UPDATE toernooideelnemer "
-                                + "set Tafel_code = ? "
-                                + "where Id_toernooi = ? "
-                                + "AND Id_persoon = ? "
-                                + "AND (Tafel_code is null OR Tafel_code > ? )"
-                                + "LIMIT ?");
-                        stat4.setInt(1, selectedItem.id);
-                        stat4.setInt(2, whereClaus);
-                        stat4.setInt(3, Integer.parseInt(listItems.toString()));
-                        System.out.println("where id_persoon = " + Integer.parseInt(listItems.toString()));
-                        stat4.setInt(4, aantalTafels);
-                        stat4.setInt(5, Integer.parseInt(maxPT));
+                                    + "set Tafel_code = ?,"
+                                    + "Positie = ? "
+                                    + "where Id_toernooi = ? "
+                                    + "AND Id_persoon = ? "
+                                    + "AND (Tafel_code is null OR Tafel_code > ? )"
+                                    + "LIMIT ?");
+                            stat4.setInt(1, selectedItem.id);
+                            stat4.setInt(2, Integer.parseInt(inschr));
+                            stat4.setInt(3, whereClaus);
+                            stat4.setInt(4, Integer.parseInt(listItems.toString()));
+                            stat4.setInt(5, aantalTafels);
+                            stat4.setInt(6, Integer.parseInt(maxPT));
 
-                        stat4.executeUpdate();
+                            stat4.executeUpdate();
                     } // for (int i = 0; i < SpelerList.getModel().getSize(); i++) {
                 }
             } // else Integer.parseInt(nogOver) == 0)
 
             //vulLijst();
         } catch (Exception e) {
-            System.out.println(e);
+            ePopup(e);
         }
     }
 
@@ -188,7 +199,6 @@ public class Toernooi_start extends javax.swing.JFrame {
         try {
             Sql_connect.doConnect();
             String wat = idToernooiTxt.getText();
-            System.out.println("wat:" + wat);
             int whereClaus = Integer.parseInt(idToernooiTxt.getText());
 
             PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = ?");
@@ -204,21 +214,15 @@ public class Toernooi_start extends javax.swing.JFrame {
 
             while (result1.next()) {
                 inschr = result1.getString("inschrijvingen");
-                //System.out.println("aantal: " + inschr);
-
             }
             while (result2.next()) {
                 maxPT = result2.getString("Max_speler_per_tafel");
-                //System.out.println("per tafel: " + maxPT);
             }
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
-            //System.out.println("aantal tafels = " + aantalTafels);
             int spelers = (aantalTafels * Integer.parseInt(maxPT));
             int overigeSpelers = Integer.parseInt(inschr) - spelers;
-            //System.out.println("overige spelers: " + overigeSpelers);
             tafelListModel.removeAllElements();
 
-            //Random rnd = new Random();
             if ((aantalTafels == 0) & (overigeSpelers < Integer.parseInt(maxPT))) {
                 ModelItem item = new ModelItem();
                 item.id = 1;
@@ -226,7 +230,6 @@ public class Toernooi_start extends javax.swing.JFrame {
                 tafelListModel.addElement(item);
             } else {
                 for (int i1 = 1; i1 <= aantalTafels; i1++) {
-                    System.out.println("tafel:" + i1);
                     ModelItem item = new ModelItem();
                     item.id = i1;
                     item.naam = "tafel " + i1;
@@ -236,7 +239,7 @@ public class Toernooi_start extends javax.swing.JFrame {
             }
             //vulLijst();
         } catch (Exception e) {
-            System.out.println(e);
+            ePopup(e);
         }
     }
 
@@ -256,21 +259,16 @@ public class Toernooi_start extends javax.swing.JFrame {
 
             while (result1.next()) {
                 inschr = result1.getString("inschrijvingen");
-                System.out.println("aantal: " + inschr);
 
             }
             while (result2.next()) {
                 maxPT = result2.getString("Max_speler_per_tafel");
-                System.out.println("per tafel: " + maxPT);
             }
             int aantalTafels = Integer.parseInt(inschr) / Integer.parseInt(maxPT);
-            System.out.println("aantal tafels = " + aantalTafels);
             int spelers = (aantalTafels * Integer.parseInt(maxPT));
             int overigeSpelers = Integer.parseInt(inschr) - spelers;
-            System.out.println("overige spelers: " + overigeSpelers);
 
             rondeListModel.removeAllElements();
-            //Random rnd = new Random();
             int helftTafels = aantalTafels / 2;
             int Rondes;
             if (helftTafels > (Integer.parseInt(maxPT) / 2)) {
@@ -284,7 +282,6 @@ public class Toernooi_start extends javax.swing.JFrame {
                 rondeListModel.addElement(item);
             } else {
                 for (int i1 = 1; i1 <= Rondes; i1++) {
-                    System.out.println("tafel:" + i1);
                     ModelItem item = new ModelItem();
                     item.naam = "ronde " + i1;
                     rondeListModel.addElement(item);
@@ -293,35 +290,14 @@ public class Toernooi_start extends javax.swing.JFrame {
             }
             //vulLijst();
         } catch (Exception e) {
-            System.out.println(e);
+            ePopup(e);
         }
     }
 
-    private void vulLijst() {
-        try {
-            Sql_connect.doConnect();
-
-            String prepSqlStatementVoorActer = "SELECT * FROM toernooi";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-
-            ResultSet result = stat.executeQuery();
-
-            tafelListModel.removeAllElements();
-
-//
-//                //MELDINGFIELD.setText("Opvragen lijst gelukt!");
-//
-//            }
-            for (int i = 0; i < 2; i++) {
-                while (result.next()) {
-                    ModelItem item = new ModelItem();
-                    item.naam = "tafel " + i;
-                    tafelListModel.addElement(item);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    private void ePopup(Exception e) {
+        final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
+        String error = eMessage + e;
+        JOptionPane.showMessageDialog(rootPane, error);
     }
 
     /**
@@ -568,26 +544,16 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void vulRondeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vulRondeBtnActionPerformed
         // TODO add your handling code here:
-
         krijgRondes();
-
-        /* 
-         als hoeveelheid tafels meer is dan (helft van de aantal spelers per tafel) in ronde 1 dan ronde^n
-        
-        
-        
-         */
     }//GEN-LAST:event_vulRondeBtnActionPerformed
 
     private void RondeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_RondeListValueChanged
         // TODO add your handling code here:
         krijgTafels();
-
     }//GEN-LAST:event_RondeListValueChanged
 
     private void SpelerListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_SpelerListValueChanged
         // TODO add your handling code here:
-        System.out.println("klik");
         gegevensLijst();
     }//GEN-LAST:event_SpelerListValueChanged
 
@@ -604,10 +570,10 @@ public class Toernooi_start extends javax.swing.JFrame {
     private void gegevensLijst() {
         try {
             ModelItem selectedItem = (ModelItem) SpelerList.getSelectedValue();
-            System.out.println("id: " + selectedItem.id);
+            MELDINGFIELD.setText("Speler heeft tafel_code: " + selectedItem);
 
         } catch (Exception e) {
-            //System.out.println("niks geselecteerd");
+            MELDINGFIELD.setText("U heeft geen speler geselecteerd");
         }
     }
 
