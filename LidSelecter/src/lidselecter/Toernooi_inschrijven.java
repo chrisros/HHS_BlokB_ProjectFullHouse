@@ -157,12 +157,22 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             MELDINGFIELD.setText("Inschrijven voor toernooi: " + idToernooi + " is mislukt");
         }
     }
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
 
     // Hier vul je de lijst met de toernooi namen
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;

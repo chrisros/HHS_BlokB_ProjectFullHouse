@@ -49,7 +49,18 @@ public class LedenOverzicht extends javax.swing.JFrame {
         tabelVullen();
         tableEigenschappen();
     }
-
+   
+             public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
+             
     // hierin worden de gegevens opgeroepen om in de tabel te zetten
     private void tabelVullen() {
         // TODO add your handling code here:
@@ -61,8 +72,8 @@ public class LedenOverzicht extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = zoekTxt.getText();
-
+            String zoekVeld = removeLastChar(zoekTxt.getText());
+             
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
 

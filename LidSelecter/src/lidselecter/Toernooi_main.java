@@ -187,7 +187,16 @@ public class Toernooi_main extends javax.swing.JFrame {
         }
 
     }
-  
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
     
 
     // hierin worden de gegevens opgeroepen om in de tabel te zetten
@@ -209,7 +218,7 @@ public class Toernooi_main extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = zoekTxt2.getText();
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
 
             // statement maken
             String prepSqlStatement = "select * from toernooi where Naam like ?;";
@@ -283,7 +292,7 @@ public class Toernooi_main extends javax.swing.JFrame {
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
