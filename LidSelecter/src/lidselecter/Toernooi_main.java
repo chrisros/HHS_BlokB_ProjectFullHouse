@@ -31,8 +31,7 @@ public class Toernooi_main extends javax.swing.JFrame {
     // private PreparedStatement pst = null;
     private final DefaultTableModel table = new DefaultTableModel();
     DefaultListModel jListModel = new DefaultListModel();
-    private String meeneemId;
-    private String meeneemNaam;
+    private int meeneemId;
     private boolean fieldsOk;
     
     /**
@@ -365,6 +364,7 @@ public class Toernooi_main extends javax.swing.JFrame {
                 maxSpelersTxt.setText(add6);
                 String add7 = result.getString("Id_toernooi");
                 toernooi_IdTxt.setText(add7);
+                meeneemId = Integer.parseInt(add7);
             }
 
         } catch (Exception e) {
@@ -672,7 +672,32 @@ public class Toernooi_main extends javax.swing.JFrame {
             MELDINGFIELD.setText("Inschrijven voor toernooi: " + idToernooi + " is mislukt");
         }
     }
+/*
+       private void toernooiMeenemen() {
+        try {
+            int row = toernooiTabel.getSelectedRow();
+            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            Sql_connect.doConnect();
+            System.out.println("row"+row);
+            System.out.println("table"+Table_click);
 
+            // statement maken
+            String prepSqlStatement = "select * from toernooi where Id_toernooi = ?";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            stat.setString(1, Table_click);
+            ResultSet result = stat.executeQuery();
+
+            if (result.next()) {
+                meeneemId = result.getInt("Id_toernooi");
+                meeneemNaam = result.getString("Naam");
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    */
     private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
 
     }//GEN-LAST:event_toernooiTabelFocusGained
@@ -687,10 +712,7 @@ public class Toernooi_main extends javax.swing.JFrame {
         //toernooiMeenemen();
 
         Toernooi_start Toernooi_start = new Toernooi_start();
-        toernooiMeenemen();
-        Toernooi_start.idToernooiTxt.setText(meeneemId);
-        Toernooi_start.naamToernooiTxt.setText(meeneemNaam);
-
+        Toernooi_start.toernooiId = meeneemId;        
         this.dispose();
         Toernooi_start.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_startButtonActionPerformed
@@ -709,29 +731,7 @@ public class Toernooi_main extends javax.swing.JFrame {
         vulLijst();
     }//GEN-LAST:event_zoekTxtKeyReleased
 
-    private void toernooiMeenemen() {
-        try {
-            int row = toernooiTabel.getSelectedRow();
-
-            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
-            Sql_connect.doConnect();
-
-            // statement maken
-            String prepSqlStatement = "select * from toernooi where Id_toernooi = '" + Table_click + "'";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            ResultSet result = stat.executeQuery();
-
-            if (result.next()) {
-
-                meeneemId = result.getString("Id_toernooi");
-                meeneemNaam = result.getString("Naam");
-
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
+ 
 
     /**
      * @param args the command line arguments
