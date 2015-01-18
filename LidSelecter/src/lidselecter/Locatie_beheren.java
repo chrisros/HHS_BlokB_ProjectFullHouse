@@ -197,57 +197,55 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     }
 
     // hier weizig je de toernooien
-    private void wijzigenToernooi() {
+    private void wijzigenLocatie() {
         try {
             // verkrijg de waarders uit de velden
             int idLocatie = Integer.parseInt(idLocatieTxt.getText());
             String naamLoc = naamLocTxt.getText();
             String plaats = plaatsTxt.getText();
             String straat = straatTxt.getText();
-            String huisnummer = huisnummerTxt.getText();
+            int  huisnummer = Integer.parseInt(huisnummerTxt.getText()) ;
+            String postcode = Postcode_field.getText();
             String telnummer = telNummerTxt.getText();
             int tafel = Integer.parseInt(tafels.getText());
 
             Sql_connect.doConnect();
-            String prepSqlStatement = "UPDATE toernooi SET "
-                    + "Naam_locatie = ?, "
-                    + "Plaats = ?, "
-                    + "Straat = ?,"
-                    + "Huisnummer = ?,"
-                    + "Telefoonnummer = ?"
-                    + "Max_tafels = ?"
-                    + "WHERE Id_locatie = ?";
+            String prepSqlStatement = "UPDATE locatie set Naam_locatie = ?, Plaats =? , Straat = ?, Huisnummer = ?, Telefoonnummer = ? "
+                    + ", Postcode = ?, Max_tafels = ?"
+                    + " WHERE Id_locatie = ?";
+            
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setString(1, naamLoc);
             stat.setString(2, plaats);
             stat.setString(3, straat);
-            stat.setString(4, huisnummer);
+            stat.setInt(4, huisnummer);
             stat.setString(5, telnummer);
-            stat.setInt(6, tafel);
-            stat.setInt(7, idLocatie);
+            stat.setString(6, postcode);
+            stat.setInt(7, tafel);
+            stat.setInt(8, idLocatie);
             stat.executeUpdate();
             vulLijst();             
-            MELDINGFIELD.setText("Toernooi gewijzigd");
+            MELDINGFIELD.setText("Locatie gewijzigd");
 
         } catch (Exception e) {
             ePopup(e);
             MELDINGFIELD.setText("Wijziging mislukt!");
         }
-
     }
 
     // hier verwijder je een toernooi, geselecteerd op id
-    private void verwijderenToernooi() {
+    private void verwijderenLocatie() {
         try {
-
-            int id_toernooi = Integer.parseInt(idLocatieTxt.getText());
+            // verkrijg de waarders uit de velden
+            int idLocatie = Integer.parseInt(idLocatieTxt.getText());
+            
 
             Sql_connect.doConnect();
-            String prepSqlStatement = "DELETE FROM toernooi WHERE Id_toernooi = ?";
+            String prepSqlStatement = "Delete from locatie WHERE Id_locatie = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, id_toernooi);
+            stat.setInt(1, idLocatie);
             stat.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Toernooi met id: " + id_toernooi + " succesvol verwijderd.");
+            JOptionPane.showMessageDialog(this, "Toernooi met id: " + idLocatie + " succesvol verwijderd.");
             vulLijst();
 
         } catch (Exception e) {
@@ -291,25 +289,23 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
             String naamLoc = naamLocTxt.getText();
             String plaats = plaatsTxt.getText();
             String straat = straatTxt.getText();
-            String huisnummer = huisnummerTxt.getText();
+            int  huisnummer = Integer.parseInt(huisnummerTxt.getText()) ;
             String postcode = Postcode_field.getText();
             String telnummer = telNummerTxt.getText();
             int tafel = Integer.parseInt(tafels.getText());
 
             // sql prepair statement
             String prepSqlStatement
-                    = "INSERT INTO locatie (Max_tafels, Postcode, Naam_locatie, Plaats, "
-                    + "Straat, Huisnummer,"
-                    + "Telefoonnummer) "
+                    = "INSERT INTO locatie (Naam_locatie, Plaats, Straat, Huisnummer, Telefoonnummer, Postcode, Max_tafels)"
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, tafel);
-            stat.setString(2, naamLoc);
-            stat.setString(3, plaats);
-            stat.setString(4, straat);
-            stat.setString(5, huisnummer);
+            stat.setString(1, naamLoc);
+            stat.setString(2, plaats);
+            stat.setString(3, straat);
+            stat.setInt(4, huisnummer);
+            stat.setString(5, telnummer);
             stat.setString(6, postcode);
-            stat.setString(7, telnummer);
+            stat.setInt(7, tafel);
             stat.executeUpdate();
             // melding
             JOptionPane.showMessageDialog(rootPane, "Toevoegen nieuwe locatie gelukt");
@@ -517,10 +513,10 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(voegtoeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(wijzigenButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(verwijderenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(voegtoeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                .addComponent(wijzigenButton, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                .addComponent(verwijderenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(feedback2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -622,7 +618,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
 
     private void verwijderenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderenButtonActionPerformed
         // TODO add your handling code here:
-        verwijderenToernooi();
+        verwijderenLocatie();
     }//GEN-LAST:event_verwijderenButtonActionPerformed
 
     private void LocatieListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LocatieListMouseClicked
@@ -633,7 +629,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     private void wijzigenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wijzigenButtonActionPerformed
         // TODO add your handling code here:
         if (checkFields() == true) {
-            wijzigenToernooi();
+            wijzigenLocatie();
         }
     }//GEN-LAST:event_wijzigenButtonActionPerformed
 

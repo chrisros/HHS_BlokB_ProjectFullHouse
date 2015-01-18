@@ -91,11 +91,11 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="voegtoeButton" alignment="0" min="-2" pref="128" max="-2" attributes="0"/>
-                                  <Component id="wijzigenButton" alignment="1" min="-2" pref="128" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="voegtoeButton" alignment="0" pref="128" max="32767" attributes="0"/>
+                                  <Component id="wijzigenButton" alignment="0" pref="128" max="32767" attributes="0"/>
+                                  <Component id="verwijderenButton" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="verwijderenButton" min="-2" pref="127" max="-2" attributes="0"/>
                               <Component id="feedback2" alignment="0" min="-2" pref="203" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
