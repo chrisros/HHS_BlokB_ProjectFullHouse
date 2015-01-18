@@ -197,18 +197,21 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
     private void gegevensLijst() {
         try {
             Sql_connect.doConnect();
-            int whereClaus = Integer.parseInt(idToernooiTxt.getText());
+            int whereClaus = 1;//Integer.parseInt(idToernooiTxt.getText());
             ModelItem selectedItem = (ModelItem) uitschakelList.getSelectedValue();
 
-            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("SELECT * from toernooideelnemer where Id_toernooi = ? AND Positie = 0");
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("SELECT Id_persoon, count(*) from toernooideelnemer where Id_toernooi = ? AND Positie = 0");
             stat1.setInt(1, whereClaus);
             ResultSet result1 = stat1.executeQuery();
             String laagsteRanking = "";
+            String Ranking = "";
             while (result1.next()) {
                 laagsteRanking = result1.getString("count(*)");
+                Ranking = result1.getString("Id_persoon");
             }
+            System.out.println("statement" + stat1);
             System.out.println("count" + laagsteRanking);
-            System.out.println("id:" + selectedItem.id);
+            System.out.println("id:" + Ranking);
 
             
 
