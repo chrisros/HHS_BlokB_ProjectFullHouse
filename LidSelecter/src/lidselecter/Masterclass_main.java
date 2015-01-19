@@ -410,6 +410,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         zoekTxt2 = new javax.swing.JTextField();
+        tutorInschrijvenButton = new javax.swing.JButton();
 
         inschrijvenToernooiButton.setText("Inschrijven Toernooi");
         inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
@@ -515,6 +516,13 @@ public class Masterclass_main extends javax.swing.JFrame {
             }
         });
 
+        tutorInschrijvenButton.setText("Inschrijven als Tutor");
+        tutorInschrijvenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tutorInschrijvenButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -557,14 +565,15 @@ public class Masterclass_main extends javax.swing.JFrame {
                         .addComponent(jLabel4)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 92, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(zoekTxt))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 92, Short.MAX_VALUE)
-                        .addComponent(jButton1))))
+                            .addComponent(zoekTxt)
+                            .addComponent(tutorInschrijvenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {masterclass_IdTxt, maxSpelersTxt, minSpelersTxt, speler_codeTxt});
@@ -612,8 +621,10 @@ public class Masterclass_main extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(16, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tutorInschrijvenButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1))))
         );
@@ -677,6 +688,13 @@ public class Masterclass_main extends javax.swing.JFrame {
         tabelVullen();
     }//GEN-LAST:event_zoekTxt2KeyReleased
 
+    private void tutorInschrijvenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tutorInschrijvenButtonActionPerformed
+        // TODO add your handling code here:
+        Tutor_inschrijven Tutor_inschrijven = new Tutor_inschrijven();
+        Tutor_inschrijven.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
+    }//GEN-LAST:event_tutorInschrijvenButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -735,6 +753,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField speler_codeTxt;
+    private javax.swing.JButton tutorInschrijvenButton;
     private javax.swing.JTextField zoekTxt;
     private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables
