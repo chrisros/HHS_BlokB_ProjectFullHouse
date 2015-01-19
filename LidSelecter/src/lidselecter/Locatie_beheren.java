@@ -226,6 +226,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
             stat.executeUpdate();
             vulLijst();             
             MELDINGFIELD.setText("Locatie gewijzigd");
+            JOptionPane.showMessageDialog(rootPane, "Wijzigen van de locatie gelukt");
 
         } catch (Exception e) {
             ePopup(e);
@@ -583,8 +584,8 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
                     .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
+                .addGap(18, 18, 18)
                 .addComponent(backToMain)
                 .addGap(52, 52, 52))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -619,6 +620,9 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     private void verwijderenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderenButtonActionPerformed
         // TODO add your handling code here:
         verwijderenLocatie();
+            this.dispose();
+            Locatie_beheren Locatie_beheren = new Locatie_beheren();
+            Locatie_beheren.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_verwijderenButtonActionPerformed
 
     private void LocatieListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LocatieListMouseClicked
@@ -630,6 +634,9 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
         // TODO add your handling code here:
         if (checkFields() == true) {
             wijzigenLocatie();
+            this.dispose();
+            Locatie_beheren Locatie_beheren = new Locatie_beheren();
+            Locatie_beheren.setVisible(rootPaneCheckingEnabled);
         }
     }//GEN-LAST:event_wijzigenButtonActionPerformed
 
