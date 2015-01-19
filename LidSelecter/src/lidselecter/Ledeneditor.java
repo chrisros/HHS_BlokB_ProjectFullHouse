@@ -151,21 +151,20 @@ public class Ledeneditor extends javax.swing.JFrame {
     private void getLijst() {
         try {
             Sql_connect.doConnect();
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT voornaam, achternaam, Id_persoon FROM persoon ORDER BY voornaam");
-            ResultSet result = stat.executeQuery();
-
+            PreparedStatement stat2 = Sql_connect.getConnection().prepareStatement("SELECT voornaam, achternaam, Id_persoon FROM persoon ORDER BY voornaam");
+            ResultSet result2 = stat2.executeQuery();
             jListModel.removeAllElements();
-            while (result.next()) {
+            while (result2.next()) {
                 ModelItem item = new ModelItem();
-                item.id = result.getInt("Id_persoon");
-                item.voornaam = result.getString("voornaam");
-                item.achternaam = result.getString("achternaam");
+                item.id = result2.getInt("Id_persoon");
+                item.voornaam = result2.getString("voornaam");
+                item.achternaam = result2.getString("achternaam");
                 jListModel.addElement(item);
                 feedback.setText("Opvraag lijst gelukt!");
             }
 
         } catch (Exception e) {
-            ePopup(e);
+            //ePopup(e);
         }
     }
 
@@ -239,9 +238,8 @@ public class Ledeneditor extends javax.swing.JFrame {
 
             //parse fields to prepstat
             Sql_connect.doConnect();
-            String prepSqlStatementAdd = "INSERT INTO persoon (voornaam, Achternaam, Adres, Postcode, Woonplaats, Land, Email, Telefoonnummer) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementAdd);
+                      PreparedStatement stat = Sql_connect.getConnection().prepareStatement("INSERT INTO persoon (voornaam, Achternaam, Adres, Postcode, Woonplaats, Land, Email, Telefoonnummer) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             //stat.setInt(1, code);
             stat.setString(1, rnaam);
             stat.setString(2, anaam);
@@ -254,7 +252,7 @@ public class Ledeneditor extends javax.swing.JFrame {
 
             stat.executeUpdate();
             feedback.setText("Toevoegen lid gelukt!");
-            getLijst();
+            
 
         } catch (Exception e) {
             ePopup(e);
@@ -464,6 +462,7 @@ public class Ledeneditor extends javax.swing.JFrame {
         telefoon = new javax.swing.JTextField();
         zoekTxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         jFormattedTextField1.setText("DD");
@@ -588,6 +587,13 @@ public class Ledeneditor extends javax.swing.JFrame {
 
         jLabel5.setText("Zoeken");
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -637,13 +643,15 @@ public class Ledeneditor extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 6, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 6, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -697,7 +705,7 @@ public class Ledeneditor extends javax.swing.JFrame {
                         .addComponent(wijzig)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(verwijder))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSeparator1))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -705,7 +713,9 @@ public class Ledeneditor extends javax.swing.JFrame {
                     .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1))
         );
 
         jButton3.setText("Terug");
@@ -780,18 +790,21 @@ public class Ledeneditor extends javax.swing.JFrame {
     private void voegtoeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voegtoeActionPerformed
         if (checkFields() == true) {
             addPerson();
-            this.dispose();
-            Ledeneditor Ledeneditor = new Ledeneditor();
-           Ledeneditor.setVisible(rootPaneCheckingEnabled);
+            //Ledeneditor Ledeneditor = new Ledeneditor();
+            //Ledeneditor.setVisible(rootPaneCheckingEnabled);
+            //this.dispose();
+            getLijst();
+            getLijst();
+                    
         }
     }//GEN-LAST:event_voegtoeActionPerformed
 
     private void verwijderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderActionPerformed
 
         deletePerson();
-        this.dispose();
-            Ledeneditor Ledeneditor = new Ledeneditor();
-           Ledeneditor.setVisible(rootPaneCheckingEnabled);
+        //this.dispose();
+           // Ledeneditor Ledeneditor = new Ledeneditor();
+           //Ledeneditor.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_verwijderActionPerformed
 
     private void jListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListValueChanged
@@ -804,8 +817,7 @@ public class Ledeneditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jListCaretPositionChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //getLijst();
-        setFields();
+        getLijst();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPanel1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyPressed
@@ -868,6 +880,7 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel feedback;
     private javax.swing.JTextField id;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
