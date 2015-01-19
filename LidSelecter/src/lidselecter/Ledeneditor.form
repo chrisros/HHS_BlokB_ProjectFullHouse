@@ -157,6 +157,16 @@
                           <Component id="zoekTxt" min="-2" pref="125" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+<<<<<<< HEAD
+=======
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" min="-2" pref="174" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+>>>>>>> parent of 7f96555... fix ledeneditor
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -237,6 +247,11 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
+<<<<<<< HEAD
+=======
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+>>>>>>> parent of 7f96555... fix ledeneditor
               </Group>
           </Group>
         </DimensionLayout>
@@ -394,6 +409,17 @@
             <Property name="text" type="java.lang.String" value="Zoeken"/>
           </Properties>
         </Component>
+<<<<<<< HEAD
+=======
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jButton1"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+          </Events>
+        </Component>
+>>>>>>> parent of 7f96555... fix ledeneditor
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="jButton3">

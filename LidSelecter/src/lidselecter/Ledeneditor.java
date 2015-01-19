@@ -464,6 +464,10 @@ public class Ledeneditor extends javax.swing.JFrame {
         telefoon = new javax.swing.JTextField();
         zoekTxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+<<<<<<< HEAD
+=======
+        jButton1 = new javax.swing.JButton();
+>>>>>>> parent of 7f96555... fix ledeneditor
         jButton3 = new javax.swing.JButton();
 
         jFormattedTextField1.setText("DD");
@@ -588,6 +592,16 @@ public class Ledeneditor extends javax.swing.JFrame {
 
         jLabel5.setText("Zoeken");
 
+<<<<<<< HEAD
+=======
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+>>>>>>> parent of 7f96555... fix ledeneditor
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -643,7 +657,16 @@ public class Ledeneditor extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+<<<<<<< HEAD
                         .addGap(0, 0, Short.MAX_VALUE)))
+=======
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 6, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
+>>>>>>> parent of 7f96555... fix ledeneditor
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -697,7 +720,11 @@ public class Ledeneditor extends javax.swing.JFrame {
                         .addComponent(wijzig)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(verwijder))
+<<<<<<< HEAD
             .addGroup(jPanel1Layout.createSequentialGroup()
+=======
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+>>>>>>> parent of 7f96555... fix ledeneditor
                 .addContainerGap()
                 .addComponent(jSeparator1))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -705,7 +732,13 @@ public class Ledeneditor extends javax.swing.JFrame {
                     .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+<<<<<<< HEAD
                 .addComponent(jScrollPane1))
+=======
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1))
+>>>>>>> parent of 7f96555... fix ledeneditor
         );
 
         jButton3.setText("Terug");
@@ -789,9 +822,15 @@ public class Ledeneditor extends javax.swing.JFrame {
     private void verwijderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verwijderActionPerformed
 
         deletePerson();
+<<<<<<< HEAD
         this.dispose();
             Ledeneditor Ledeneditor = new Ledeneditor();
            Ledeneditor.setVisible(rootPaneCheckingEnabled);
+=======
+        //this.dispose();
+           // Ledeneditor Ledeneditor = new Ledeneditor();
+           //Ledeneditor.setVisible(rootPaneCheckingEnabled);
+>>>>>>> parent of 7f96555... fix ledeneditor
     }//GEN-LAST:event_verwijderActionPerformed
 
     private void jListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListValueChanged
@@ -804,8 +843,12 @@ public class Ledeneditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jListCaretPositionChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+<<<<<<< HEAD
         //getLiijst();
         setFields();
+=======
+        getLijst();
+>>>>>>> parent of 7f96555... fix ledeneditor
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPanel1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyPressed
@@ -868,6 +911,10 @@ public class Ledeneditor extends javax.swing.JFrame {
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel feedback;
     private javax.swing.JTextField id;
+<<<<<<< HEAD
+=======
+    private javax.swing.JButton jButton1;
+>>>>>>> parent of 7f96555... fix ledeneditor
     private javax.swing.JButton jButton3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
