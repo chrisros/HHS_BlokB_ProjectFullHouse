@@ -14,7 +14,7 @@ public class ModelItem {
     public String maxInschrijf;
     public String maxPTafel;
     public String kaartCode;
-    public String locatieCode;
+    public int locatieCode;
     public String kaartType;
     public String naam;
 
@@ -51,7 +51,7 @@ public class ModelItem {
     public String kaartCode() {
         return kaartCode;
     }
-    public String locatieCode() {
+    public int locatieCode() {
         return locatieCode;
     }
     public String kaartType() {

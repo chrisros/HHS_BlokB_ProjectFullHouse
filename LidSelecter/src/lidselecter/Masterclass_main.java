@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -24,7 +25,7 @@ public class Masterclass_main extends javax.swing.JFrame {
 
     private final DefaultTableModel table = new DefaultTableModel();
     DefaultListModel jListModel = new DefaultListModel();
-
+    private boolean fieldsOk;
     /**
      * Creates new form Masterclass_main
      */
@@ -33,28 +34,71 @@ public class Masterclass_main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         maxSpelersTxt.setText("0");
         inschrijfList.setModel(jListModel);
-
         masterclassTable.setModel(table);
-        String[] Kolomnaam = {"Masterclass id", "Min Rating", "Prijs", "Max spelers", "Locatie code", "Datum"};
+        String[] Kolomnaam = {"Masterclass", "Id", "Min Rating", "Prijs", "Capaciteit", "Locatie code", "Datum"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
-        table.setColumnCount(6);
-
+        table.setColumnCount(7);
+        vulLijst();
         tabelVullen();
         tableEigenschappen();
-
+        
     }
 
+    private void checkIntField(JTextField field, int minLength, int maxLength) {
+        try {
+            if (field.getText().equals("")) {
+                MELDINGVELD.setForeground(Color.orange);
+                MELDINGVELD.setText("Veld mag niet leeg zijn");
+                field.setBackground(Color.orange);
+                fieldsOk = false;
+            } else if (field.getText().length() < minLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te kort");
+                field.setBackground(Color.red); 
+                fieldsOk = false;
+            } else if (field.getText().length() > maxLength) {
+                MELDINGVELD.setForeground(Color.red);
+                MELDINGVELD.setText("Input te lang");
+                field.setBackground(Color.red);
+                fieldsOk = false;
+            } else {
+                Integer.parseInt(field.getText());
+                MELDINGVELD.setForeground(Color.black);
+                MELDINGVELD.setText("");
+                field.setBackground(Color.white);
+            }
+        } catch (Exception e) {
+            MELDINGVELD.setForeground(Color.red);
+            MELDINGVELD.setText("Alleen cijfers toegestaan");
+            field.setBackground(Color.red);
+            fieldsOk = false;
+        }
+    }
+        private boolean checkFields() {
+        fieldsOk = true;
+        checkIntField(masterclass_IdTxt, 1, 10);
+        checkIntField(speler_codeTxt, 1, 10);
+        return fieldsOk;
+    }
+    
     private void tableEigenschappen() {
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-        masterclassTable.getColumn("Masterclass id").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Masterclass");
+        masterclassTable.getColumn("Id").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Id").setMaxWidth(50);
         masterclassTable.getColumn("Min Rating").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Min Rating").setMaxWidth(100);
         masterclassTable.getColumn("Prijs").setCellRenderer(rightRenderer);
-        masterclassTable.getColumn("Max spelers").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Prijs").setMaxWidth(70);
+        masterclassTable.getColumn("Capaciteit").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Capaciteit").setMaxWidth(100);
         masterclassTable.getColumn("Locatie code").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Locatie code").setMaxWidth(100);
         masterclassTable.getColumn("Datum").setCellRenderer(rightRenderer);
+        masterclassTable.getColumn("Datum").setMaxWidth(90);
 
         TableCellRenderer rendererFromHeader = masterclassTable.getTableHeader().getDefaultRenderer();
         JLabel headerLabel = (JLabel) rendererFromHeader;
@@ -109,11 +153,21 @@ public class Masterclass_main extends javax.swing.JFrame {
         String error = eMessage + e;
         JOptionPane.showMessageDialog(rootPane, error);
     }
-
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
     private void tabelVullen() {
         // TODO add your handling code here:
         Sql_connect.doConnect();
         // declareer de variable voor in de rs
+        String naam;
         String id;
         String rating;
         String prijs;
@@ -124,9 +178,10 @@ public class Masterclass_main extends javax.swing.JFrame {
         try {
             // connect 
             Sql_connect.doConnect();
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
             // statement maken
-            String prepSqlStatement = "select * from masterclass;";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from masterclass WHERE Naam_masterclass LIKE ?");
+            stat.setString(1, "%"+zoekVeld+"%");
             ResultSet result = stat.executeQuery();
 
             // rijen
@@ -142,6 +197,7 @@ public class Masterclass_main extends javax.swing.JFrame {
             int d = 0;
             while (result.next()) {
                 //Stop de variable in een rs
+                naam = result.getString("Naam_masterclass");
                 id = result.getString("Id_masterclass");
                 rating = result.getString("Minimale_rating");
                 prijs = result.getString("Inschrijf_prijs");
@@ -150,12 +206,13 @@ public class Masterclass_main extends javax.swing.JFrame {
                 Datum = result.getString("Datum");
 
                 // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
-                table.setValueAt(id, d, 0);
-                table.setValueAt(rating, d, 1);
-                table.setValueAt(prijs, d, 2);
-                table.setValueAt(Max_inschrijvingen_M, d, 3);
-                table.setValueAt(Id_locatie, d, 4);
-                table.setValueAt(Datum, d, 5);
+                table.setValueAt(naam, d, 0);
+                table.setValueAt(id, d, 1);
+                table.setValueAt(rating, d, 2);
+                table.setValueAt(prijs, d, 3);
+                table.setValueAt(Max_inschrijvingen_M, d, 4);
+                table.setValueAt(Id_locatie, d, 5);
+                table.setValueAt(Datum, d, 6);
 
                 // verhoog aantal totdat alles was je hebt opgevraagd is geweest
                 d++;
@@ -163,7 +220,7 @@ public class Masterclass_main extends javax.swing.JFrame {
             }
 
             result.last();
-            System.out.println(result.getRow());
+            //System.out.println(result.getRow());
 
             result.close();
             stat.close();
@@ -172,17 +229,42 @@ public class Masterclass_main extends javax.swing.JFrame {
         }
     }
 
+    private void updateProgressBar() {
+        try {
+            int row = masterclassTable.getSelectedRow();
+
+            String Table_click = masterclassTable.getModel().getValueAt(row, 1).toString();
+            Sql_connect.doConnect();
+
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as inschrijvingen from masterclassdeelnemer where Id_masterclass = ?");
+            stat.setString(1, Table_click);
+            ResultSet result = stat.executeQuery();
+            if (result.next()) {
+                String add1 = result.getString("inschrijvingen");
+                minSpelersTxt.setText(add1);
+            }
+
+            setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
+
+        } catch (Exception e) {
+            //ePopup(e);
+            System.out.println(e);
+        }
+    }
+
     private void gegevensOphalen() {
 
         try {
             int row = masterclassTable.getSelectedRow();
 
-            String Table_click = masterclassTable.getModel().getValueAt(row, 0).toString();
+            String Table_click = masterclassTable.getModel().getValueAt(row, 1).toString();
             Sql_connect.doConnect();
 
             // statement maken
-            String prepSqlStatement = "select * from masterclass where Id_masterclass = '" + Table_click + "'";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            
+            
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from masterclass where Id_masterclass = ?");
+            stat.setString(1, Table_click);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
@@ -197,10 +279,25 @@ public class Masterclass_main extends javax.swing.JFrame {
         }
     }
 
+    private void gegevensLijst() {
+        try {
+            if (inschrijfList.getSelectedValue() == null) {
+                MELDINGVELD.setText("Niets Geselecteerd.");
+            } else {
+                ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
+                speler_codeTxt.setText(Integer.toString(selectedItem.id));
+
+                MELDINGVELD.setText("Opvraag ID gelukt!");
+            }
+        } catch (Exception e) {
+            MELDINGVELD.setText("Geen naam geselecteerd!");
+        }
+    }
+
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
@@ -226,7 +323,7 @@ public class Masterclass_main extends javax.swing.JFrame {
                     item.achternaam = result.getString("achternaam");
                     jListModel.addElement(item);
 
-                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                    MELDINGVELD.setText("Opvragen lijst gelukt!");
 
                 }
 
@@ -244,7 +341,7 @@ public class Masterclass_main extends javax.swing.JFrame {
                     item.achternaam = result.getString("achternaam");
                     jListModel.addElement(item);
 
-                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                    MELDINGVELD.setText("Opvragen lijst gelukt!");
                 }
             }
         } catch (Exception e) {
@@ -299,7 +396,6 @@ public class Masterclass_main extends javax.swing.JFrame {
         minSpelersTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         maxSpelersTxt = new javax.swing.JTextField();
-        inschrijfProcesButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
         speler_codeTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -311,6 +407,10 @@ public class Masterclass_main extends javax.swing.JFrame {
         inschrijfList = new javax.swing.JList();
         jLabel4 = new javax.swing.JLabel();
         zoekTxt = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        zoekTxt2 = new javax.swing.JTextField();
+        tutorInschrijvenButton = new javax.swing.JButton();
 
         inschrijvenToernooiButton.setText("Inschrijven Toernooi");
         inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
@@ -360,20 +460,13 @@ public class Masterclass_main extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("Ingeschreven spelers");
+        jLabel6.setText("Ingeschreven spelers:");
 
         minSpelersTxt.setEditable(false);
 
-        jLabel7.setText("van");
+        jLabel7.setText("Van:");
 
         maxSpelersTxt.setEditable(false);
-
-        inschrijfProcesButton.setText("Check inschrijfproces");
-        inschrijfProcesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inschrijfProcesButtonActionPerformed(evt);
-            }
-        });
 
         progressBar.setForeground(new java.awt.Color(153, 153, 255));
 
@@ -383,10 +476,10 @@ public class Masterclass_main extends javax.swing.JFrame {
 
         masterclass_IdTxt.setEditable(false);
 
-        jLabel1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jLabel1.setText("Klik masterclass aan en vul je id in en klik op inschrijven");
+        jLabel1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jLabel1.setText("Selecteer een Masterclass en speler om de speler in te schrijven");
 
-        MELDINGVELD.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        MELDINGVELD.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
 
         inschrijfList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -405,11 +498,28 @@ public class Masterclass_main extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(inschrijfList);
 
-        jLabel4.setText("Zoeken");
+        jLabel4.setText("Speler zoeken:");
 
         zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 zoekTxtKeyReleased(evt);
+            }
+        });
+
+        jButton2.setText("Start masterclass");
+
+        jLabel5.setText("Masterclass zoeken:");
+
+        zoekTxt2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zoekTxt2KeyReleased(evt);
+            }
+        });
+
+        tutorInschrijvenButton.setText("Inschrijven als Tutor");
+        tutorInschrijvenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tutorInschrijvenButtonActionPerformed(evt);
             }
         });
 
@@ -418,98 +528,105 @@ public class Masterclass_main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel2))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(minSpelersTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                    .addComponent(masterclass_IdTxt))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(60, 60, 60)
+                                        .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(speler_codeTxt)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(inschrijvenMasterclassButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(jLabel1))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 92, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(MELDINGVELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(12, 12, 12))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addContainerGap()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel2)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jLabel3)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addComponent(inschrijvenMasterclassButton))))
-                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(zoekTxt))
-                            .addComponent(jScrollPane2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(92, 92, 92)
-                                .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(inschrijfProcesButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addGap(131, 131, 131)))
-                        .addGap(140, 140, 140)
-                        .addComponent(jButton1)))
-                .addContainerGap())
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(zoekTxt)
+                            .addComponent(tutorInschrijvenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {masterclass_IdTxt, maxSpelersTxt, minSpelersTxt, speler_codeTxt});
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {inschrijvenMasterclassButton, jButton2});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel6)
                                     .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel7)
-                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(inschrijfProcesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inschrijvenMasterclassButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(masterclass_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(inschrijvenMasterclassButton)
+                                .addGap(6, 6, 6))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tutorInschrijvenButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))))
         );
 
         pack();
@@ -518,7 +635,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     private void masterclassTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterclassTableMouseClicked
         // TODO add your handling code here:
         gegevensOphalen();
-
+        updateProgressBar();
     }//GEN-LAST:event_masterclassTableMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -532,34 +649,9 @@ public class Masterclass_main extends javax.swing.JFrame {
     }//GEN-LAST:event_inschrijvenToernooiButtonActionPerformed
 
     private void inschrijvenMasterclassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenMasterclassButtonActionPerformed
-        // TODO add your handling code here:
-        inschrijvenMasterclass();
+        if(checkFields()){inschrijvenMasterclass();}
 
     }//GEN-LAST:event_inschrijvenMasterclassButtonActionPerformed
-
-    private void inschrijfProcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijfProcesButtonActionPerformed
-        try {
-            int row = masterclassTable.getSelectedRow();
-
-            String Table_click = masterclassTable.getModel().getValueAt(row, 0).toString();
-            Sql_connect.doConnect();
-
-            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from masterclassdeelnemer where Id_masterclass = '" + Table_click + "'";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            ResultSet result = stat.executeQuery();
-
-            if (result.next()) {
-                String add1 = result.getString("inschrijvingen");
-                minSpelersTxt.setText(add1);
-            }
-
-            setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
-
-        } catch (Exception e) {
-            //ePopup(e);
-            System.out.println(e);
-        }
-    }//GEN-LAST:event_inschrijfProcesButtonActionPerformed
 
     private void inschrijfListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inschrijfListMouseClicked
         // TODO add your handling code here:
@@ -571,21 +663,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_inschrijfListValueChanged
 
-    private void gegevensLijst() {
-        try {
-            if (inschrijfList.getSelectedValue() == null) {
-                MELDINGFIELD.setText("Niets Geselecteerd.");
-            } else {
-                ModelItem selectedItem = (ModelItem) inschrijfList.getSelectedValue();
-                speler_codeTxt.setText(Integer.toString(selectedItem.id));
 
-                MELDINGFIELD.setText("Opvraag ID gelukt!");
-            }
-        } catch (Exception e) {
-            MELDINGFIELD.setText("Geen naam geselecteerd!");
-        }
-    }
-    
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
         // TODO add your handling code here:
 
@@ -605,6 +683,17 @@ public class Masterclass_main extends javax.swing.JFrame {
          met split, if array is 2
          */
     }//GEN-LAST:event_zoekTxtKeyReleased
+
+    private void zoekTxt2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxt2KeyReleased
+        tabelVullen();
+    }//GEN-LAST:event_zoekTxt2KeyReleased
+
+    private void tutorInschrijvenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tutorInschrijvenButtonActionPerformed
+        // TODO add your handling code here:
+        Tutor_inschrijven Tutor_inschrijven = new Tutor_inschrijven();
+        Tutor_inschrijven.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
+    }//GEN-LAST:event_tutorInschrijvenButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -645,14 +734,15 @@ public class Masterclass_main extends javax.swing.JFrame {
     private javax.swing.JLabel MELDINGFIELD;
     private javax.swing.JLabel MELDINGVELD;
     private javax.swing.JList inschrijfList;
-    private javax.swing.JButton inschrijfProcesButton;
     private javax.swing.JButton inschrijvenMasterclassButton;
     private javax.swing.JButton inschrijvenToernooiButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
@@ -663,7 +753,9 @@ public class Masterclass_main extends javax.swing.JFrame {
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField speler_codeTxt;
+    private javax.swing.JButton tutorInschrijvenButton;
     private javax.swing.JTextField zoekTxt;
+    private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables
 
 }

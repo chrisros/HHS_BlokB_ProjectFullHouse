@@ -29,7 +29,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         inschrijfList.setModel(jListModel);
-
+        vulLijst();
         toernooiTabel.setModel(table);
         String[] Kolomnaam = {"Toernooi id", "Datum", "Plaats code", "Max spelers"};
         table.setColumnIdentifiers(Kolomnaam);
@@ -103,13 +103,14 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             Sql_connect.doConnect();
 
             // statement maken
-            String prepSqlStatement = "select Id_toernooi from toernooi where Id_toernooi = '" + Table_click + "'";
+            String prepSqlStatement = "select * from toernooi where Id_toernooi = '" + Table_click + "'";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
-                String id_toernooi = result.getString("Id_toernooi");
-                toernooi_IdTxt.setText(id_toernooi);
+
+                String add6 = result.getString("Id_toernooi");
+                toernooi_IdTxt.setText(add6);
             }
 
         } catch (Exception e) {
@@ -138,7 +139,7 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             // sql prepair statement
             String prepSqlStatement
                     = "INSERT INTO toernooideelnemer "
-                    + "(Id_persoon, Id_toernooi, Betaald, Positie, Fiches)"
+                    + "(Id_persoon, Id_toernooi, ISbetaald, Positie, Fiches)"
                     + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, idSpeler);
@@ -156,16 +157,26 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
             MELDINGFIELD.setText("Inschrijven voor toernooi: " + idToernooi + " is mislukt");
         }
     }
+    public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
 
     // Hier vul je de lijst met de toernooi namen
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
-            
+
             if (partsLength == 2) {
 
                 String voornaam = parts[0];
@@ -392,13 +403,13 @@ public class Toernooi_inschrijven extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
-        Toernooien_main Toernooi_main = new Toernooien_main();
+        Toernooi_main Toernooi_main = new Toernooi_main();
         Toernooi_main.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
         // TODO add your handling code here:
-
+        gegevensOphalen();
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

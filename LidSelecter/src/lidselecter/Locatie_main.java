@@ -38,7 +38,17 @@ public class Locatie_main extends javax.swing.JFrame {
         tabelVullen();
         tableEigenschappen();
     }
-
+     public String removeLastChar(String s) {
+        if (s != null && s.length() > 0) {
+            if (s.substring(s.length() - 1).equals(" ")) {
+                return s.substring(0, s.length() - 1);
+            } else {
+                return s;
+            }
+        }
+        return s;
+    }
+     
     public void tabelVullen() {
 
         // TODO add your handling code here:
@@ -55,16 +65,20 @@ public class Locatie_main extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = zoekTxt.getText();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
 
-            
+            ResultSet result; 
                 // statement maken
-                String prepSqlStatement = "select * from locatie where Naam_locatie like ? OR Plaats like ?;";
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            if (zoekVeld.equals(""))
+            {
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie");
+                result = stat.executeQuery();
+            } else{
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where Naam_locatie like ? OR Plaats like ?;");
                 stat.setString(1, "%" + zoekVeld + "%");
                 stat.setString(2, "%" + zoekVeld + "%");
-                ResultSet result = stat.executeQuery();
-
+                result = stat.executeQuery();
+            }
                 // rijen
                 int i = 0;
 
@@ -101,7 +115,7 @@ public class Locatie_main extends javax.swing.JFrame {
                 System.out.println(result.getRow());
 
                 result.close();
-                stat.close();
+                //stat.close();
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e);
