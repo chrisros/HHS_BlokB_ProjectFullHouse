@@ -182,7 +182,7 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
     }
 
-    private void welBetaald() {
+    /* private void welBetaald() {
 
         try {
             Sql_connect.doConnect();
@@ -219,7 +219,7 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             ePopup(e);
         }
 
-    }
+    } */
 
     private void nietBetaald() {
 
@@ -232,8 +232,47 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
 
-            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p\n"
-                    + "JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 0 AND TD.Id_toernooi = ?";
+            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p\n" +
+"JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 0 AND TD.Id_toernooi = ?;";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+            stat.setInt(1, Table_id_click);
+
+            result = stat.executeQuery();
+            result.beforeFirst();
+
+            spelerListModel.removeAllElements();
+
+            while (result.next()) {
+                ModelItem item = new ModelItem();
+                item.id = result.getInt("Id_persoon");
+                item.voornaam = result.getString("voornaam");
+                item.achternaam = result.getString("achternaam");
+                item.isBetaald = result.getInt("IsBetaald");
+                spelerListModel.addElement(item);
+
+                MELDINGFIELD.setText("Opvragen lijst gelukt!");
+
+            }
+
+        } catch (Exception e) {
+            ePopup(e);
+        }
+
+    }
+    
+    private void welBetaald() {
+
+        try {
+            Sql_connect.doConnect();
+            String zoekVeld = ZoekSpelerTxt.getText();
+            ResultSet result;
+            Table_id_click = Integer.parseInt(Table_click);
+
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
+
+            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p\n" +
+"JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 1 AND TD.Id_toernooi = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
             stat.setInt(1, Table_id_click);
 
@@ -541,22 +580,28 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             }
 
             if (isBetaald == 0) {
-                String prepSqlStatementVoorActer = "UPDATE toernooideelnemer set IsBetaald = 1, Fiches = ? where Id_toernooi = ? AND Id_persoon = ?";
+                String prepSqlStatementVoorActer = "UPDATE toernooideelnemer set IsBetaald = 1, Fiches = ? WHERE Id_toernooi = ? AND Id_persoon = ?";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-                stat.setInt(1, Table_id_click);
-                stat.setInt(2, geefAantalFichesMee);
+                stat.setInt(1, geefAantalFichesMee);
+                stat.setInt(2, Table_id_click);
+
                 stat.setInt(3, krijgId);
                 stat.executeUpdate();
+                System.out.println(stat);
+
                 nietBetaald();
                 tabelVullen();
 
             } else if (isBetaald == 1) {
-                String prepSqlStatementVoorActer = "UPDATE toernooideelnemer set IsBetaald = 0, Fiches = 0 where Id_toernooi = ? AND Id_persoon = ? ";
+                String prepSqlStatementVoorActer = "UPDATE toernooideelnemer set IsBetaald = 0, Fiches = ? WHERE Id_toernooi = ? AND Id_persoon = ?";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-                stat.setInt(1, Table_id_click);
-                stat.setInt(2, krijgId);
+                stat.setInt(1, 0);
+                stat.setInt(2, Table_id_click);
+                stat.setInt(3, krijgId);
+                System.out.println(stat);
+
                 stat.executeUpdate();
-                
+
                 welBetaald();
                 tabelVullen();
 
@@ -564,6 +609,7 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
         } catch (Exception e) {
             //ePopup(e);
+            System.out.println("e " + e);
         }
 
     }
