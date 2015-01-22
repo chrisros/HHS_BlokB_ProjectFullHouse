@@ -30,9 +30,26 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
         initComponents();
         this.id = id;
         getInschrijfingen();
+        getNaam();
         SpelersToernooi.setModel(SpelersToernooiModel);
         getLijst();
         winnaarsWeergeven();
+    }
+    private void getNaam()
+    {
+        try {
+            /* OPHALEN NAAM TOERNOOI */
+            PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement("SELECT Naam FROM toernooi WHERE Id_toernooi = ?");
+            stat4.setInt(1, id);
+            ResultSet result4 = stat4.executeQuery();
+
+            while (result4.next()) {
+                String Naam = result4.getString("Naam");
+                Titel.setText(Naam);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     private void getLijst() {
         try {
@@ -374,7 +391,7 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Toernooi_eindstand(2).setVisible(true);
+                //new Toernooi_eindstand(2).setVisible(true);
             }
         });
     }

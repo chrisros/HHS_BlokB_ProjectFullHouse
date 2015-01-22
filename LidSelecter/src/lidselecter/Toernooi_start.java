@@ -60,9 +60,6 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     }
 
-    private void elimineerSpeler() {
-
-    }
 
     private void toernooiGegevens() {
         try {
