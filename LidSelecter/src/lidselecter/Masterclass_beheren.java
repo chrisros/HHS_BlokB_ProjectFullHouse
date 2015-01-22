@@ -107,7 +107,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         }
     }
     
-    // hier weizig je de toernooien
+    // hier weizig je de masterclasses
     private void wijzigenMasterclass() {
         try {
             // verkrijg de waarders uit de velden
@@ -147,7 +147,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
     }
     
-     // hier verwijder je een toernooi, geselecteerd op id
+     // hier verwijder je een masterclass, geselecteerd op id
     private void verwijderenMasterclass() {
         try {
 
