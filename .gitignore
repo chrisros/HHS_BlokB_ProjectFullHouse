@@ -59,3 +59,5 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 LidSelecter/nbproject/private/private.properties
+/LidSelecter/nbproject/private/
+/LidSelecter/build/

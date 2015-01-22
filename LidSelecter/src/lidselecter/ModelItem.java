@@ -21,6 +21,7 @@ public class ModelItem {
     public int locatieCode;
     public String kaartType;
     public String naam;
+    public int rating;
 
     @Override
     public String toString() {
