@@ -24,6 +24,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     private int new_masterclassID = 0;
 
     DefaultListModel masterclass = new DefaultListModel();
+    DefaultListModel locatie = new DefaultListModel();
     private boolean spelersOk;
     
     /**
@@ -35,7 +36,9 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         //locatieLabel.setText("<html>Loctie code:<br>(0 voor onbekende locatie)</html>");
         masterclassList.setModel(masterclass);
+        locatieList.setModel(locatie);
         vulLijst();
+        vulLijst2();
     }
     
     // hier krijg je het eerst volgende nummer voor het id
@@ -59,6 +62,39 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             Logger.getLogger(Ledeneditor.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new_masterclassID;
+    }
+    
+     // Hier vul je de lijst met de locaties gevuld
+    private void vulLijst2() {
+        try {
+            
+            //Sql_connect.doConnect();
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
+            ResultSet result;
+            Sql_connect.doConnect();
+            if (zoekVeld.equals(""))
+            {
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT Id_locatie, Naam_locatie FROM locatie");
+                result = stat.executeQuery();
+            } else{
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT Id_locatie, Naam_locatie FROM locatie WHERE Naam_locatie LIKE ?");
+                stat.setString(1, "%"+zoekVeld+"%");  
+                result = stat.executeQuery();
+            }
+            
+            locatie.removeAllElements();     
+            while (result.next()) {
+                ModelItem item = new ModelItem();
+
+                item.id = result.getInt("Id_locatie");
+                item.naam = result.getString("Naam_locatie");
+                locatie.addElement(item);
+                MELDINGFIELD.setText("Opvragen lijst gelukt!");
+            }
+
+        } catch (Exception e) {
+            ePopup(e);
+        }
     }
     
     // hier voeg je een nieuwe masterclass toe
@@ -231,6 +267,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                 inschrijfKostenTxt.setText(selectedItem.inschrijfKosten);
                 maxInschrijfTxt.setText(selectedItem.maxInschrijf);
                 datumTxt.setText(selectedItem.datum);
+                naamMasterclassTxt.setText(selectedItem.naam);
                 codeLocatieTxt.setText(getLocatieNaam(selectedItem.locatieCode));
                 
 
@@ -276,6 +313,12 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         return value;
     }
     
+    private void setLocatie()
+    {
+        ModelItem selectedItem = (ModelItem) locatieList.getSelectedValue();
+        codeLocatieTxt.setText(selectedItem.naam);
+    }
+    
       public String removeLastChar(String s) {
         if (s != null && s.length() > 0) {
             if (s.substring(s.length() - 1).equals(" ")) {
@@ -313,7 +356,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                 item.maxInschrijf = result.getString("Max_inschrijvingen_M");
                 item.locatieCode = result.getInt("Id_locatie");
                 item.datum = result.getString("Datum");
-                item.naam = result.getString("Naam");
+                item.naam = result.getString("Naam_masterclass");
                
                 masterclass.addElement(item);
 
@@ -354,15 +397,19 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         Wijzigen_Button = new javax.swing.JButton();
         zoekTxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        Terug_Button = new javax.swing.JButton();
         datumTxt = new javax.swing.JFormattedTextField();
         jSeparator2 = new javax.swing.JSeparator();
         MELDINGFIELD = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         masterclassList = new javax.swing.JList();
+        Terug_Button = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        locatieList = new javax.swing.JList();
+        zoekTxt2 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(710, 456));
+        setPreferredSize(new java.awt.Dimension(850, 456));
 
         jLabel1.setText("Id Masterclass");
 
@@ -414,13 +461,6 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
         jLabel8.setText("Zoek  Masterclass");
 
-        Terug_Button.setText("Terug");
-        Terug_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Terug_ButtonActionPerformed(evt);
-            }
-        });
-
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         masterclassList.setModel(new javax.swing.AbstractListModel() {
@@ -440,6 +480,27 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(masterclassList);
 
+        Terug_Button.setText("Terug");
+        Terug_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Terug_ButtonActionPerformed(evt);
+            }
+        });
+
+        locatieList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        locatieList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                locatieListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(locatieList);
+
+        jLabel9.setText("Zoek Locatie");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -447,55 +508,66 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel7))
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(codeLocatieTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                                    .addComponent(datumTxt)
-                                    .addComponent(naamMasterclassTxt)
-                                    .addComponent(idMasterclassTxt)
-                                    .addComponent(minRatingTxt)
-                                    .addComponent(inschrijfKostenTxt)
-                                    .addComponent(maxInschrijfTxt)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(Wijzigen_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(Voegtoe_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(Verwijder_Button)))
-                        .addComponent(Leegvelden_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(codeLocatieTxt)
+                            .addComponent(datumTxt)
+                            .addComponent(naamMasterclassTxt)
+                            .addComponent(minRatingTxt)
+                            .addComponent(inschrijfKostenTxt)
+                            .addComponent(maxInschrijfTxt)
+                            .addComponent(idMasterclassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(Wijzigen_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Voegtoe_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(Leegvelden_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Verwijder_Button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Terug_Button)
-                    .addComponent(jScrollPane2))
-                .addGap(40, 40, 40))
+                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(zoekTxt2))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(Terug_Button)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(761, 761, 761))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator2)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idMasterclassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(idMasterclassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel9))
+                    .addComponent(zoekTxt2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -523,22 +595,23 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                             .addComponent(naamMasterclassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Voegtoe_Button)
-                            .addComponent(Verwijder_Button))
+                        .addComponent(Voegtoe_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Leegvelden_Button)
-                            .addComponent(Wijzigen_Button)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Terug_Button)
+                        .addComponent(Wijzigen_Button)
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(Verwijder_Button)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Leegvelden_Button))
+                            .addComponent(MELDINGFIELD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(26, Short.MAX_VALUE))
-            .addComponent(jSeparator2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Terug_Button)))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -547,12 +620,12 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -603,6 +676,10 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
         vulLijst();
     }//GEN-LAST:event_zoekTxtKeyReleased
+
+    private void locatieListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_locatieListValueChanged
+       setLocatie();
+    }//GEN-LAST:event_locatieListValueChanged
 
     /**
      * @param args the command line arguments
@@ -670,13 +747,17 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JList locatieList;
     private javax.swing.JList masterclassList;
     private javax.swing.JTextField maxInschrijfTxt;
     private javax.swing.JTextField minRatingTxt;
     private javax.swing.JTextField naamMasterclassTxt;
     private javax.swing.JTextField zoekTxt;
+    private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables
 }
