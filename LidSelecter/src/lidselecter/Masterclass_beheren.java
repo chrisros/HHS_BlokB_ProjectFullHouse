@@ -476,7 +476,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                         .addComponent(Leegvelden_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
