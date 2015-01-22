@@ -84,10 +84,11 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
             // sql prepair statement
             String prepSqlStatement
-                    = "INSERT INTO toernooi (Id_masterclass, Minimale_rating, Inschrijf_prijs, "
+                    = "INSERT INTO masterclass (Minimale_rating, Inschrijf_prijs, "
                     + "Max_inschrijvingen_M, Id_locatie, "
                     + "Datum, Naam_masterclass)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
+            
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setString(1, Id_masterclass);
             stat.setInt(2, rating);
@@ -126,7 +127,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                     + "Id_locatie = ?,"
                     + "Datum = ?,"
                     + "Naam_masterclass = ? "
-                    + "WHERE Id_toernooi = ?";
+                    + "WHERE Id_masterclass = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, Id_masterclass);
             stat.setInt(2, rating);
@@ -666,9 +667,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     private void Voegtoe_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Voegtoe_ButtonActionPerformed
         if (checkFields()) {
             nieuwMasterclass();
-            this.dispose();
-            Masterclass_beheren Masterclass_beheren = new Masterclass_beheren();
-            Masterclass_beheren.setVisible(rootPaneCheckingEnabled);
+            vulLijst();
         }
     }//GEN-LAST:event_Voegtoe_ButtonActionPerformed
 
