@@ -246,9 +246,9 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private boolean nextRoundFinal() {
         if (totaalAantalTafels > maxPertafel) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -348,9 +348,8 @@ public class Toernooi_start extends javax.swing.JFrame {
                 } else if (spelersAanTafel == 1) {
                     final String eMessage = "Dit is de laatste speler van de tafel, deze gaat door naar de volgende ronde";
                     JOptionPane.showMessageDialog(rootPane, eMessage);
-                    
-                    if (checkIfRondeIsOver())
-                    {
+
+                    if (checkIfRondeIsOver()) {
                         eindigRonde();
                     }
                 }
@@ -368,18 +367,16 @@ public class Toernooi_start extends javax.swing.JFrame {
             PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as aantalPersonen from toernooideelnemer where Id_toernooi = ? AND Positie = 0");
             stat4.setInt(1, whereClaus);
             ResultSet result = stat4.executeQuery();
-            
-            while (result.next()) 
-            {
+
+            while (result.next()) {
                 int spelersInToernooi = result.getInt("aantalPersonen");
                 System.out.println(spelersInToernooi);
-                
-                if (spelersInToernooi == totaalAantalTafels) 
-                {
+
+                if (spelersInToernooi == totaalAantalTafels) {
                     return true;
                 }
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_start.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -393,7 +390,7 @@ public class Toernooi_start extends javax.swing.JFrame {
         int rondeId = 2;
         int inschrijvingen = totaalAantalTafels;
 
-        Toernooi_vordering Toernooi_vordering = new Toernooi_vordering(id, rondeId, inschrijvingen, maxPertafel, rating);
+        Toernooi_vordering Toernooi_vordering = new Toernooi_vordering(id, rondeId, inschrijvingen, maxPertafel, rating, nextRoundFinal());
         Toernooi_vordering.setVisible(rootPaneCheckingEnabled);
 
         this.dispose();

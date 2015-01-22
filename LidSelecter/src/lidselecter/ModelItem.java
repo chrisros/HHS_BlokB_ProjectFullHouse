@@ -11,6 +11,7 @@ public class ModelItem {
     public int aantalFiches;
     public String idTafel;
     public String positie;
+    public int eindPositie = 0;
     public String voornaam;
     public String achternaam;
     public String datum;
@@ -26,10 +27,13 @@ public class ModelItem {
     @Override
     public String toString() {
         String description;
-        if(null==naam)
+        if(null==naam&&eindPositie!=0)
+        {
+            description = " "+eindPositie+"  "+voornaam+" "+achternaam; 
+        } else if(null==naam)
         {
             description = voornaam+" "+achternaam;
-        } else
+        }else
         {
             description = naam;   
         }     
