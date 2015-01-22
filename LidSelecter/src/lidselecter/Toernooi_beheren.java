@@ -71,6 +71,7 @@ public class Toernooi_beheren extends javax.swing.JFrame {
                         maxInschrijfTxt.setBackground(Color.red);
                     } else
                     {
+                        spelersOk = true;
                         MELDINGFIELD.setForeground(Color.black);
                         maxInschrijfTxt.setBackground(Color.white);
                     }

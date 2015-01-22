@@ -18,14 +18,14 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author Aaik
  */
-public class Locatie_main extends javax.swing.JFrame {
+public class Locatie_main_ongespeeld extends javax.swing.JFrame {
 
     private final DefaultTableModel table = new DefaultTableModel();
 
     /**
      * Creates new form Locatie_main
      */
-    public Locatie_main() {
+    public Locatie_main_ongespeeld() {
         initComponents();
         setLocationRelativeTo(null);
 
@@ -71,10 +71,10 @@ public class Locatie_main extends javax.swing.JFrame {
                 // statement maken
             if (zoekVeld.equals(""))
             {
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie");
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie WHERE Id_locatie NOT IN (select Id_locatie from toernooi)");
                 result = stat.executeQuery();
             } else{
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where Naam_locatie like ? OR Plaats like ?;");
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where Naam_locatie like ? OR Plaats like ? AND NOT IN (select Id_locatie from toernooi)");
                 stat.setString(1, "%" + zoekVeld + "%");
                 stat.setString(2, "%" + zoekVeld + "%");
                 result = stat.executeQuery();
@@ -212,7 +212,7 @@ public class Locatie_main extends javax.swing.JFrame {
             }
         });
 
-        locatieToevoegenButton1.setText("ongespeelde locaties bekijken");
+        locatieToevoegenButton1.setText("alle locaties bekijken");
         locatieToevoegenButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 locatieToevoegenButton1ActionPerformed(evt);
@@ -288,8 +288,8 @@ public class Locatie_main extends javax.swing.JFrame {
     }//GEN-LAST:event_zoekTxtKeyReleased
 
     private void locatieToevoegenButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locatieToevoegenButton1ActionPerformed
-        Locatie_main_ongespeeld Locatie_main_ongespeeld = new Locatie_main_ongespeeld();
-        Locatie_main_ongespeeld.setVisible(rootPaneCheckingEnabled);
+        Locatie_main Locatie_main = new Locatie_main();
+        Locatie_main.setVisible(rootPaneCheckingEnabled);
         this.dispose();
     }//GEN-LAST:event_locatieToevoegenButton1ActionPerformed
 
@@ -310,20 +310,20 @@ public class Locatie_main extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Locatie_main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Locatie_main_ongespeeld.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Locatie_main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Locatie_main_ongespeeld.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Locatie_main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Locatie_main_ongespeeld.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Locatie_main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Locatie_main_ongespeeld.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Locatie_main().setVisible(true);
+                new Locatie_main_ongespeeld().setVisible(true);
             }
         });
     }

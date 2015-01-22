@@ -175,7 +175,7 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
     // hier geef je de eisen mee
     private boolean checkFields() {
         fieldsOk = true;
-        checkStringField(idLocatieTxt, 1, 100);
+        //checkStringField(idLocatieTxt, 1, 100);
         checkStringField(naamLocTxt, 2, 250);
         checkStringField(plaatsTxt, 3, 100);
         checkStringField(straatTxt, 4, 40);
@@ -210,8 +210,14 @@ private void checkIntField(JTextField field, int minLength, int maxLength) {
             int tafel = Integer.parseInt(tafels.getText());
 
             Sql_connect.doConnect();
-            String prepSqlStatement = "UPDATE locatie set Naam_locatie = ?, Plaats =? , Straat = ?, Huisnummer = ?, Telefoonnummer = ? "
-                    + ", Postcode = ?, Max_tafels = ?"
+            String prepSqlStatement = "UPDATE locatie set "
+                    + "Naam_locatie = ?, "
+                    + "Plaats =? , "
+                    + "Straat = ?, "
+                    + "Huisnummer = ?, "
+                    + "Telefoonnummer = ? ,"
+                    + "Postcode = ?, "
+                    + "Max_tafels = ?"
                     + " WHERE Id_locatie = ?";
             
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);

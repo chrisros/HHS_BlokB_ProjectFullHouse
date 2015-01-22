@@ -24,7 +24,7 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
     public Toernooi_eliminatie() {
         initComponents();
         uitschakelList.setModel(uitschakelModel);
-        //vulSpelers();
+        vulSpelers();
     }
 
     private void vulSpelers() {
@@ -77,7 +77,6 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
         uitgeschakeldList = new javax.swing.JList();
         idToernooiTxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,13 +152,6 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
 
         jLabel1.setText("Toernooi:");
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -169,8 +161,6 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -186,17 +176,11 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jButton2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -207,7 +191,7 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
     }//GEN-LAST:event_idToernooiTxtActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      
+        gegevensLijst();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void gegevensLijst() {
@@ -216,19 +200,18 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
             int whereClaus = 1;//Integer.parseInt(idToernooiTxt.getText());
             ModelItem selectedItem = (ModelItem) uitschakelList.getSelectedValue();
 
-            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("SELECT Id_persoon, Tafel_code from toernooideelnemer where Id_toernooi = 1 AND Positie = 0");
-            //stat1.setInt(1, whereClaus);
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("SELECT Id_persoon, count(*) from toernooideelnemer where Id_toernooi = ? AND Positie = 0");
+            stat1.setInt(1, whereClaus);
             ResultSet result1 = stat1.executeQuery();
-//            String Id_persoon = "";
-//            String Tafel_code = "";
+            String laagsteRanking = "";
+            String Ranking = "";
             while (result1.next()) {
-               String Id_persoon = result1.getString("Id_persoon");
-               String Tafel_code = result1.getString("Tafel_code");
-                System.out.println("statement" + Id_persoon);
-            System.out.println("Tafel_code " + Tafel_code);
+                laagsteRanking = result1.getString("count(*)");
+                Ranking = result1.getString("Id_persoon");
             }
-            
-            //System.out.println("id:" + Ranking);
+            System.out.println("statement" + stat1);
+            System.out.println("count" + laagsteRanking);
+            System.out.println("id:" + Ranking);
 
             
 
@@ -241,11 +224,6 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
     private void uitschakelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_uitschakelListMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_uitschakelListMouseClicked
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-          gegevensLijst();
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void krijgSpelers() {
 
@@ -289,7 +267,6 @@ public class Toernooi_eliminatie extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField idToernooiTxt;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

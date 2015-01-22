@@ -7,6 +7,7 @@ package lidselecter;
 public class ModelItem {
 
     public int id;
+    public String idTafel;
     public String positie;
     public String voornaam;
     public String achternaam;
@@ -18,22 +19,21 @@ public class ModelItem {
     public int locatieCode;
     public String kaartType;
     public String naam;
-    public String idTafel;
-    public int isBetaald;
-    public int aantalFiches;
 
     @Override
     public String toString() {
         String description;
-        if (null == naam) {
-            description = voornaam + " " + achternaam;
-        } else {
-            description = naam;
-        }
+        if(null==naam)
+        {
+            description = voornaam+" "+achternaam;
+        } else
+        {
+            description = naam;   
+        }     
         return description;
     }
-
-    public String toNaam() {
+    
+    public String toNaam(){
         return naam;
     }
 
@@ -44,23 +44,18 @@ public class ModelItem {
     public String toInschrijfKosten() {
         return inschrijfKosten;
     }
-
     public String maxInschrijf() {
         return maxInschrijf;
     }
-
     public String maxPTafel() {
         return maxPTafel;
     }
-
     public String kaartCode() {
         return kaartCode;
     }
-
     public int locatieCode() {
         return locatieCode;
     }
-
     public String kaartType() {
         return kaartType;
     }

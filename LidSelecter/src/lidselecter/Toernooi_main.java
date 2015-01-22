@@ -31,9 +31,9 @@ public class Toernooi_main extends javax.swing.JFrame {
     // private PreparedStatement pst = null;
     private final DefaultTableModel table = new DefaultTableModel();
     DefaultListModel jListModel = new DefaultListModel();
-    private String meeneemId;
-    private String meeneemNaam;
+    public int id;
     private boolean fieldsOk;
+    
     
     /**
      * Creates new form Toernooien
@@ -50,8 +50,8 @@ public class Toernooi_main extends javax.swing.JFrame {
         table.setColumnCount(9);
         vulLijst();
         tabelVullen();
-        tableEigenschappen(); 
-   }
+        tableEigenschappen();
+    }
     
     
     private void checkIntField(JTextField field, int minLength, int maxLength) {
@@ -102,8 +102,9 @@ public class Toernooi_main extends javax.swing.JFrame {
             String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
             Sql_connect.doConnect();
 
-            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = '" + Table_click + "'";
+            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            stat.setString(1, Table_click);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
@@ -112,13 +113,36 @@ public class Toernooi_main extends javax.swing.JFrame {
             }
 
             setProgress(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
-
+            
         } catch (Exception e) {
             //ePopup(e);
             System.out.println(e);
         }
     }
+    private void updateProgressBar1() {
+        try {
+            int row = toernooiTabel.getSelectedRow();
 
+            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            Sql_connect.doConnect();
+
+            String prepSqlStatement = "select count(Id_persoon) as inschrijvingen from toernooideelnemer where Id_toernooi = ? AND IsBetaald = 1";
+            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+            stat.setString(1, Table_click);
+            ResultSet result = stat.executeQuery();
+
+            if (result.next()) {
+                String add1 = result.getString("inschrijvingen");
+                minSpelersTxt.setText(add1);
+            }
+
+            setProgress1(Integer.parseInt(minSpelersTxt.getText()), Integer.parseInt(maxSpelersTxt.getText()));
+            
+        } catch (Exception e) {
+            //ePopup(e);
+            System.out.println(e);
+        }
+    }
     // hierin wordt gezorgd dat de inhoud rechts staat
     private void tableEigenschappen() {
 
@@ -187,6 +211,47 @@ public class Toernooi_main extends javax.swing.JFrame {
         }
 
     }
+        private void setProgress1(int currentPlayers, int maxPlayers) {
+        try {
+            progressBar1.setMinimum(0);
+            progressBar1.setMaximum(maxPlayers);
+            progressBar1.setName("Betaald");
+            progressBar1.setValue(currentPlayers);
+            if //als er nog niemand in geschreven staat
+                    (currentPlayers == 0) {
+                progressBar1.setString("Nog geen spelers hebben betaald");//set de text van de progressbar
+                progressBar1.setStringPainted(rootPaneCheckingEnabled);
+                progressBar1.setForeground(Color.red);//set de kleur van de text
+            } //als het toernooi vol zit
+            else if (currentPlayers == maxPlayers) {
+                progressBar1.setString("Alle spelers hebben betaald");//set de text van de progressbar
+                progressBar1.setStringPainted(rootPaneCheckingEnabled);
+                progressBar1.setForeground(Color.green);//set de kleur van de text            
+            } //als er wel mensen ingeschreven stan, maar het toernooi niet vol zit
+            else if (currentPlayers < maxPlayers) {
+                int restant = maxPlayers - currentPlayers;
+                String plaatsen = "";
+                if (restant == 1) {
+                    plaatsen = " persoon heeft";
+                } else {
+                    plaatsen = " personen hebben";
+                }
+                String text = "Nog " + restant + plaatsen + " niet betaald";//set de text van de progressbar
+                progressBar1.setString(text);
+                progressBar1.setStringPainted(rootPaneCheckingEnabled);
+                progressBar1.setForeground(Color.black);//set de kleur van de text
+            } //als er meer mensen ingeschreven staan dan mogelijk is bij dit toernooi
+            else if (currentPlayers > maxPlayers) {
+                int overschot = currentPlayers - maxPlayers;
+                progressBar1.setString("max betalingen overschreden met " + overschot);//set de text van de progressbar
+                progressBar1.setStringPainted(rootPaneCheckingEnabled);
+                progressBar1.setForeground(Color.white);//set de kleur van de text
+            }
+        } catch (Exception e) {
+            ePopup(e);
+        }
+
+    }
     public String removeLastChar(String s) {
         if (s != null && s.length() > 0) {
             if (s.substring(s.length() - 1).equals(" ")) {
@@ -218,7 +283,7 @@ public class Toernooi_main extends javax.swing.JFrame {
             // connect 
             Sql_connect.doConnect();
 
-            String zoekVeld = removeLastChar(zoekToernooiTxt.getText());
+            String zoekVeld = removeLastChar(zoekTxt2.getText());
 
             // statement maken
             String prepSqlStatement = "select * from toernooi where Naam like ?;";
@@ -265,6 +330,8 @@ public class Toernooi_main extends javax.swing.JFrame {
             }
 
             result.last();
+            System.out.println(result.getRow());
+
             result.close();
             stat.close();
         } catch (SQLException e) {
@@ -286,6 +353,9 @@ public class Toernooi_main extends javax.swing.JFrame {
             MELDINGFIELD.setText("Geen naam geselecteerd!");
         }
     }
+    
+               
+         
 
     private void vulLijst() {
         try {
@@ -300,11 +370,12 @@ public class Toernooi_main extends javax.swing.JFrame {
                 String voornaam = parts[0];
                 String achternaam = parts[1];
 
-                String prepSqlStatementVoorActer = "SELECT * FROM persoon where Voornaam like ? AND Achternaam like ?";
+                String prepSqlStatementVoorActer = "SELECT * FROM persoon where Voornaam like ? AND Achternaam like ? AND Id_persoon NOT IN (SELECT Id_persoon From toernooideelnemer where Id_toernooi=?)";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
                 stat.setString(1, "%" + voornaam + "%");
                 stat.setString(2, "%" + achternaam + "%");
-
+                stat.setString(3, toernooi_IdTxt.getText());
+                
                 ResultSet result = stat.executeQuery();
 
                 jListModel.removeAllElements();
@@ -321,9 +392,67 @@ public class Toernooi_main extends javax.swing.JFrame {
                 }
 
             } else {
-                String prepSqlStatement = "SELECT * FROM persoon where Voornaam like ?";
+                String prepSqlStatement = "SELECT * FROM persoon where Voornaam like ? AND Id_persoon NOT IN (SELECT Id_persoon From toernooideelnemer where Id_toernooi=?)";
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
                 stat.setString(1, "%" + zoekVeld + "%");
+                stat.setString(2, toernooi_IdTxt.getText());
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+                }
+            }
+        } catch (Exception e) {
+            ePopup(e);
+        }
+    }
+    
+        private void vulLijstIngeschreven() {
+        try {
+            Sql_connect.doConnect();
+            String zoekVeld = removeLastChar(zoekTxt.getText());
+
+            String[] parts = zoekVeld.split(" ");
+            int partsLength = parts.length;
+
+            if (partsLength == 2) {
+
+                String voornaam = parts[0];
+                String achternaam = parts[1];
+
+                String prepSqlStatementVoorActer = "SELECT * FROM persoon where Voornaam like ? AND Achternaam like ? AND Id_persoon IN (SELECT Id_persoon From toernooideelnemer where Id_toernooi=?)";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setString(1, "%" + voornaam + "%");
+                stat.setString(2, "%" + achternaam + "%");
+                stat.setString(3, toernooi_IdTxt.getText());
+                
+                ResultSet result = stat.executeQuery();
+
+                jListModel.removeAllElements();
+
+                while (result.next()) {
+                    ModelItem item = new ModelItem();
+                    item.id = result.getInt("Id_persoon");
+                    item.voornaam = result.getString("voornaam");
+                    item.achternaam = result.getString("achternaam");
+                    jListModel.addElement(item);
+
+                    MELDINGFIELD.setText("Opvragen lijst gelukt!");
+
+                }
+
+            } else {
+                String prepSqlStatement = "SELECT * FROM persoon where Voornaam like ? AND Id_persoon IN (SELECT Id_persoon From toernooideelnemer where Id_toernooi=?)";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
+                stat.setString(1, "%" + zoekVeld + "%");
+                stat.setString(2, toernooi_IdTxt.getText());
                 ResultSet result = stat.executeQuery();
 
                 jListModel.removeAllElements();
@@ -381,7 +510,7 @@ public class Toernooi_main extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         toernooiTabel = new javax.swing.JTable();
-        zoekToernooiTxt = new javax.swing.JTextField();
+        zoekTxt2 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         jLabel6 = new javax.swing.JLabel();
@@ -401,6 +530,9 @@ public class Toernooi_main extends javax.swing.JFrame {
         speler_codeTxt = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        progressBar1 = new javax.swing.JProgressBar();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -421,14 +553,14 @@ public class Toernooi_main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                toernooiTabelMouseClicked(evt);
-            }
-        });
         toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 toernooiTabelFocusGained(evt);
+            }
+        });
+        toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                toernooiTabelMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(toernooiTabel);
@@ -439,9 +571,9 @@ public class Toernooi_main extends javax.swing.JFrame {
             toernooiTabel.getColumnModel().getColumn(3).setHeaderValue("Max Spelers");
         }
 
-        zoekToernooiTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        zoekTxt2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                zoekToernooiTxtKeyReleased(evt);
+                zoekTxt2KeyReleased(evt);
             }
         });
 
@@ -452,6 +584,11 @@ public class Toernooi_main extends javax.swing.JFrame {
         jLabel6.setText("Ingeschreven spelers:");
 
         minSpelersTxt.setEditable(false);
+        minSpelersTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minSpelersTxtActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Van:");
 
@@ -459,6 +596,11 @@ public class Toernooi_main extends javax.swing.JFrame {
 
         jLabel1.setText("Speler zoeken:");
 
+        zoekTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoekTxtActionPerformed(evt);
+            }
+        });
         zoekTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 zoekTxtKeyReleased(evt);
@@ -515,6 +657,22 @@ public class Toernooi_main extends javax.swing.JFrame {
             }
         });
 
+        progressBar1.setForeground(new java.awt.Color(153, 153, 255));
+
+        jButton2.setText("Toon inschrijfingen");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Toon alle spelers");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -522,55 +680,61 @@ public class Toernooi_main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(0, 14, Short.MAX_VALUE)
+                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                            .addComponent(progressBar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(progressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(zoekToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel1))
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addGap(34, 34, 34)
-                                        .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel9))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel7)))
+                                .addComponent(jLabel10)
+                                .addGap(34, 34, 34)
+                                .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel9))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inschrijvenToernooiButton)
+                            .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inschrijvenToernooiButton))))))
-                    .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(zoekTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
+                                .addComponent(MELDINGFIELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(MELDINGVELD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {inschrijvenToernooiButton, startButton});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {inschrijvenToernooiButton, jButton2, jButton3, startButton});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -578,7 +742,7 @@ public class Toernooi_main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(zoekToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(zoekTxt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel8)
                         .addComponent(jLabel1))
                     .addComponent(zoekTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -589,29 +753,41 @@ public class Toernooi_main extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(startButton)
                                     .addComponent(maxSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel7)
                                     .addComponent(minSpelersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel9)
-                                        .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel10))))
-                            .addComponent(inschrijvenToernooiButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(toernooi_IdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)
+                                    .addComponent(speler_codeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10)
+                                    .addComponent(inschrijvenToernooiButton)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(startButton)
+                                    .addComponent(jButton2))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3)))
+                        .addGap(34, 34, 34))
                     .addComponent(jScrollPane2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jButton1))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {inschrijvenToernooiButton, jButton2, jButton3, startButton});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -626,6 +802,8 @@ public class Toernooi_main extends javax.swing.JFrame {
         // TODO add your handling code here:
         gegevensOphalen();
         updateProgressBar();
+        updateProgressBar1();
+        vulLijst();
     }//GEN-LAST:event_toernooiTabelMouseClicked
 
     private void inschrijvenToernooiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inschrijvenToernooiButtonActionPerformed
@@ -666,7 +844,9 @@ public class Toernooi_main extends javax.swing.JFrame {
             MELDINGFIELD.setText("Ingeschreven voor toernooi: " + idToernooi + " met speler code: " + idSpeler);
 
         } catch (Exception e) {
-            ePopup(e);
+            final String eMessage = "Persoon reeds ingeeschreven voor toernooi.";
+            String error = eMessage;
+            JOptionPane.showMessageDialog(rootPane, error);
             MELDINGFIELD.setText("Inschrijven voor toernooi: " + idToernooi + " is mislukt");
         }
     }
@@ -675,22 +855,22 @@ public class Toernooi_main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_toernooiTabelFocusGained
 
-    private void zoekToernooiTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekToernooiTxtKeyReleased
+    private void zoekTxt2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxt2KeyReleased
         // TODO add your handling code here:
         tabelVullen();
-    }//GEN-LAST:event_zoekToernooiTxtKeyReleased
+    }//GEN-LAST:event_zoekTxt2KeyReleased
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        // TODO add your handling code here:
-        //toernooiMeenemen();
-
-        Toernooi_start Toernooi_start = new Toernooi_start();
-        toernooiMeenemen();
-        Toernooi_start.idToernooiTxt.setText(meeneemId);
-        Toernooi_start.naamToernooiTxt.setText(meeneemNaam);
-
+        if(toernooi_IdTxt.getText().equals(""))
+        {
+            MELDINGFIELD.setText("Geen toernooi geselecteerd!");
+        }else
+        {
+        id = Integer.parseInt(toernooi_IdTxt.getText());
+        Toernooi_start Toernooi_start = new Toernooi_start(id);
         this.dispose();
         Toernooi_start.setVisible(rootPaneCheckingEnabled);
+        }
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void inschrijfListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inschrijfListMouseClicked
@@ -707,6 +887,22 @@ public class Toernooi_main extends javax.swing.JFrame {
         vulLijst();
     }//GEN-LAST:event_zoekTxtKeyReleased
 
+    private void zoekTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoekTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_zoekTxtActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        vulLijst();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void minSpelersTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minSpelersTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minSpelersTxtActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void toernooiMeenemen() {
         try {
             int row = toernooiTabel.getSelectedRow();
@@ -721,8 +917,8 @@ public class Toernooi_main extends javax.swing.JFrame {
 
             if (result.next()) {
 
-                meeneemId = result.getString("Id_toernooi");
-                meeneemNaam = result.getString("Naam");
+                //meeneemId = result.getString("Id_toernooi");
+                //meeneemNaam = result.getString("Naam");
 
             }
 
@@ -780,6 +976,8 @@ public class Toernooi_main extends javax.swing.JFrame {
     private javax.swing.JList inschrijfList;
     private javax.swing.JButton inschrijvenToernooiButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel6;
@@ -791,11 +989,12 @@ public class Toernooi_main extends javax.swing.JFrame {
     private javax.swing.JTextField maxSpelersTxt;
     private javax.swing.JTextField minSpelersTxt;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JProgressBar progressBar1;
     private javax.swing.JTextField speler_codeTxt;
     private javax.swing.JButton startButton;
     public javax.swing.JTable toernooiTabel;
     private javax.swing.JTextField toernooi_IdTxt;
-    private javax.swing.JTextField zoekToernooiTxt;
     private javax.swing.JTextField zoekTxt;
+    private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables
 }
