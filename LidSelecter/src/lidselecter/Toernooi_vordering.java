@@ -354,7 +354,13 @@ public class Toernooi_vordering extends javax.swing.JFrame {
                 while (result.next()) {
                     spelersAanTafel = result.getInt("aantalPersonen");
                 }
-
+                    Sql_connect.doConnect();
+                    PreparedStatement stat5 = Sql_connect.getConnection().prepareStatement("UPDATE tafel SET spelerAanwezig=? WHERE Tafel_code = ? AND toernooi = ?  LIMIT 1");
+                    stat5.setInt(1, spelersAanTafel);
+                    stat5.setString(2, eliminatie_tafel);
+                    stat5.setInt(3, whereClaus);
+                    stat5.executeUpdate();
+                    
                 if (spelersAanTafel > 1) {
                     ModelItem selectedItem = (ModelItem) SpelerList.getSelectedValue();
                     int eliminatie_id = selectedItem.id;

@@ -6,6 +6,7 @@
 package lidselecter;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.sql.*;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -636,6 +637,11 @@ public class Toernooi_main extends javax.swing.JFrame {
                 inschrijfListMouseClicked(evt);
             }
         });
+        inschrijfList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inschrijfListKeyPressed(evt);
+            }
+        });
         inschrijfList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 inschrijfListValueChanged(evt);
@@ -766,7 +772,6 @@ public class Toernooi_main extends javax.swing.JFrame {
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -927,6 +932,13 @@ public class Toernooi_main extends javax.swing.JFrame {
             isBetaald = 0;
         } 
     }//GEN-LAST:event_betaaldbuttonActionPerformed
+
+    private void inschrijfListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inschrijfListKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
+            if(checkFields()){inschrijvenToernooi();}
+        }
+        
+    }//GEN-LAST:event_inschrijfListKeyPressed
 
     private void toernooiMeenemen() {
         try {

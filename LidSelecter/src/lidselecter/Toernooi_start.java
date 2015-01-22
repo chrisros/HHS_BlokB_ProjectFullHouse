@@ -23,7 +23,8 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     DefaultListModel tafelListModel = new DefaultListModel();
     DefaultListModel spelerListModel = new DefaultListModel();
-
+    
+    int tafelCounter;
     int whereClaus;             //Toernooi ID 
     int inschrijvingen;         //hoeveelheid mensen die zich hebben ingescreven en hebben 
     int maxPertafel;
@@ -45,6 +46,7 @@ public class Toernooi_start extends javax.swing.JFrame {
      */
     public Toernooi_start(int id) {
         whereClaus = id;
+        tafelCounter = getTafelCount();
         initComponents();
         setLocationRelativeTo(null);
         TafelList.setModel(tafelListModel);
@@ -59,7 +61,22 @@ public class Toernooi_start extends javax.swing.JFrame {
         //vulLijst();
 
     }
+    //ophalen nieuwe id voor de tafel
+    private int getTafelCount() {
+        try {
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement("SELECT MAX(Tafel_code) as hoogsteTafelId FROM tafel");
+            ResultSet result1 = stat1.executeQuery();
+            while (result1.next()) {
+                int hoogsteTafelId = result1.getInt("hoogsteTafelId");
+                hoogsteTafelId++;
+                return hoogsteTafelId;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Toernooi_vordering.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
 
+    }
 
     private void toernooiGegevens() {
         try {
@@ -106,18 +123,17 @@ public class Toernooi_start extends javax.swing.JFrame {
         }
         aantalTafels = inschrijvingen / maxPertafel;
         spelers = (aantalTafels * maxPertafel);
-        overigeSpelers = inschrijvingen - spelers;
+        overigeSpelers = inschrijvingen % maxPertafel;
         totaalAantalTafels = aantalTafels;
         rating = inschrijvingen;
         if (overigeSpelers > 0) {
             if (overigeSpelers < minSpelersPerTafel) {
                 int overschot = maxPertafel + overigeSpelers;
-                //aantalTafels++;
                 bonusTafel1 = (overschot / 2);
                 bonusTafel2 = overschot - bonusTafel1;
-                totaalAantalTafels = totaalAantalTafels + 2;
+                aantalTafels--;
+                totaalAantalTafels++;
             } else {
-                //aantalTafels++;
                 bonusTafel1 = overigeSpelers;
                 bonusTafel2 = 0;
                 totaalAantalTafels++;
@@ -195,7 +211,7 @@ public class Toernooi_start extends javax.swing.JFrame {
             try {
                 Sql_connect.doConnect();
                 PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("UPDATE toernooideelnemer SET Tafel_code=?, Fiches=? WHERE Tafel_code is null AND Id_toernooi = ? LIMIT ?");
-                stat3.setInt(1, tafelCount);
+                stat3.setInt(1, tafelCounter);
                 stat3.setInt(2, fiches);
                 stat3.setInt(3, whereClaus);
                 stat3.setInt(4, maxPertafel);
@@ -204,6 +220,8 @@ public class Toernooi_start extends javax.swing.JFrame {
                 Logger.getLogger(Toernooi_start.class.getName()).log(Level.SEVERE, null, ex);
             }
             tafelCount++;
+            tafelCounter++;
+
 
         }
         if (bonusTafel1 != 0) {
@@ -212,7 +230,7 @@ public class Toernooi_start extends javax.swing.JFrame {
                 try {
                     Sql_connect.doConnect();
                     PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("UPDATE toernooideelnemer SET Tafel_code=?, Fiches=? WHERE Tafel_code is null AND Id_toernooi = ? LIMIT ?");
-                    stat3.setInt(1, tafelCount);
+                    stat3.setInt(1, tafelCounter);
                     stat3.setInt(2, fiches);
                     stat3.setInt(3, whereClaus);
                     stat3.setInt(4, bonusTafel1);
@@ -221,13 +239,15 @@ public class Toernooi_start extends javax.swing.JFrame {
                     Logger.getLogger(Toernooi_start.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 tafelCount++;
+                tafelCounter++;
+
 
             }
             if (bonusTafel2 != 0) {
                 try {
                     Sql_connect.doConnect();
                     PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("UPDATE toernooideelnemer SET Tafel_code=?, Fiches=? WHERE Tafel_code is null AND Id_toernooi = ? LIMIT ?");
-                    stat3.setInt(1, tafelCount);
+                    stat3.setInt(1, tafelCounter);
                     stat3.setInt(2, fiches);
                     stat3.setInt(3, whereClaus);
                     stat3.setInt(4, bonusTafel2);
@@ -236,6 +256,8 @@ public class Toernooi_start extends javax.swing.JFrame {
                     Logger.getLogger(Toernooi_start.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 tafelCount++;
+                tafelCounter++;
+
             }
 
         }
@@ -328,7 +350,14 @@ public class Toernooi_start extends javax.swing.JFrame {
                 while (result.next()) {
                     spelersAanTafel = result.getInt("aantalPersonen");
                 }
-
+                int newspelersAanTafel = spelersAanTafel;
+                Sql_connect.doConnect();
+                    PreparedStatement stat5 = Sql_connect.getConnection().prepareStatement("UPDATE tafel SET spelerAanwezig=? WHERE Tafel_code = ? AND toernooi = ?  LIMIT 1");
+                    stat5.setInt(1, newspelersAanTafel);
+                    stat5.setString(2, eliminatie_tafel);
+                    stat5.setInt(3, whereClaus);
+                    stat5.executeUpdate();
+                    
                 if (spelersAanTafel > 1) {
                     ModelItem selectedItem = (ModelItem) SpelerList.getSelectedValue();
                     int eliminatie_id = selectedItem.id;
