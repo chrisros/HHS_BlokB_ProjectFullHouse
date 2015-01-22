@@ -54,12 +54,6 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
         tabelVullen();
         tableEigenschappen();
-
-        if (nietBetaaltCheck.isSelected()) {
-            System.out.println("niet betaald aan");
-        }
-
-        //jLabel1.setText("Speler:");
     }
 
     private void tableEigenschappen() {
@@ -152,6 +146,11 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             Table_click = TableToernooi.getModel().getValueAt(row, 0).toString();
             TxtToernooi_ID.setText(Table_click);
             Sql_connect.doConnect();
+            if (isBetaald == 1) {
+                welBetaald();
+            } else {
+                nietBetaald();
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -181,64 +180,41 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
         }
 
     }
-
-    /* private void welBetaald() {
-
-        try {
-            Sql_connect.doConnect();
-            String zoekVeld = ZoekSpelerTxt.getText();
-            ResultSet result;
-            Table_id_click = Integer.parseInt(Table_click);
-
-            String[] parts = zoekVeld.split(" ");
-            int partsLength = parts.length;
-
-            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p"
-                    + "JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 1 AND TD.Id_toernooi = ?";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-            stat.setInt(1, Table_id_click);
-
-            result = stat.executeQuery();
-
-            spelerListModel.removeAllElements();
-            result.beforeFirst();
-
-            while (result.next()) {
-                ModelItem item = new ModelItem();
-                item.id = result.getInt("Id_persoon");
-                item.voornaam = result.getString("voornaam");
-                item.achternaam = result.getString("achternaam");
-                item.isBetaald = result.getInt("IsBetaald");
-                spelerListModel.addElement(item);
-
-                MELDINGFIELD.setText("Opvragen lijst gelukt!");
-
-            }
-
-        } catch (Exception e) {
-            ePopup(e);
-        }
-
-    } */
-
+           
     private void nietBetaald() {
-
         try {
             Sql_connect.doConnect();
-            String zoekVeld = ZoekSpelerTxt.getText();
+            String zoekVeld = removeLastChar(ZoekSpelerTxt.getText());
             ResultSet result;
             Table_id_click = Integer.parseInt(Table_click);
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
+            if (partsLength == 2) {
 
-            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p " +
-"JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 0 AND TD.Id_toernooi = ?;";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-            stat.setInt(1, Table_id_click);
+                String voornaam = parts[0];
+                String achternaam = parts[1];
 
-            result = stat.executeQuery();
-            result.beforeFirst();
+                String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p "
+                        + "JOIN toernooideelnemer TD ON TD.Id_persoon = p.Id_persoon "
+                        + "where IsBetaald = 0 AND TD.Id_toernooi = ? AND p.Voornaam like ? AND p.Achternaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setInt(1, Table_id_click);
+                stat.setString(2, "%" + voornaam + "%");
+                stat.setString(3, "%" + achternaam + "%");
+
+                result = stat.executeQuery();
+                result.beforeFirst();
+            } else {
+                String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p "
+                        + "JOIN toernooideelnemer TD ON TD.Id_persoon = p.Id_persoon "
+                        + "where IsBetaald = 0 AND TD.Id_toernooi = ? AND p.Voornaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setInt(1, Table_id_click);
+                stat.setString(2, "%" + zoekVeld + "%");
+                result = stat.executeQuery();
+                result.beforeFirst();
+            }
 
             spelerListModel.removeAllElements();
 
@@ -259,28 +235,47 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
         }
 
     }
+
+    
     
     private void welBetaald() {
 
         try {
             Sql_connect.doConnect();
-            String zoekVeld = ZoekSpelerTxt.getText();
+            String zoekVeld = removeLastChar(ZoekSpelerTxt.getText());
             ResultSet result;
             Table_id_click = Integer.parseInt(Table_click);
 
             String[] parts = zoekVeld.split(" ");
             int partsLength = parts.length;
 
-            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p " +
-"JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where IsBetaald = 1 AND TD.Id_toernooi = ?";
-            PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
-            stat.setInt(1, Table_id_click);
+            if (partsLength == 2) {
 
-            result = stat.executeQuery();
-            result.beforeFirst();
+                String voornaam = parts[0];
+                String achternaam = parts[1];
+
+                String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p "
+                        + "JOIN toernooideelnemer TD ON TD.Id_persoon = p.Id_persoon "
+                        + "where IsBetaald = 1 AND TD.Id_toernooi = ? AND p.Voornaam like ? AND p.Achternaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setInt(1, Table_id_click);
+                stat.setString(2, "%" + voornaam + "%");
+                stat.setString(3, "%" + achternaam + "%");
+
+                result = stat.executeQuery();
+                result.beforeFirst();
+            } else {
+                String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p "
+                        + "JOIN toernooideelnemer TD ON TD.Id_persoon = p.Id_persoon "
+                        + "where IsBetaald = 1 AND TD.Id_toernooi = ? AND p.Voornaam like ?";
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
+                stat.setInt(1, Table_id_click);
+                stat.setString(2, "%" + zoekVeld + "%");
+                result = stat.executeQuery();
+                result.beforeFirst();
+            }
 
             spelerListModel.removeAllElements();
-
             while (result.next()) {
                 ModelItem item = new ModelItem();
                 item.id = result.getInt("Id_persoon");
@@ -299,6 +294,9 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
     }
 
+    
+    
+    
     private void vulLijst() {
         try {
             Sql_connect.doConnect();
@@ -307,8 +305,8 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
             String[] parts = zoekVeld.split(" ");
 
-            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p " +
-"JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where TD.Id_toernooi = ?";
+            String prepSqlStatementVoorActer = "select p.Voornaam, p.Achternaam, p.Id_persoon, TD.Positie, TD.IsBetaald from persoon p "
+                    + "JOIN toernooideelnemer TD on TD.Id_persoon = p.Id_persoon where TD.Id_toernooi = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatementVoorActer);
             stat.setInt(1, Table_id_click);
 
@@ -353,8 +351,6 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         ZoekSpelerTxt = new javax.swing.JTextField();
-        welBetaaltCheck = new javax.swing.JCheckBox();
-        nietBetaaltCheck = new javax.swing.JCheckBox();
         zoekToernooiTxt = new javax.swing.JTextField();
         MELDINGFIELD = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -364,6 +360,7 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
         Updaten = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         TxtToernooi_ID = new javax.swing.JTextField();
+        betaaldbutton = new javax.swing.JToggleButton();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -410,10 +407,6 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             }
         });
 
-        welBetaaltCheck.setText("Wel Betaald");
-
-        nietBetaaltCheck.setText("Niet Betaald");
-
         zoekToernooiTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 zoekToernooiTxtKeyReleased(evt);
@@ -441,10 +434,11 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
 
         TxtToernooi_ID.setEditable(false);
 
-        jButton1.setText("Haal Op");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        betaaldbutton.setSelected(true);
+        betaaldbutton.setText("Heeft niet betaald");
+        betaaldbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                betaaldbuttonActionPerformed(evt);
             }
         });
 
@@ -455,48 +449,45 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(Updaten)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jLabel3)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(TxtSpelerId, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jLabel6)
-                                            .addGap(36, 36, 36)
-                                            .addComponent(TxtToernooi_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jLabel4)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(welBetaaltCheck)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(nietBetaaltCheck)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton1)))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(zoekToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 32, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                            .addComponent(ZoekSpelerTxt))))
-                .addContainerGap(21, Short.MAX_VALUE))
+                                .addComponent(zoekToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(TxtSpelerId, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(TxtToernooi_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Updaten, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel5))
+                                    .addComponent(betaaldbutton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(39, 39, 39))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                    .addComponent(ZoekSpelerTxt))
+                .addGap(14, 14, 14))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Updaten, jButton1});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -512,38 +503,49 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(welBetaaltCheck)
-                            .addComponent(nietBetaaltCheck)
                             .addComponent(jLabel6)
                             .addComponent(TxtToernooi_ID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                            .addComponent(betaaldbutton))
                         .addGap(4, 4, 4)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(TxtSpelerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Updaten)
                             .addComponent(jLabel4)
-                            .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Updaten)))
+                            .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
-                .addGap(26, 26, 26)
-                .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
+
+        jButton1.setText("Terug");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jButton1))
         );
 
         pack();
@@ -610,7 +612,11 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
     }
 
     private void ZoekSpelerTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ZoekSpelerTxtKeyReleased
-        vulLijst();
+        if (isBetaald == 1) {
+            welBetaald();
+        } else {
+            nietBetaald();
+        }
     }//GEN-LAST:event_ZoekSpelerTxtKeyReleased
 
     public String removeLastChar(String s) {
@@ -644,26 +650,22 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_IngeschrevenDeelnemerValueChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        if (welBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
+    private void betaaldbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_betaaldbuttonActionPerformed
+        if (betaaldbutton.getText().equals("Heeft niet betaald")) {
+            betaaldbutton.setText("Heeft wel betaald");
+            isBetaald = 1;
             welBetaald();
-        } else if (!welBetaaltCheck.isSelected() && nietBetaaltCheck.isSelected()) {
-            isWelBetaald = false;
+        } else if (betaaldbutton.getText().equals("Heeft wel betaald")) {
+            betaaldbutton.setText("Heeft niet betaald");
+            isBetaald = 0;
             nietBetaald();
-        } else if (welBetaaltCheck.isSelected() && nietBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
-            vulLijst();
-        } else if (nietBetaaltCheck.isSelected()) {
-            isWelBetaald = false;
-            nietBetaald();
-        } else if (!nietBetaaltCheck.isSelected() && welBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
-            welBetaald();
-        } else if (!welBetaaltCheck.isSelected() && !nietBetaaltCheck.isSelected()) {
-            vulLijst();
         }
+    }//GEN-LAST:event_betaaldbuttonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+        Main menu = new Main();
+        menu.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -720,6 +722,7 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
     private javax.swing.JTextField TxtToernooi_ID;
     private javax.swing.JButton Updaten;
     private javax.swing.JTextField ZoekSpelerTxt;
+    private javax.swing.JToggleButton betaaldbutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -729,8 +732,6 @@ public class Toernooi_Betalen2 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JCheckBox nietBetaaltCheck;
-    private javax.swing.JCheckBox welBetaaltCheck;
     private javax.swing.JTextField zoekToernooiTxt;
     // End of variables declaration//GEN-END:variables
 }
