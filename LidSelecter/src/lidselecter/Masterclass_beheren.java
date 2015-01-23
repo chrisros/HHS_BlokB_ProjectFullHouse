@@ -25,8 +25,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
     DefaultListModel masterclass = new DefaultListModel();
     DefaultListModel locatie = new DefaultListModel();
-    private boolean spelersOk;
-    
+
     /**
      * Creates new form Masterclass_beheren
      */
@@ -34,13 +33,12 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         initComponents();
         nieuwMasterclassId();
         setLocationRelativeTo(null);
-        //locatieLabel.setText("<html>Loctie code:<br>(0 voor onbekende locatie)</html>");
         masterclassList.setModel(masterclass);
         locatieList.setModel(locatie);
         vulLijst();
         vulLijst2();
     }
-    
+
     // hier krijg je het eerst volgende nummer voor het id
     private int nieuwMasterclassId() {
         // standaard waarde nieuw id
@@ -63,7 +61,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         }
         return new_masterclassID;
     }
-    
+
     // hier voeg je een nieuwe masterclass toe
     private void nieuwMasterclass() {
         try {
@@ -74,13 +72,14 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
             // krijg de tekst uit de velden
             String Id_masterclass = idMasterclassTxt.getText(); /* is tekstdie verkregen is uit nieuwToernooiId() methode */
+
             int rating = Integer.parseInt(minRatingTxt.getText());
             String Inschrijfkosten = inschrijfKostenTxt.getText();
             String Max_inschrijvingen_M = maxInschrijfTxt.getText();
             int Id_locatie = getLocatie(codeLocatieTxt.getText());
             String Datum = datumTxt.getText();
-            String naam = naamMasterclassTxt.getText();
-           
+            int Masterclass_Code = masterclassType.getSelectedIndex();
+            String MasterclassType = (String) masterclassType.getSelectedItem();
 
             // sql prepair statement
             String prepSqlStatement
@@ -88,7 +87,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                     + "Max_inschrijvingen_M, Id_locatie, "
                     + "Datum, Naam_masterclass)"
                     + "VALUES (?, ?, ?, ?, ?, ?)";
-            
+
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setString(1, Id_masterclass);
             stat.setInt(2, rating);
@@ -96,29 +95,28 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             stat.setString(4, Max_inschrijvingen_M);
             stat.setInt(5, Id_locatie);
             stat.setString(6, Datum);
-            stat.setString(7, naam);
+            stat.setString(7, MasterclassType);
             stat.executeUpdate();
             // melding
             JOptionPane.showMessageDialog(rootPane, "Toevoegen nieuwe masterclass gelukt");
-
 
         } catch (Exception e) {
             ePopup(e);
         }
     }
-    
+
     // hier weizig je de masterclasses
     private void wijzigenMasterclass() {
         try {
             // verkrijg de waarders uit de velden
-            int Id_masterclass = Integer.parseInt(idMasterclassTxt.getText());  
+            int Id_masterclass = Integer.parseInt(idMasterclassTxt.getText());
             int rating = Integer.parseInt(minRatingTxt.getText());
             String Inschrijfkosten = inschrijfKostenTxt.getText();
             String Max_inschrijvingen_M = maxInschrijfTxt.getText();
             int Id_locatie = getLocatie(codeLocatieTxt.getText());
             String Datum = datumTxt.getText();
-            String naam = naamMasterclassTxt.getText();
-         
+            String MasterclassType = (String) masterclassType.getSelectedItem();
+
             Sql_connect.doConnect();
             String prepSqlStatement = "UPDATE masterclass SET "
                     + "Minimale_rating = ?, "
@@ -129,13 +127,13 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                     + "Naam_masterclass = ? "
                     + "WHERE Id_masterclass = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, Id_masterclass);
-            stat.setInt(2, rating);
-            stat.setString(3, Inschrijfkosten);
-            stat.setString(4, Max_inschrijvingen_M);
-            stat.setInt(5, Id_locatie);
-            stat.setString(6, Datum);
-            stat.setString(7, naam);
+            stat.setInt(1, rating);
+            stat.setString(2, Inschrijfkosten);
+            stat.setString(3, Max_inschrijvingen_M);
+            stat.setInt(4, Id_locatie);
+            stat.setString(5, Datum);
+            stat.setString(6, MasterclassType);
+            stat.setInt(7, Id_masterclass);
             stat.executeUpdate();
             vulLijst();
             MELDINGFIELD.setText("Masterclass gewijzigd");
@@ -146,8 +144,8 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         }
 
     }
-    
-     // hier verwijder je een masterclass, geselecteerd op id
+
+    // hier verwijder je een masterclass, geselecteerd op id
     private void verwijderenMasterclass() {
         try {
 
@@ -165,20 +163,19 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             MELDINGFIELD.setText("Verwijderen mislukt");
         }
     }
-    
+
     //leegt de velden
-    private void leegVelden()
-    {
+    private void leegVelden() {
         idMasterclassTxt.setText("");
         minRatingTxt.setText("");
         inschrijfKostenTxt.setText("");
         maxInschrijfTxt.setText("");
         codeLocatieTxt.setText("");
         datumTxt.setText("");
-        naamMasterclassTxt.setText("");
+        masterclassType.setSelectedIndex(0);
         nieuwMasterclassId();
     }
-    
+
     // hier check je of de velden aan de eisen voldoen
     private void checkStringField(JTextField field, int minLength, int maxLength) {
 
@@ -211,6 +208,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         }
 
     }
+
     // hier geef je de eisen mee
     private boolean checkFields() {
         fieldsOk = true;
@@ -219,13 +217,11 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         checkStringField(inschrijfKostenTxt, 4, 40);
         checkStringField(maxInschrijfTxt, 2, 100);
         checkStringField(datumTxt, 10, 10);
-         checkStringField(naamMasterclassTxt, 2, 250);
-        
-       
+
         return fieldsOk;
     }
-    
-     private void gegevensLijst() {
+
+    private void gegevensLijst() {
         try {
             if (masterclassList.getSelectedValue() == null) {
                 MELDINGFIELD.setText("Niets Geselecteerd.");
@@ -237,8 +233,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                 maxInschrijfTxt.setText(selectedItem.maxInschrijf);
                 datumTxt.setText(selectedItem.datum);
                 codeLocatieTxt.setText(getLocatieNaam(selectedItem.locatieCode));
-                naamMasterclassTxt.setText(selectedItem.naam);
-                
+                masterclassType.setSelectedItem(selectedItem.naam);
 
                 MELDINGFIELD.setText("Opvraag ID gelukt!");
             }
@@ -246,9 +241,9 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             MELDINGFIELD.setText("Geen naam geselecteerd!");
         }
     }
-     //haalt de locatie op van de huidig geselecteerde masterclass
-    private String getLocatieNaam(int locatieID)
-    {
+
+    //haalt de locatie op van de huidig geselecteerde masterclass
+    private String getLocatieNaam(int locatieID) {
         String value = "";
         try {
             Sql_connect.doConnect();
@@ -256,16 +251,16 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             stat.setInt(1, locatieID);
             ResultSet result = stat.executeQuery();
             while (result.next()) {
-            value = result.getString("Naam_locatie");
+                value = result.getString("Naam_locatie");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_beheren.class.getName()).log(Level.SEVERE, null, ex);
-            
+
         }
         return value;
     }
-    private int getLocatie(String locatieNaam)
-    {
+
+    private int getLocatie(String locatieNaam) {
         int value = 0;
         try {
             Sql_connect.doConnect();
@@ -273,22 +268,21 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             stat.setString(1, locatieNaam);
             ResultSet result = stat.executeQuery();
             while (result.next()) {
-            value = result.getInt("Id_locatie");
+                value = result.getInt("Id_locatie");
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_beheren.class.getName()).log(Level.SEVERE, null, ex);
         }
         return value;
     }
-    
-    private void setLocatie()
-    {
+
+    private void setLocatie() {
         ModelItem selectedItem = (ModelItem) locatieList.getSelectedValue();
         codeLocatieTxt.setText(selectedItem.naam);
     }
-    
-      public String removeLastChar(String s) {
+
+    public String removeLastChar(String s) {
         if (s != null && s.length() > 0) {
             if (s.substring(s.length() - 1).equals(" ")) {
                 return s.substring(0, s.length() - 1);
@@ -298,24 +292,24 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         }
         return s;
     }
-      private void vulLijst() {
+
+    private void vulLijst() {
         try {
-            
+
             //Sql_connect.doConnect();
             String zoekVeld = removeLastChar(zoekTxt.getText());
             ResultSet result;
             Sql_connect.doConnect();
-            if (zoekVeld.equals(""))
-            {
+            if (zoekVeld.equals("")) {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM masterclass");
                 result = stat.executeQuery();
-            } else{
+            } else {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM masterclass WHERE Naam_masterclass LIKE ?");
-                stat.setString(1, "%"+zoekVeld+"%");  
+                stat.setString(1, "%" + zoekVeld + "%");
                 result = stat.executeQuery();
             }
-            
-            masterclass.removeAllElements();     
+
+            masterclass.removeAllElements();
             while (result.next()) {
                 ModelItem item = new ModelItem();
 
@@ -326,7 +320,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                 item.locatieCode = result.getInt("Id_locatie");
                 item.datum = result.getString("Datum");
                 item.naam = result.getString("Naam_masterclass");
-               
+
                 masterclass.addElement(item);
 
                 MELDINGFIELD.setText("Opvragen lijst gelukt!");
@@ -336,25 +330,25 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             ePopup(e);
         }
     }
-       // Hier vul je de lijst met de locaties gevuld
+
+    // Hier vul je de lijst met de locaties gevuld
     private void vulLijst2() {
         try {
-            
+
             //Sql_connect.doConnect();
             String zoekVeld = removeLastChar(zoekTxt2.getText());
             ResultSet result;
             Sql_connect.doConnect();
-            if (zoekVeld.equals(""))
-            {
+            if (zoekVeld.equals("")) {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT Id_locatie, Naam_locatie FROM locatie");
                 result = stat.executeQuery();
-            } else{
+            } else {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT Id_locatie, Naam_locatie FROM locatie WHERE Naam_locatie LIKE ?");
-                stat.setString(1, "%"+zoekVeld+"%");  
+                stat.setString(1, "%" + zoekVeld + "%");
                 result = stat.executeQuery();
             }
-            
-            locatie.removeAllElements();     
+
+            locatie.removeAllElements();
             while (result.next()) {
                 ModelItem item = new ModelItem();
 
@@ -384,7 +378,6 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         inschrijfKostenTxt = new javax.swing.JTextField();
         maxInschrijfTxt = new javax.swing.JTextField();
         codeLocatieTxt = new javax.swing.JTextField();
-        naamMasterclassTxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -408,6 +401,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
         locatieList = new javax.swing.JList();
         zoekTxt2 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        masterclassType = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(850, 456));
@@ -508,6 +502,8 @@ public class Masterclass_beheren extends javax.swing.JFrame {
 
         jLabel9.setText("Zoek Locatie");
 
+        masterclassType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Beginnerclass", "Mediumclass", "Proclass" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -525,16 +521,21 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                                 .addComponent(jLabel5)
                                 .addComponent(jLabel6)
                                 .addComponent(jLabel7))
-                            .addGap(31, 31, 31)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(idMasterclassTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                .addComponent(minRatingTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(inschrijfKostenTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(maxInschrijfTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(codeLocatieTxt)
-                                .addComponent(naamMasterclassTxt)
-                                .addComponent(datumTxt))
-                            .addGap(16, 16, 16))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(31, 31, 31)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(idMasterclassTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                        .addComponent(minRatingTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(inschrijfKostenTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(maxInschrijfTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(codeLocatieTxt)
+                                        .addComponent(datumTxt))
+                                    .addGap(16, 16, 16))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(masterclassType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18))))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(Leegvelden_Button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -571,6 +572,9 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                         .addComponent(Terug_Button)))
                 .addGap(10, 34, Short.MAX_VALUE))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {codeLocatieTxt, datumTxt, idMasterclassTxt, inschrijfKostenTxt, masterclassType, maxInschrijfTxt, minRatingTxt});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -608,18 +612,18 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                             .addComponent(datumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(naamMasterclassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
+                            .addComponent(jLabel7)
+                            .addComponent(masterclassType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(Voegtoe_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                         .addComponent(Wijzigen_Button)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGap(0, 1, Short.MAX_VALUE)
                                 .addComponent(Verwijder_Button)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -640,7 +644,7 @@ public class Masterclass_beheren extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -705,12 +709,12 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
     private void ePopup(Exception e) {
         final String eMessage = "Er is iets fout gegaan, neem contact op met de aplicatiebouwer, geef deze foutmelding door: ";
         String error = eMessage + e;
         JOptionPane.showMessageDialog(rootPane, error);
     }
+
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
@@ -775,9 +779,9 @@ public class Masterclass_beheren extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JList locatieList;
     private javax.swing.JList masterclassList;
+    private javax.swing.JComboBox masterclassType;
     private javax.swing.JTextField maxInschrijfTxt;
     private javax.swing.JTextField minRatingTxt;
-    private javax.swing.JTextField naamMasterclassTxt;
     private javax.swing.JTextField zoekTxt;
     private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables

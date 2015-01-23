@@ -29,7 +29,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -63,17 +63,25 @@
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="idMasterclassTxt" alignment="0" pref="100" max="32767" attributes="0"/>
-                                  <Component id="minRatingTxt" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="inschrijfKostenTxt" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="maxInschrijfTxt" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="codeLocatieTxt" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="naamMasterclassTxt" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="datumTxt" alignment="1" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="idMasterclassTxt" linkSize="1" alignment="0" pref="100" max="32767" attributes="0"/>
+                                          <Component id="minRatingTxt" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="inschrijfKostenTxt" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="maxInschrijfTxt" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="codeLocatieTxt" linkSize="1" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="datumTxt" linkSize="1" alignment="1" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="masterclassType" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -170,12 +178,12 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="naamMasterclassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="masterclassType" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="Voegtoe_Button" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="7" max="32767" attributes="0"/>
                           <Component id="Wijzigen_Button" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -184,7 +192,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="1" max="32767" attributes="0"/>
                                   <Component id="Verwijder_Button" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               </Group>
@@ -216,8 +224,6 @@
         <Component class="javax.swing.JTextField" name="maxInschrijfTxt">
         </Component>
         <Component class="javax.swing.JTextField" name="codeLocatieTxt">
-        </Component>
-        <Component class="javax.swing.JTextField" name="naamMasterclassTxt">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -372,6 +378,17 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Zoek Locatie"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="masterclassType">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="Beginnerclass"/>
+                <StringItem index="1" value="Mediumclass"/>
+                <StringItem index="2" value="Proclass"/>
+              </StringArray>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>
