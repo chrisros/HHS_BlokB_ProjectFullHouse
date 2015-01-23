@@ -31,10 +31,10 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         inschrijfList.setModel(jListModel);
         vulLijst();
         toernooiTabel.setModel(table);
-        String[] Kolomnaam = {"Masterclass id", "Datum", "Plaats code", "Max spelers"};
+        String[] Kolomnaam = {"Masterclass id", "Naam","Datum", "Plaats code", "Max spelers"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
-        table.setColumnCount(4);
+        table.setColumnCount(5);
 
         toernooiVullen();
     }
@@ -45,14 +45,15 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         // declareer de variable voor in de rs
         String id;
         String naam;
+        String datum;
         String plaats;
-        String Max_inschrijvingen_T;
+        String Max_inschrijvingen_M;
 
         try {
             // connect 
             Sql_connect.doConnect();
             // statement maken
-            String prepSqlStatement = "select * from toernooi;";
+            String prepSqlStatement = "select * from masterclass where Id_masterclass NOT IN (select Id_masterclass FROM masterClassGever)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
@@ -69,23 +70,24 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             int d = 0;
             while (result.next()) {
                 //Stop de variable in een rs
-                id = result.getString("Id_toernooi");
-                naam = result.getString("Datum");
+                id = result.getString("Id_masterclass");
+                naam = result.getString("Naam_masterclass");
+                datum = result.getString("Datum");
                 plaats = result.getString("Id_locatie");
-                Max_inschrijvingen_T = result.getString("Max_inschrijvingen_T");
+                Max_inschrijvingen_M = result.getString("Max_inschrijvingen_M");
 
                 // vul vervolgens in de tabel de waardes in als volgt: resultset, aantal, plaats
                 table.setValueAt(id, d, 0);
                 table.setValueAt(naam, d, 1);
                 table.setValueAt(plaats, d, 2);
-                table.setValueAt(Max_inschrijvingen_T, d, 3);
+                table.setValueAt(Max_inschrijvingen_M, d, 3);
+                table.setValueAt(datum, d, 4);
                 // verhoog aantal totdat alles was je hebt opgevraagd is geweest
                 d++;
 
             }
 
             result.last();
-            System.out.println(result.getRow());
 
             result.close();
             stat.close();
@@ -103,18 +105,18 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             Sql_connect.doConnect();
 
             // statement maken
-            String prepSqlStatement = "select * from toernooi where Id_toernooi = '" + Table_click + "'";
+            String prepSqlStatement = "select * from masterclass where Id_masterclass = '" + Table_click + "'";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             ResultSet result = stat.executeQuery();
 
             if (result.next()) {
 
-                String add6 = result.getString("Id_toernooi");
+                String add6 = result.getString("Id_masterclass");
                 masterclass_IdTxt.setText(add6);
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            ePopup(e);
         }
     }
 
@@ -129,32 +131,40 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         // krijg de tekst uit de velden
         int idMasterclass = Integer.parseInt(masterclass_IdTxt.getText());
         int idSpeler = Integer.parseInt(speler_codeTxt.getText());
+        
+        
+        
         try {
             //maak een connectie
             Sql_connect.doConnect();
 
-            int isBetaald = 0;
-            int isPositie = 0;
-            int aantalFisches = 0;
+            String prepSqlStatement1 = "select Id_locatie from masterclass where Id_masterclass = ?";
+            PreparedStatement stat1 = Sql_connect.getConnection().prepareStatement(prepSqlStatement1);
+            stat1.setInt(1, idMasterclass);
+            ResultSet result1 = stat1.executeQuery();
+            int locatieGegevens = 0;
+            while (result1.next()){
+                locatieGegevens = result1.getInt("Id_locatie");
+            }
+            
             // sql prepair statement
             String prepSqlStatement
-                    = "INSERT INTO toernooideelnemer "
-                    + "(Id_persoon, Id_toernooi, ISbetaald, Positie, Fiches)"
-                    + "VALUES (?, ?, ?, ?, ?)";
+                    = "INSERT INTO masterClassGever "
+                    + "(Id_masterclass, Id_tutor, Id_locatie)"
+                    + "VALUES (?, ?, ?)";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setInt(1, idSpeler);
-            stat.setInt(2, idMasterclass);
-            stat.setInt(3, isPositie);
-            stat.setInt(4, isBetaald);
-            stat.setInt(5, aantalFisches);
+            stat.setInt(1, idMasterclass);
+            stat.setInt(2, idSpeler);
+            stat.setInt(3, locatieGegevens);
 
             stat.executeUpdate();
             // melding
-            MELDINGFIELD.setText("Ingeschreven voor toernooi: " + idMasterclass + " met speler code: " + idSpeler);
+            MELDINGFIELD.setText("Ingeschreven voor masterclass: " + idMasterclass + " met tutor code: " + idSpeler);
+            toernooiVullen();
 
         } catch (Exception e) {
             ePopup(e);
-            MELDINGFIELD.setText("Inschrijven voor toernooi: " + idMasterclass + " is mislukt");
+            MELDINGFIELD.setText("Inschrijven voor masterclass: " + idMasterclass + " is mislukt");
         }
     }
     public String removeLastChar(String s) {
