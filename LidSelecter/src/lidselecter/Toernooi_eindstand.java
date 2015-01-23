@@ -140,6 +140,15 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
                  prijs1.setText(prijs);
                 }
             updateRatring(1, persoonId);
+            
+            Sql_connect.doConnect();
+                    PreparedStatement stat8 = Sql_connect.getConnection().prepareStatement("INSERT INTO rating (Id_persoon, Id_toernooi, behaalde_ronde, wijziging) VALUES (?, ?, ?, ?)");
+                    stat8.setInt(1, persoonId);
+                    stat8.setInt(2, id);
+                    stat8.setString(3, "Finale");
+                    stat8.setDouble(4, 15);
+                    stat8.executeUpdate();
+                    
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -162,6 +171,15 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
                  prijs2.setText(prijs);
                 }
             updateRatring(2, persoonId);
+            
+            Sql_connect.doConnect();
+                    PreparedStatement stat8 = Sql_connect.getConnection().prepareStatement("INSERT INTO rating (Id_persoon, Id_toernooi, behaalde_ronde, wijziging) VALUES (?, ?, ?, ?)");
+                    stat8.setInt(1, persoonId);
+                    stat8.setInt(2, id);
+                    stat8.setString(3, "Finale");
+                    stat8.setDouble(4, 10);
+                    stat8.executeUpdate();
+                    
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -184,6 +202,15 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
                  prijs3.setText(prijs);
                 }
             updateRatring(3, persoonId);
+            
+            Sql_connect.doConnect();
+                    PreparedStatement stat8 = Sql_connect.getConnection().prepareStatement("INSERT INTO rating (Id_persoon, Id_toernooi, behaalde_ronde, wijziging) VALUES (?, ?, ?, ?)");
+                    stat8.setInt(1, persoonId);
+                    stat8.setInt(2, id);
+                    stat8.setString(3, "Finale");
+                    stat8.setDouble(4, 5);
+                    stat8.executeUpdate();
+            
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }

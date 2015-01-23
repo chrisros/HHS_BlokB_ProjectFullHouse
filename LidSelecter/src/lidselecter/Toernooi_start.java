@@ -437,6 +437,14 @@ public class Toernooi_start extends javax.swing.JFrame {
                     stat7.setInt(2, eliminatie_id);
                     stat7.executeUpdate();
                     
+                    Sql_connect.doConnect();
+                    PreparedStatement stat8 = Sql_connect.getConnection().prepareStatement("INSERT INTO rating (Id_persoon, Id_toernooi, behaalde_ronde, wijziging) VALUES (?, ?, ?, ?)");
+                    stat8.setInt(1, eliminatie_id);
+                    stat8.setInt(2, whereClaus);
+                    stat8.setInt(3, rondeId);
+                    stat8.setDouble(4, berekenRating(newRating));
+                    stat8.executeUpdate();
+                    
                 } else if (spelersAanTafel == 1) {
                     final String eMessage = "Dit is de laatste speler van de tafel, deze gaat door naar de volgende ronde";
                     JOptionPane.showMessageDialog(rootPane, eMessage);
@@ -456,7 +464,7 @@ public class Toernooi_start extends javax.swing.JFrame {
     private boolean checkIfRondeIsOver() {
         try {
             Sql_connect.doConnect();
-            PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as aantalPersonen from toernooideelnemer where Id_toernooi = ? AND Positie = 0");
+            PreparedStatement stat4 = Sql_connect.getConnection().prepareStatement("select count(Id_persoon) as aantalPersonen from toernooideelnemer where Id_toernooi = ? AND Positie = 0 AND Isbetaald = 1");
             stat4.setInt(1, whereClaus);
             ResultSet result = stat4.executeQuery();
 
