@@ -89,13 +89,12 @@ public class Masterclass_beheren extends javax.swing.JFrame {
                     + "VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
-            stat.setString(1, Id_masterclass);
-            stat.setInt(2, rating);
-            stat.setString(3, Inschrijfkosten);
-            stat.setString(4, Max_inschrijvingen_M);
-            stat.setInt(5, Id_locatie);
-            stat.setString(6, Datum);
-            stat.setString(7, MasterclassType);
+            stat.setInt(1, rating);
+            stat.setString(2, Inschrijfkosten);
+            stat.setString(3, Max_inschrijvingen_M);
+            stat.setInt(4, Id_locatie);
+            stat.setString(5, Datum);
+            stat.setString(6, MasterclassType);
             stat.executeUpdate();
             // melding
             JOptionPane.showMessageDialog(rootPane, "Toevoegen nieuwe masterclass gelukt");
