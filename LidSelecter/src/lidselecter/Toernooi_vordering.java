@@ -23,21 +23,21 @@ public class Toernooi_vordering extends javax.swing.JFrame {
 
     DefaultListModel tafelListModel = new DefaultListModel();
     DefaultListModel spelerListModel = new DefaultListModel();
+    int totaalAantalTafelsoud;
     boolean isFinale;
     int tafelCount;
     int whereClaus;             //Toernooi ID 
     int inschrijvingen;         //hoeveelheid mensen die zich hebben ingescreven en hebben 
-    int maxPertafel;
-    int aantalTafels;
-    int totaalAantalTafelsoud;
-    int totaalAantalTafels;
-    int spelers;
-    int rating;
-    int overigeSpelers;
-    int bonusTafel1 = 0;
-    int bonusTafel2 = 0;
-    int rondeId;
-    final int minSpelersPerTafel = 4;
+    int maxPertafel;            //maximale hoeveelheid spelers per tafel          
+    int aantalTafels;           //hoeveelheid complete tafels
+    int totaalAantalTafels;     //totale hoefeelheid tafel
+    int spelers;                //aantal spelers aan hele tafels
+    int rating;                 //actuele hoeveelheid mensen in toernooi               
+    int overigeSpelers;         //spelers niet in hele tafel
+    int bonusTafel1 = 0;        //hoeveelheid mensen aan niet complete tafel1
+    int bonusTafel2 = 0;        //hoeveelheid mensen aan niet complete tafel1
+    int rondeId;            //hoeveelste ronde van het toernooi het is (bij start altijd 1)
+     int minSpelersPerTafel = 4;
     int fiches = 1000;
 
     /**
@@ -60,6 +60,7 @@ public class Toernooi_vordering extends javax.swing.JFrame {
         SpelerList.setModel(spelerListModel);
         idToernooiTxt.setText(Integer.toString(whereClaus));
         toernooiGegevens();
+        minSpelersPerTafel = (maxPertafel/2);
         toevoegenRonde();
         rondeLabel.setText(Integer.toString(rondeId));
         toevoegenTafel();
@@ -87,6 +88,50 @@ public class Toernooi_vordering extends javax.swing.JFrame {
 
     }
 
+        private double berekenRating(double newRating)
+    {
+        int modifier;
+        if (rating>(inschrijvingen*0.8))
+        {
+            modifier = -5;
+        } else if(rating>(inschrijvingen*0.65))
+        {
+            modifier = -3;
+        } else if(rating>(inschrijvingen*0.5))
+        {
+            modifier = -1;
+        }else if(rating>(inschrijvingen*0.35))
+        {
+            modifier = 1;
+        }else if(rating>(inschrijvingen*0.20))
+        {
+            modifier = 3;
+        }else
+        {
+           modifier = 5; 
+        }
+        double multiplier = newRating/100;
+        double returnStat;
+        if(multiplier==1)
+        {
+        returnStat = modifier;  
+        }else if(multiplier > 1&&modifier>0)
+        {
+        returnStat = (multiplier*modifier);    
+        }else if(multiplier > 1&&modifier<0)
+        {
+        returnStat = (modifier/multiplier);    
+        }else if(multiplier < 1&&modifier>0)
+        {
+        returnStat = (multiplier*modifier);    
+        }else
+        {
+        returnStat = modifier;   
+        }
+        returnStat = Math.round(returnStat);
+        return returnStat;
+    }
+    
     private void toevoegenRonde() {
         try {
             Sql_connect.doConnect();
@@ -354,7 +399,17 @@ public class Toernooi_vordering extends javax.swing.JFrame {
                 while (result.next()) {
                     spelersAanTafel = result.getInt("aantalPersonen");
                 }
-
+                 double newRating=100;
+                
+                PreparedStatement stat6 = Sql_connect.getConnection().prepareStatement("SELECT AVG(P.Rating) AS avgRating FROM persoon P"
+                        + " JOIN toernooideelnemer T on T.Id_persoon = P.Id_persoon"
+                        + " WHERE T.Tafel_code = ? AND Positie = 0 AND Id_toernooi = ?");
+                stat6.setString(1, eliminatie_tafel);
+                stat6.setInt(2, whereClaus);
+                ResultSet result2 = stat6.executeQuery();
+                while (result2.next()) {
+                    newRating = result2.getInt("avgRating");
+                }
                 if (spelersAanTafel > 1) {
                     ModelItem selectedItem = (ModelItem) SpelerList.getSelectedValue();
                     int eliminatie_id = selectedItem.id;
@@ -367,7 +422,13 @@ public class Toernooi_vordering extends javax.swing.JFrame {
                     stat3.executeUpdate();
                     int selectedIndex = SpelerList.getSelectedIndex();
                     spelerListModel.remove(selectedIndex);
-                    //checkIfRondeIsOver();
+                    
+                    Sql_connect.doConnect();
+                    PreparedStatement stat7 = Sql_connect.getConnection().prepareStatement("UPDATE persoon SET Rating=Rating+? WHERE id_persoon=? LIMIT 1");
+                    stat7.setDouble(1, berekenRating(newRating));
+                    stat7.setInt(2, eliminatie_id);
+                    stat7.executeUpdate();
+                    
                 } else if (spelersAanTafel == 1) {
                     final String eMessage = "Dit is de laatste speler van de tafel, deze gaat door naar de volgende ronde";
                     JOptionPane.showMessageDialog(rootPane, eMessage);
