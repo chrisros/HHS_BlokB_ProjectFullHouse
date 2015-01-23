@@ -9,6 +9,7 @@ public class ModelItem {
     public int id;
     public int isBetaald;
     public int aantalFiches;
+    public String fichesInBeheren;
     public String idTafel;
     public String positie;
     public int eindPositie = 0;
