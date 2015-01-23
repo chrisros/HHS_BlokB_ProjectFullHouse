@@ -134,6 +134,8 @@ public class Toernooi_vordering extends javax.swing.JFrame {
     
     private void toevoegenRonde() {
         try {
+            //System.out.println("rondeId"+rondeId);
+            //System.out.println("rondeId"+totaalAantalTafels);
             Sql_connect.doConnect();
             PreparedStatement stat3 = Sql_connect.getConnection().prepareStatement("INSERT INTO ronde (Id_toernooi, Id_ronde, Tafel_aantal) VALUES (?, ?, ?)");
             stat3.setInt(1, whereClaus);
@@ -209,9 +211,9 @@ public class Toernooi_vordering extends javax.swing.JFrame {
             }
         }
 
-        System.out.println("aantalTafels" + aantalTafels);
-        System.out.println("bonusTafel1" + bonusTafel1);
-        System.out.println("bonusTafel2" + bonusTafel2);
+        //System.out.println("aantalTafels" + aantalTafels);
+        //System.out.println("bonusTafel1" + bonusTafel1);
+        //System.out.println("bonusTafel2" + bonusTafel2);
 
     }
 
@@ -454,7 +456,7 @@ public class Toernooi_vordering extends javax.swing.JFrame {
 
             while (result.next()) {
                 int spelersInToernooi = result.getInt("aantalPersonen");
-                System.out.println(spelersInToernooi);
+                //System.out.println(spelersInToernooi);
 
                 if (spelersInToernooi == totaalAantalTafels) {
                     return true;

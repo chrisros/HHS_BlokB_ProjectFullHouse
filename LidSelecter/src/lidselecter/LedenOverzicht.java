@@ -131,7 +131,7 @@ public class LedenOverzicht extends javax.swing.JFrame {
                 }
 
                 result.last();
-                System.out.println(result.getRow());
+                //System.out.println(result.getRow());
 
                 result.close();
                 stat.close();

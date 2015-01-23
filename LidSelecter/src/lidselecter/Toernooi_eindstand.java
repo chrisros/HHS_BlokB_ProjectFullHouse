@@ -74,6 +74,21 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
             //ePopup(e);
         }
     }
+    private void updateRatring(int plaats, int id)
+    {
+        int rating = (15 /plaats);
+        try {
+            
+            Sql_connect.doConnect();
+            PreparedStatement stat7 = Sql_connect.getConnection().prepareStatement("UPDATE persoon SET Rating=Rating+? WHERE id_persoon=? LIMIT 1");
+            stat7.setDouble(1, rating);
+            stat7.setInt(2, id);
+            stat7.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void getInschrijfingen()
     {
         try {
@@ -105,6 +120,7 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
     }
         private void winnaarsWeergeven()
         {
+            int persoonId = 0;
         try {
             Sql_connect.doConnect();
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT P.Voornaam, P.Achternaam, P.Id_persoon FROM persoon P"
@@ -116,12 +132,14 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
             while (result.next()) {
                 String roepnaam = result.getString("voornaam");
                 String achternaam = result.getString("achternaam");
+                persoonId = result.getInt("Id_persoon");
                 String naam = roepnaam+" "+achternaam;
                 
                  String prijs = "€"+berekenPrijsGeld(1); 
                  naam1.setText(naam);
                  prijs1.setText(prijs);
                 }
+            updateRatring(1, persoonId);
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,12 +154,14 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
             while (result.next()) {
                 String roepnaam = result.getString("voornaam");
                 String achternaam = result.getString("achternaam");
+                persoonId = result.getInt("Id_persoon");
                 String naam = roepnaam+" "+achternaam;
                 
                  String prijs = "€"+berekenPrijsGeld(2); 
                  naam2.setText(naam);
                  prijs2.setText(prijs);
                 }
+            updateRatring(2, persoonId);
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,12 +176,14 @@ public class Toernooi_eindstand extends javax.swing.JFrame {
             while (result.next()) {
                 String roepnaam = result.getString("voornaam");
                 String achternaam = result.getString("achternaam");
+                persoonId = result.getInt("Id_persoon");                
                 String naam = roepnaam+" "+achternaam;
                 
                  String prijs = "€"+berekenPrijsGeld(3); 
                  naam3.setText(naam);
                  prijs3.setText(prijs);
                 }
+            updateRatring(3, persoonId);
         } catch (SQLException ex) {
             Logger.getLogger(Toernooi_eindstand.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -186,9 +186,9 @@ public class Toernooi_start extends javax.swing.JFrame {
             }
         }
 
-        System.out.println("aantalTafels" + aantalTafels);
-        System.out.println("bonusTafel1" + bonusTafel1);
-        System.out.println("bonusTafel2" + bonusTafel2);
+        //System.out.println("aantalTafels" + aantalTafels);
+        //System.out.println("bonusTafel1" + bonusTafel1);
+        //System.out.println("bonusTafel2" + bonusTafel2);
 
     }
 
@@ -319,7 +319,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
     private void weergevenTafels() {
         try {
-            System.out.println("weergevenTafels");
+            //System.out.println("weergevenTafels");
             String prepSqlStatement = "SELECT * FROM tafel WHERE toernooi = ? AND ronde = ?";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
             stat.setInt(1, whereClaus);
@@ -356,8 +356,8 @@ public class Toernooi_start extends javax.swing.JFrame {
     }
 
     private void weergevenSpelers() {
-        System.out.println(whereClaus);
-        System.out.println(getSelectedTafel());
+        //System.out.println(whereClaus);
+        //System.out.println(getSelectedTafel());
         try {
             String prepSqlStatement = "Select P.Voornaam, P.Achternaam, P.Id_persoon from persoon P join toernooideelnemer T on T.Id_persoon = P.Id_persoon WHERE T.Id_toernooi = ? AND T.Tafel_code = ? AND T.Fiches>0";
             PreparedStatement stat = Sql_connect.getConnection().prepareStatement(prepSqlStatement);
@@ -462,7 +462,7 @@ public class Toernooi_start extends javax.swing.JFrame {
 
             while (result.next()) {
                 int spelersInToernooi = result.getInt("aantalPersonen");
-                System.out.println(spelersInToernooi);
+                //System.out.println(spelersInToernooi);
 
                 if (spelersInToernooi == totaalAantalTafels) {
                     return true;
@@ -479,10 +479,12 @@ public class Toernooi_start extends javax.swing.JFrame {
         String eMessage = "Alle tafels zijn uitgespeeld";
         JOptionPane.showMessageDialog(rootPane, eMessage);
         int id = whereClaus;
-        int rondeID = rondeId++;
+        rondeId++;
+        //System.out.println("ronde id "+rondeId);
+        //System.out.println("whereClaus "+whereClaus);
         int inschrijvingen = totaalAantalTafels;
 
-        Toernooi_vordering Toernooi_vordering = new Toernooi_vordering(id, rondeID, inschrijvingen, maxPertafel, rating, nextRoundFinal());
+        Toernooi_vordering Toernooi_vordering = new Toernooi_vordering(id, rondeId, inschrijvingen, maxPertafel, rating, nextRoundFinal());
         Toernooi_vordering.setVisible(rootPaneCheckingEnabled);
 
         this.dispose();
