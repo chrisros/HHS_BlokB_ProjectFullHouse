@@ -411,6 +411,7 @@ public class Masterclass_main extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         zoekTxt2 = new javax.swing.JTextField();
         tutorInschrijvenButton = new javax.swing.JButton();
+        tutorInschrijvenButton1 = new javax.swing.JButton();
 
         inschrijvenToernooiButton.setText("Inschrijven Toernooi");
         inschrijvenToernooiButton.addActionListener(new java.awt.event.ActionListener() {
@@ -523,6 +524,13 @@ public class Masterclass_main extends javax.swing.JFrame {
             }
         });
 
+        tutorInschrijvenButton1.setText("Tutor aan masterclass toevoegen");
+        tutorInschrijvenButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tutorInschrijvenButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -556,7 +564,8 @@ public class Masterclass_main extends javax.swing.JFrame {
                                     .addComponent(inschrijvenMasterclassButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addComponent(jLabel1))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tutorInschrijvenButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -566,14 +575,12 @@ public class Masterclass_main extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 92, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(zoekTxt)
-                            .addComponent(tutorInschrijvenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tutorInschrijvenButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(zoekTxt))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {masterclass_IdTxt, maxSpelersTxt, minSpelersTxt, speler_codeTxt});
@@ -620,8 +627,10 @@ public class Masterclass_main extends javax.swing.JFrame {
                         .addGap(1, 1, 1)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tutorInschrijvenButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(MELDINGVELD, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addContainerGap(37, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tutorInschrijvenButton)
@@ -695,6 +704,13 @@ public class Masterclass_main extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_tutorInschrijvenButtonActionPerformed
 
+    private void tutorInschrijvenButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tutorInschrijvenButton1ActionPerformed
+        // TODO add your handling code here:
+        Tutor_masterclass Tutor_masterclass = new Tutor_masterclass();
+        Tutor_masterclass.setVisible(rootPaneCheckingEnabled);
+        this.dispose();
+    }//GEN-LAST:event_tutorInschrijvenButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -754,6 +770,7 @@ public class Masterclass_main extends javax.swing.JFrame {
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField speler_codeTxt;
     private javax.swing.JButton tutorInschrijvenButton;
+    private javax.swing.JButton tutorInschrijvenButton1;
     private javax.swing.JTextField zoekTxt;
     private javax.swing.JTextField zoekTxt2;
     // End of variables declaration//GEN-END:variables

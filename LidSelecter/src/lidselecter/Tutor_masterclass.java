@@ -31,7 +31,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         inschrijfList.setModel(jListModel);
         vulLijst();
         toernooiTabel.setModel(table);
-        String[] Kolomnaam = {"Masterclass id", "Naam","Datum", "Plaats code", "Max spelers"};
+        String[] Kolomnaam = {"Masterclass id", "Naam", "Datum", "Plaats code", "Max spelers"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
         table.setColumnCount(5);
@@ -116,7 +116,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             }
 
         } catch (Exception e) {
-            ePopup(e);
+            //ePopup(e);
         }
     }
 
@@ -131,9 +131,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         // krijg de tekst uit de velden
         int idMasterclass = Integer.parseInt(masterclass_IdTxt.getText());
         int idSpeler = Integer.parseInt(speler_codeTxt.getText());
-        
-        
-        
+
         try {
             //maak een connectie
             Sql_connect.doConnect();
@@ -143,10 +141,10 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             stat1.setInt(1, idMasterclass);
             ResultSet result1 = stat1.executeQuery();
             int locatieGegevens = 0;
-            while (result1.next()){
+            while (result1.next()) {
                 locatieGegevens = result1.getInt("Id_locatie");
             }
-            
+
             // sql prepair statement
             String prepSqlStatement
                     = "INSERT INTO masterClassGever "
@@ -167,6 +165,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             MELDINGFIELD.setText("Inschrijven voor masterclass: " + idMasterclass + " is mislukt");
         }
     }
+
     public String removeLastChar(String s) {
         if (s != null && s.length() > 0) {
             if (s.substring(s.length() - 1).equals(" ")) {
@@ -412,9 +411,10 @@ public class Tutor_masterclass extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Masterclass_main Masterclass_main = new Masterclass_main();
+        Masterclass_main.setVisible(rootPaneCheckingEnabled);
         this.dispose();
-        Toernooi_main Toernooi_main = new Toernooi_main();
-        Toernooi_main.setVisible(rootPaneCheckingEnabled);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
