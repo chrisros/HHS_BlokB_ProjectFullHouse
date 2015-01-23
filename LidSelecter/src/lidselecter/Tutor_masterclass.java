@@ -30,7 +30,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         inschrijfList.setModel(jListModel);
         vulLijst();
-        toernooiTabel.setModel(table);
+        masterclassTabel.setModel(table);
         String[] Kolomnaam = {"Masterclass id", "Naam", "Datum", "Plaats code", "Max spelers"};
         table.setColumnIdentifiers(Kolomnaam);
         table.setRowCount(0);
@@ -99,9 +99,9 @@ public class Tutor_masterclass extends javax.swing.JFrame {
     private void gegevensOphalen() {
 
         try {
-            int row = toernooiTabel.getSelectedRow();
+            int row = masterclassTabel.getSelectedRow();
 
-            String Table_click = toernooiTabel.getModel().getValueAt(row, 0).toString();
+            String Table_click = masterclassTabel.getModel().getValueAt(row, 0).toString();
             Sql_connect.doConnect();
 
             // statement maken
@@ -244,7 +244,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        toernooiTabel = new javax.swing.JTable();
+        masterclassTabel = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -266,7 +266,7 @@ public class Tutor_masterclass extends javax.swing.JFrame {
             }
         });
 
-        toernooiTabel.setModel(new javax.swing.table.DefaultTableModel(
+        masterclassTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null}
             },
@@ -282,17 +282,17 @@ public class Tutor_masterclass extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        toernooiTabel.addMouseListener(new java.awt.event.MouseAdapter() {
+        masterclassTabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                toernooiTabelMouseClicked(evt);
+                masterclassTabelMouseClicked(evt);
             }
         });
-        toernooiTabel.addFocusListener(new java.awt.event.FocusAdapter() {
+        masterclassTabel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                toernooiTabelFocusGained(evt);
+                masterclassTabelFocusGained(evt);
             }
         });
-        jScrollPane1.setViewportView(toernooiTabel);
+        jScrollPane1.setViewportView(masterclassTabel);
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jLabel1.setText("Klik masterclass en tutor aan en schrijf in");
@@ -417,20 +417,20 @@ public class Tutor_masterclass extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void toernooiTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toernooiTabelMouseClicked
+    private void masterclassTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterclassTabelMouseClicked
         // TODO add your handling code here:
         gegevensOphalen();
-    }//GEN-LAST:event_toernooiTabelMouseClicked
+    }//GEN-LAST:event_masterclassTabelMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         inschrijvenMasterclass();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void toernooiTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toernooiTabelFocusGained
+    private void masterclassTabelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_masterclassTabelFocusGained
         // TODO add your handling code here:
         gegevensOphalen();
-    }//GEN-LAST:event_toernooiTabelFocusGained
+    }//GEN-LAST:event_masterclassTabelFocusGained
 
     private void zoekTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zoekTxtKeyReleased
         // TODO add your handling code here:
@@ -511,9 +511,9 @@ public class Tutor_masterclass extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable masterclassTabel;
     private javax.swing.JTextField masterclass_IdTxt;
     private javax.swing.JTextField speler_codeTxt;
-    private javax.swing.JTable toernooiTabel;
     private javax.swing.JTextField zoekTxt;
     // End of variables declaration//GEN-END:variables
 }
