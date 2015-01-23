@@ -61,7 +61,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                  <Component id="Updaten" linkSize="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Updaten" min="-2" max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" min="-2" pref="452" max="-2" attributes="0"/>
                                   <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
@@ -77,20 +77,15 @@
                                               <Component id="TxtToernooi_ID" min="-2" pref="47" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
                                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="TxtBetaald" min="-2" pref="47" max="-2" attributes="0"/>
+                                              <EmptySpace pref="193" max="32767" attributes="0"/>
                                           </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="welBetaaltCheck" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="nietBetaaltCheck" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="jButton1" linkSize="2" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                          <Component id="betaaldbutton" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -100,14 +95,14 @@
                                   <Component id="zoekToernooiTxt" min="-2" pref="256" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace type="separate" pref="30" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jScrollPane1" pref="119" max="32767" attributes="0"/>
                               <Component id="ZoekSpelerTxt" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="19" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -127,11 +122,9 @@
                           <Component id="jScrollPane2" min="-2" pref="220" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="welBetaaltCheck" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="nietBetaaltCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="TxtToernooi_ID" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="betaaldbutton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -146,7 +139,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="MELDINGFIELD" min="-2" pref="14" max="-2" attributes="0"/>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -216,19 +209,6 @@
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ZoekSpelerTxtKeyReleased"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="welBetaaltCheck">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Wel Betaald"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="welBetaaltCheckActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="nietBetaaltCheck">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Niet Betaald"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="zoekToernooiTxt">
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="zoekToernooiTxtKeyReleased"/>
@@ -279,12 +259,12 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JToggleButton" name="betaaldbutton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Haal Op"/>
+            <Property name="text" type="java.lang.String" value="Heeft niet betaald"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="betaaldbuttonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

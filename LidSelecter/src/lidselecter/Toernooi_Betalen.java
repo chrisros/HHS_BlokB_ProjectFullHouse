@@ -55,9 +55,6 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
         tabelVullen();
         tableEigenschappen();
 
-        if (nietBetaaltCheck.isSelected()) {
-            System.out.println("niet betaald aan");
-        }
 
         //jLabel1.setText("Speler:");
     }
@@ -152,6 +149,12 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
             Table_click = TableToernooi.getModel().getValueAt(row, 0).toString();
             TxtToernooi_ID.setText(Table_click);
             Sql_connect.doConnect();
+            
+            if (isBetaald == 1){
+                welBetaald();
+            } else {
+                nietBetaald();
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -353,8 +356,6 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         ZoekSpelerTxt = new javax.swing.JTextField();
-        welBetaaltCheck = new javax.swing.JCheckBox();
-        nietBetaaltCheck = new javax.swing.JCheckBox();
         zoekToernooiTxt = new javax.swing.JTextField();
         MELDINGFIELD = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -364,7 +365,7 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
         Updaten = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         TxtToernooi_ID = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        betaaldbutton = new javax.swing.JToggleButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -411,15 +412,6 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
             }
         });
 
-        welBetaaltCheck.setText("Wel Betaald");
-        welBetaaltCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                welBetaaltCheckActionPerformed(evt);
-            }
-        });
-
-        nietBetaaltCheck.setText("Niet Betaald");
-
         zoekToernooiTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 zoekToernooiTxtKeyReleased(evt);
@@ -447,10 +439,10 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
 
         TxtToernooi_ID.setEditable(false);
 
-        jButton1.setText("Haal Op");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        betaaldbutton.setText("Heeft niet betaald");
+        betaaldbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                betaaldbuttonActionPerformed(evt);
             }
         });
 
@@ -478,31 +470,24 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
                                             .addComponent(jLabel6)
                                             .addGap(36, 36, 36)
                                             .addComponent(TxtToernooi_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(27, 27, 27)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                             .addComponent(jLabel4)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(welBetaaltCheck)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(nietBetaaltCheck)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton1)))))
+                                            .addComponent(TxtBetaald, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE))
+                                        .addComponent(betaaldbutton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(zoekToernooiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 30, Short.MAX_VALUE)
+                        .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                             .addComponent(ZoekSpelerTxt))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Updaten, jButton1});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -518,11 +503,9 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(welBetaaltCheck)
-                            .addComponent(nietBetaaltCheck)
                             .addComponent(jLabel6)
                             .addComponent(TxtToernooi_ID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                            .addComponent(betaaldbutton))
                         .addGap(4, 4, 4)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -533,7 +516,7 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
                     .addComponent(jScrollPane1))
                 .addGap(26, 26, 26)
                 .addComponent(MELDINGFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton2.setText("Terug");
@@ -665,35 +648,23 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
         gegevensLijst();
     }//GEN-LAST:event_IngeschrevenDeelnemerValueChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        if (welBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
-            welBetaald();
-        } else if (!welBetaaltCheck.isSelected() && nietBetaaltCheck.isSelected()) {
-            isWelBetaald = false;
-            nietBetaald();
-        } else if (welBetaaltCheck.isSelected() && nietBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
-            vulLijst();
-        } else if (nietBetaaltCheck.isSelected()) {
-            isWelBetaald = false;
-            nietBetaald();
-        } else if (!nietBetaaltCheck.isSelected() && welBetaaltCheck.isSelected()) {
-            isWelBetaald = true;
-            welBetaald();
-        } else if (!welBetaaltCheck.isSelected() && !nietBetaaltCheck.isSelected()) {
-            vulLijst();
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         close();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void welBetaaltCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_welBetaaltCheckActionPerformed
+    private void betaaldbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_betaaldbuttonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_welBetaaltCheckActionPerformed
+        if(betaaldbutton.getText().equals("Heeft niet betaald"))
+        {
+            betaaldbutton.setText("Heeft wel betaald");
+            isBetaald = 1;
+        } else if(betaaldbutton.getText().equals("Heeft wel betaald"))
+        {
+            betaaldbutton.setText("Heeft niet betaald");
+            isBetaald = 0;
+        } 
+         gegevensOphalenTabel();
+    }//GEN-LAST:event_betaaldbuttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -749,7 +720,7 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
     private javax.swing.JTextField TxtToernooi_ID;
     private javax.swing.JButton Updaten;
     private javax.swing.JTextField ZoekSpelerTxt;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JToggleButton betaaldbutton;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -759,8 +730,6 @@ public class Toernooi_Betalen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JCheckBox nietBetaaltCheck;
-    private javax.swing.JCheckBox welBetaaltCheck;
     private javax.swing.JTextField zoekToernooiTxt;
     // End of variables declaration//GEN-END:variables
 }
