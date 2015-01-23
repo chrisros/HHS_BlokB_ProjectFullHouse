@@ -74,7 +74,7 @@ public class Locatie_main_ongespeeld extends javax.swing.JFrame {
                 PreparedStatement stat = Sql_connect.getConnection().prepareStatement("SELECT * FROM locatie WHERE Id_locatie NOT IN (select Id_locatie from toernooi)");
                 result = stat.executeQuery();
             } else{
-                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where Naam_locatie like ? OR Plaats like ? AND NOT IN (select Id_locatie from toernooi)");
+                PreparedStatement stat = Sql_connect.getConnection().prepareStatement("select * from locatie where (Naam_locatie like ? OR Plaats like ?) AND Id_locatie NOT IN (select Id_locatie from toernooi);");
                 stat.setString(1, "%" + zoekVeld + "%");
                 stat.setString(2, "%" + zoekVeld + "%");
                 result = stat.executeQuery();
